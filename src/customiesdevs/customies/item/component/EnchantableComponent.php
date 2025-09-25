@@ -1,0 +1,68 @@
+<?php
+declare(strict_types=1);
+
+namespace customiesdevs\customies\item\component;
+
+final class EnchantableComponent implements ItemComponent {
+
+	public const SLOT_ALL = "all";
+	public const SLOT_BOOTS = "armor_feet";
+	public const SLOT_CHESTPLATE = "armor_torso";
+	public const SLOT_HELMET = "armor_head";
+	public const SLOT_LEGGINGS = "armor_legs";
+	public const SLOT_AXE = "axe";
+	public const SLOT_BOW = "bow";
+	public const SLOT_COSMETIC_HEAD = "cosmetic_head";
+	public const SLOT_CROSSBOW = "crossbow";
+	public const SLOT_ELYTRA = "elytra";
+	public const SLOT_FISHING_ROD = "fishing_rod";
+	public const SLOT_FLINT = "flintsteel";
+	public const SLOT_HOE = "hoe";
+	public const SLOT_PICKAXE = "pickaxe";
+	public const SLOT_SHEARS = "shears";
+	public const SLOT_SHIELD = "shield";
+	public const SLOT_SHOVEL = "shovel";
+	public const SLOT_SWORD = "sword";
+
+	// Armor Enchantability
+	public const ARMOR_LEATHER = 15;
+	public const ARMOR_CHAIN = 12;
+	public const ARMOR_IRON = 9;
+	public const ARMOR_GOLD = 25;
+	public const ARMOR_DIAMOND = 10;
+	public const ARMOR_TURTLE = 9;
+	public const ARMOR_NETHERITE = 15;
+	public const ARMOR_OTHER = 1;
+	// Tool Enchantability
+	public const TOOL_WOOD = 15;
+	public const TOOL_STONE = 5;
+	public const TOOL_IRON = 14;
+	public const TOOL_GOLD = 22;
+	public const TOOL_DIAMOND = 10;
+	public const TOOL_NETHERITE = 15;
+	public const TOOL_OTHER = 1;
+
+	private string $slot;
+	private int $value;	
+
+	/**
+	 * Determines what enchantments can be applied to the item. Not all enchantments will have an effect on all item components.
+	 * @param string $slot Specifies which types of enchantments can be applied. For example, `bow` would allow this item to be enchanted as if it were a bow
+	 * @param int $value Specifies the value of the enchantment, Default is set to `1`
+	 */
+	public function __construct(string $slot = self::SLOT_ALL, int $value = 1) {
+		$this->slot = $slot;
+		$this->value = $value;
+	}
+
+	public function getName(): string {
+		return "minecraft:enchantable";
+	}
+
+	public function getValue(): array {
+		return [
+			"slot" => $this->slot,
+			"value" => $this->value
+		];
+	}
+}

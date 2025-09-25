@@ -1,0 +1,31 @@
+{
+	"name": "customiesdevs/customies",
+	"type": "pocketmine-plugin",
+	"minimum-stability": "beta",
+	"prefer-stable": true,
+	"autoload": {
+		"classmap": ["src"]
+	},
+	"scripts": {
+		"analyze": "vendor/bin/phpstan analyze src --level=8",
+		"build": "php -dphar.readonly=0 vendor/bin/pharynx -i=. -c -p=PluginName.phar"
+	},
+	"repositories": [
+
+	],
+	"require": {
+
+	},
+	"require-dev": {
+		"pocketmine/pocketmine-mp": "^5.30",
+		"phpstan/phpstan": "^1.2",
+		"phpstan/phpstan-strict-rules": "^1.0",
+		"phpstan/extension-installer": "^1.0",
+		"friendsofphp/php-cs-fixer": "^3"
+	},
+	"config": {
+		"allow-plugins": {
+			"phpstan/extension-installer": true
+		}
+	}
+}

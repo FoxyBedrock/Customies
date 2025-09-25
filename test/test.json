@@ -1,0 +1,30 @@
+{
+  "components": {
+    "item_properties": {
+      "allow_off_hand": 0, // default value false
+      "can_destroy_in_creative": 1, // default value true
+      "creative_category": 4,
+      "creative_group": "",
+      "damage": 0, // default value int
+      "enchantable_slot": "none", // default value string
+      "enchantable_value": 0, // default value int
+      "foil": 0, // default value false
+      "frame_count": 1, // default value
+      "hand_equipped": 0, // default value false
+      "hover_text_color": "§g", // this is only added when the hover text color component is added
+      "liquid_clipped": 0, // default value false
+      "max_stack_size": 64, // default value
+      "minecraft:icon": {
+        "textures": {
+          "default": "nk:test"
+        }
+      },
+      "mining_speed": 1, // default value
+      "should_despawn": 1, // default value true
+      "stacked_by_data": 0, // default value false
+      "use_animation": 0, // default value 
+      "use_duration": 0 // default value
+    },
+    "item_tags": []
+  }
+}
