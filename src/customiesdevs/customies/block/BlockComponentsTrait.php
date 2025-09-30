@@ -3,7 +3,6 @@
 namespace customiesdevs\customies\block;
 
 use customiesdevs\customies\block\component\BlockComponent;
-use customiesdevs\customies\block\component\BreathabilityComponent;
 use customiesdevs\customies\block\component\CollisionBoxComponent;
 use customiesdevs\customies\block\component\DestructibleByExplosionComponent;
 use customiesdevs\customies\block\component\DestructibleByMiningComponent;
@@ -15,6 +14,7 @@ use customiesdevs\customies\block\component\LightDampeningComponent;
 use customiesdevs\customies\block\component\LightEmissionComponent;
 use customiesdevs\customies\block\component\MaterialInstancesComponent;
 use customiesdevs\customies\block\component\SelectionBoxComponent;
+use customiesdevs\customies\block\properties\Material;
 
 trait BlockComponentsTrait {
 	
@@ -43,7 +43,6 @@ trait BlockComponentsTrait {
 	 * @param bool $useGeometry Check if geometry component should be used, default is set to `true`
 	 */
 	protected function initComponent(string $texture, bool $useGeometry = true): void {
-		$this->addComponent(new BreathabilityComponent());
 		$this->addComponent(new DestructibleByExplosionComponent());
 		$this->addComponent(new DestructibleByMiningComponent($this->getBreakInfo()->getHardness()));
 		$this->addComponent(new LightEmissionComponent($this->getLightLevel()));

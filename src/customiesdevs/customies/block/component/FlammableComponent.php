@@ -2,8 +2,6 @@
 
 namespace customiesdevs\customies\block\component;
 
-use pocketmine\nbt\tag\CompoundTag;
-
 class FlammableComponent implements BlockComponent {
 
 	private int $catchChanceModifier;
@@ -23,9 +21,10 @@ class FlammableComponent implements BlockComponent {
 		return "minecraft:flammable";
 	}
 
-	public function getValue(): CompoundTag {
-		return CompoundTag::create()
-			->setInt("catch_chance_modifier", $this->catchChanceModifier)
-			->setInt("destroy_chance_modifier", $this->destroyChanceModifier);
+	public function getValue(): array {
+		return [
+			"catch_chance_modifier" => $this->catchChanceModifier,
+			"destroy_chance_modifier" => $this->destroyChanceModifier
+		];
 	}
 }

@@ -2,8 +2,6 @@
 
 namespace customiesdevs\customies\block\component;
 
-use pocketmine\nbt\tag\CompoundTag;
-
 class LightEmissionComponent implements BlockComponent {
 
 	private int $emission;
@@ -20,8 +18,9 @@ class LightEmissionComponent implements BlockComponent {
 		return "minecraft:light_emission";
 	}
 
-	public function getValue(): CompoundTag {
-		return CompoundTag::create()
-			->setByte("emission", $this->emission);
+	public function getValue(): array {
+		return [
+			"lightLevel" => $this->emission
+		];
 	}
 }

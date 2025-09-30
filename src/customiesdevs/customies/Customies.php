@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies;
 
+use customiesdevs\customies\block\BlockManager;
 use customiesdevs\customies\block\CustomiesBlockFactory;
 use customiesdevs\customies\item\ItemManager;
 use pocketmine\plugin\PluginBase;
@@ -20,6 +21,7 @@ final class Customies extends PluginBase {
 		$this->getServer()->getPluginManager()->registerEvents(new CustomiesListener(), $this);
 		
 		ItemManager::getInstance()->registerItems();
+		BlockManager::getInstance()->registerBlocks();
 
 		$cachePath = $this->getDataFolder() . "idcache";
 		$this->getScheduler()->scheduleDelayedTask(new ClosureTask(static function () use ($cachePath): void {

@@ -29,6 +29,8 @@ use pocketmine\Server;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalBlockStateHandlers;
+use RuntimeException;
+
 use function array_map;
 use function array_reverse;
 use function hash;
@@ -53,6 +55,7 @@ final class CustomiesBlockFactory {
 	 * Adds a worker initialize hook to the async pool to sync the BlockFactory for every thread worker that is created.
 	 * It is especially important for the workers that deal with chunk encoding, as using the wrong runtime ID mappings
 	 * can result in massive issues with almost every block showing as the wrong thing and causing lag to clients.
+	 * @param string $cachePath The path where the block state cache file is located (usually server's root folder).
 	 */
 	public function addWorkerInitHook(string $cachePath): void {
 		$server = Server::getInstance();
@@ -64,6 +67,9 @@ final class CustomiesBlockFactory {
 
 	/**
 	 * Get a custom block from its identifier. An exception will be thrown if the block is not registered.
+	 * @param string $identifier
+	 * @throws InvalidArgumentException
+	 * @return Block A clone of the registered block.
 	 */
 	public function get(string $identifier): Block {
 		return clone (
@@ -111,12 +117,8 @@ final class CustomiesBlockFactory {
 
 		$propertiesTag = CompoundTag::create();
 		$components = CompoundTag::create();
-		if($block instanceof BlockComponents) {
-			foreach ($block->getComponents() as $component) {
-				$components->setTag($component->getName(), $component->getValue());
-			}
-		}
 
+		// TODO 
 		if($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
 			foreach($block->getBlockProperties() as $blockProperty){
@@ -166,19 +168,11 @@ final class CustomiesBlockFactory {
 			$serializer ??= static fn() => new BlockStateWriter($identifier);
 			$deserializer ??= static fn(BlockStateReader $in) => $block;
 		}
+		
 		GlobalBlockStateHandlers::getSerializer()->map($block, $serializer);
 		GlobalBlockStateHandlers::getDeserializer()->map($identifier, $deserializer);
 
-		$creativeInfo ??= CreativeInventoryInfo::DEFAULT();
-		$propertiesTag
-			->setTag("components",
-				$components->setTag("minecraft:creative_category", CompoundTag::create()
-					->setString("category", $creativeInfo->getCategory())
-					->setString("group", $creativeInfo->getGroup())))
-			->setTag("menu_category", CompoundTag::create()
-				->setString("category", $creativeInfo->getCategory() ?? "")
-				->setString("group", $creativeInfo->getGroup() ?? ""))
-			->setInt("molangVersion", 1);
+		$nbt = $this->createBlockNBT($block, $creativeInfo);
 
 		if($creativeInfo !== null){
 			$this->loadGroups();
@@ -206,7 +200,7 @@ final class CustomiesBlockFactory {
 			CreativeInventory::getInstance()->add($block->asItem(), $category, $group);
 		}
 
-		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($propertiesTag));
+		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($nbt));
 		$this->blockFuncs[$identifier] = [$blockFunc, $serializer, $deserializer];
 
 		// 1.20.60 added a new "block_id" field which depends on the order of the block palette entries. Every time we
@@ -215,10 +209,33 @@ final class CustomiesBlockFactory {
 			return strcmp(hash("fnv164", $a->getName()), hash("fnv164", $b->getName()));
 		});
 		foreach($this->blockPaletteEntries as $i => $entry) {
-			$root = $entry->getStates()->getRoot()
-				->setTag("vanilla_block_data", CompoundTag::create()
-					->setInt("block_id", 10000 + $i));
+			/** @var CompoundTag $root */
+			$root = $entry->getStates()->getRoot();
+			$root->setTag("vanilla_block_data", CompoundTag::create()->setInt("block_id", 10000 + $i));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));
 		}
+	}
+
+	private function createBlockNBT(Block $block, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
+		$propertiesTag = CompoundTag::create();
+		$components = CompoundTag::create();
+
+		if($block instanceof BlockComponents) {
+			foreach ($block->getComponents() as $component) {
+				$tag = NBT::getTagType($component->getValue());
+				if($tag === null) {
+					throw new RuntimeException("Failed to get tag type for component " . $component->getName());
+				}
+				$components->setTag($component->getName(), $tag);
+			}
+			$propertiesTag
+				->setTag("components", $components)
+				->setTag("menu_category", CompoundTag::create()
+					->setString("category", $creativeInfo->getCategory() ?? "")
+					->setString("group", $creativeInfo->getGroup() ?? ""))
+				->setInt("molangVersion", 12);
+			return $propertiesTag;	
+		}
+		return CompoundTag::create();
 	}
 }

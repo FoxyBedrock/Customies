@@ -2,8 +2,6 @@
 
 namespace customiesdevs\customies\block\component;
 
-use pocketmine\nbt\tag\CompoundTag;
-
 class DestructibleByMiningComponent implements BlockComponent {
 
 	private float $secondsToDestroy;
@@ -20,8 +18,9 @@ class DestructibleByMiningComponent implements BlockComponent {
 		return "minecraft:destructible_by_mining";
 	}
 
-	public function getValue(): CompoundTag {
-		return CompoundTag::create()
-			->setFloat("value", $this->secondsToDestroy);
+	public function getValue(): array {
+		return [
+			"value" => $this->secondsToDestroy
+		];
 	}
 }
