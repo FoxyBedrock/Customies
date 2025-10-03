@@ -18,7 +18,7 @@ class CraftingTableComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:crafting_table";
+		return VanillaBlockComponents::CRAFTING_TABLE;
 	}
 
 	public function getValue(): array {
@@ -26,5 +26,12 @@ class CraftingTableComponent implements BlockComponent {
 			"crafting_tags" => $this->craftingTags,
 			"table_name" => $this->tableName
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["table_name"] ?? "Crafting Table",
+			$data["crafting_tags"] ?? ["crafting_table"]
+		);
 	}
 }

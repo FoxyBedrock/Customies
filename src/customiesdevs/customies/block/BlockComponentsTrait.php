@@ -15,6 +15,7 @@ use customiesdevs\customies\block\component\LightEmissionComponent;
 use customiesdevs\customies\block\component\MaterialInstancesComponent;
 use customiesdevs\customies\block\component\SelectionBoxComponent;
 use customiesdevs\customies\block\properties\Material;
+use customiesdevs\customies\block\properties\RenderMethod;
 
 trait BlockComponentsTrait {
 	
@@ -61,6 +62,6 @@ trait BlockComponentsTrait {
 		if($this->getName() !== "Unknown") {
 			$this->addComponent(new DisplayNameComponent($this->getName()));
 		}
-		$this->addComponent(new MaterialInstancesComponent([new Material(Material::TARGET_ALL, $texture, Material::RENDER_METHOD_OPAQUE)]));
+		$this->addComponent(new MaterialInstancesComponent([new Material(Material::TARGET_ALL, $texture, RenderMethod::OPAQUE)]));
 	}
 }

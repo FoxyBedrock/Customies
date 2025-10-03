@@ -23,7 +23,7 @@ class SelectionBoxComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:selection_box";
+		return VanillaBlockComponents::SELECTION_BOX;
 	}
 
 	public function getValue(): array {
@@ -40,5 +40,24 @@ class SelectionBoxComponent implements BlockComponent {
 				$this->size->getZ()
 			]
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		if (is_bool($data)) {
+			return new self($data);
+		}
+		return new self(
+			true,
+			new Vector3(
+				$data["origin"][0] ?? -8,
+				$data["origin"][1] ?? 0,
+				$data["origin"][2] ?? -8
+			),
+			new Vector3(
+				$data["size"][0] ?? 16,
+				$data["size"][1] ?? 16,
+				$data["size"][2] ?? 16
+			)
+		);
 	}
 }

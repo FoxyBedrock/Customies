@@ -18,7 +18,7 @@ class FlammableComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:flammable";
+		return VanillaBlockComponents::FLAMMABLE;
 	}
 
 	public function getValue(): array {
@@ -26,5 +26,12 @@ class FlammableComponent implements BlockComponent {
 			"catch_chance_modifier" => $this->catchChanceModifier,
 			"destroy_chance_modifier" => $this->destroyChanceModifier
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["catch_chance_modifier"] ?? 5,
+			$data["destroy_chance_modifier"] ?? 20
+		);
 	}
 }

@@ -6,6 +6,7 @@ namespace customiesdevs\customies\block;
 
 use customiesdevs\customies\Customies;
 use customiesdevs\customies\item\CreativeInventoryInfo;
+use pocketmine\block\Block;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use function array_filter;
@@ -121,13 +122,15 @@ class BlockManager {
 			throw new \InvalidArgumentException("Invalid block config: missing required fields");
 		}
 
-		$customBlock = new CustomiesBlock($minecraftBlock["components"]);
 		$identifier = $minecraftBlock["description"]["identifier"];
+		$components = $minecraftBlock["components"];
 
 		$creativeInfo = $this->getCreativeInventoryInfo($minecraftBlock);
-
+		
 		CustomiesBlockFactory::getInstance()->registerBlock(
-			static fn() => $customBlock,
+			static function() use ($components): Block {
+				return new CustomiesBlock($components);
+			},
 			$identifier,
 			$creativeInfo
 		);

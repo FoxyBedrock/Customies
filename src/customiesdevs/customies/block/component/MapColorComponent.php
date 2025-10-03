@@ -15,12 +15,16 @@ class MapColorComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:map_color";
+		return VanillaBlockComponents::MAP_COLOR;
 	}
 
 	public function getValue(): array {
 		return [
 			"color" => $this->color
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data);
 	}
 }

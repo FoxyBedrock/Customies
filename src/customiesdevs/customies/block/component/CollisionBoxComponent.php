@@ -16,14 +16,18 @@ class CollisionBoxComponent implements BlockComponent {
 	 * @param Vector3 $size Size of each side of the collision box. Size is specified as [x, y, z]. "origin" + "size" must be in the range (-8, 0, -8) to (8, 16, 8), inclusive.
 	 * @param bool $useCollisionBox If collision should be enabled, default is set to `true`.
 	 */
-	public function __construct(bool $useCollisionBox = true, Vector3 $origin = new Vector3(-8.0, 0.0, -8.0), Vector3 $size = new Vector3(16.0, 16.0, 16.0)) {
+	public function __construct(
+		bool $useCollisionBox = true, 
+		Vector3 $origin = new Vector3(-8, 0, -8), 
+		Vector3 $size = new Vector3(16, 16, 16)
+	) {
 		$this->useCollisionBox = $useCollisionBox;
 		$this->origin = $origin;
 		$this->size = $size;
 	}
 
 	public function getName(): string {
-		return "minecraft:collision_box";
+		return VanillaBlockComponents::COLLISION_BOX;
 	}
 
 	public function getValue(): array {
@@ -40,5 +44,24 @@ class CollisionBoxComponent implements BlockComponent {
 				$this->size->getZ()
 			]
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		if (is_bool($data)) {
+			return new self($data);
+		}
+		return new self(
+			true,
+			new Vector3(
+				$data["origin"][0] ?? -8,
+				$data["origin"][1] ?? 0,
+				$data["origin"][2] ?? -8
+			),
+			new Vector3(
+				$data["size"][0] ?? 16,
+				$data["size"][1] ?? 16,
+				$data["size"][2] ?? 16
+			)
+		);
 	}
 }

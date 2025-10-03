@@ -17,8 +17,8 @@ final class Material {
 	/**
 	 * @param string $target The targeted face for the material. Possible values are: "*", "sides", "up", "down", "north", "east", "south", "west".
 	 * @param string $texture Texture name for the material.
-	 * @param string $renderMethod The render method to use.
-	 * @param string $tintMethod Tint multiplied to the color. Tint method logic varies, but often refers to the "rain" and "temperature" of the biome the block is placed in to compute the tint.
+	 * @param RenderMethod $renderMethod The render method to use.
+	 * @param TintMethod $tintMethod Tint multiplied to the color. Tint method logic varies, but often refers to the "rain" and "temperature" of the biome the block is placed in to compute the tint.
 	 * @param float $ambientOcclusion If this material has ambient occlusion applied when lighting, shadows will be created around and underneath the block. Decimal value controls exponent applied to a value after lighting.
 	 * @param boolean $faceDimming This material should be dimmed by the direction it's facing.
 	 * @param boolean $isotropic Should the faces that this material is applied to randomize their UVs?
@@ -26,8 +26,8 @@ final class Material {
 	public function __construct(
 		private readonly string $target,
 		private readonly string $texture,
-		private readonly string $renderMethod = RenderMethod::OPAQUE,
-		private readonly string $tintMethod = TintMethod::NONE,
+		private readonly RenderMethod $renderMethod = RenderMethod::OPAQUE,
+		private readonly TintMethod $tintMethod = TintMethod::NONE,
 		private readonly float $ambientOcclusion = 1.0,
 		private readonly bool $faceDimming = false,
 		private readonly bool $isotropic = false
@@ -40,12 +40,24 @@ final class Material {
 	public function getTarget(): string {
 		return $this->target;
 	}
+
+	public static function fromArray(string $target, array $data): self {
+		return new self(
+			$target,
+			$data["texture"],
+			RenderMethod::tryFrom($data["render_method"] ?? "") ?? RenderMethod::OPAQUE,
+			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE,
+			(float)($data["ambient_occlusion"] ?? 1.0),
+			(bool)($data["face_dimming"] ?? false),
+			(bool)($data["isotropic"] ?? false)
+		);
+	}	
 	
 	public function toArray(): array {
 		return [
 			"texture" => $this->texture,
-			"render_method" => $this->renderMethod,
-			"tint_method" => $this->tintMethod,
+			"render_method" => $this->renderMethod->value,
+			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,	
 			"face_dimming" => $this->faceDimming,
 			"isotropic" => $this->isotropic

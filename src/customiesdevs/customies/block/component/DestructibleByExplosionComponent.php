@@ -15,12 +15,16 @@ class DestructibleByExplosionComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:destructible_by_explosion";
+		return VanillaBlockComponents::DESTRUCTIBLE_BY_EXPLOSION;
 	}
 
 	public function getValue(): array {
 		return [
 			"value" => $this->explosionResistance
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["explosion_resistance"] ?? 0.0);
 	}
 }

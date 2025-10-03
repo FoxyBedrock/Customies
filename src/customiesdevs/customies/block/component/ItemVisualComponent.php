@@ -13,7 +13,7 @@ class ItemVisualComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:item_visual";
+		return VanillaBlockComponents::ITEM_VISUAL;
 	}
 
 	public function getValue(): array {
@@ -21,5 +21,12 @@ class ItemVisualComponent implements BlockComponent {
 			"geometry" => $this->geometry->getValue(),
 			"material_instances" => $this->materialInstances->getValue()
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			GeometryComponent::fromJson($data["geometry"] ?? []),
+			MaterialInstancesComponent::fromJson($data["material_instances"] ?? [])
+		);
 	}
 }

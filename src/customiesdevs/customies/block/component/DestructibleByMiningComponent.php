@@ -15,12 +15,16 @@ class DestructibleByMiningComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:destructible_by_mining";
+		return VanillaBlockComponents::DESTRUCTIBLE_BY_MINING;
 	}
 
 	public function getValue(): array {
 		return [
 			"value" => $this->secondsToDestroy
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["seconds_to_destroy"] ?? 0.0);
 	}
 }

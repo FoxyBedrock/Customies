@@ -11,11 +11,16 @@ class RandomOffsetComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:random_offset";
+		return VanillaBlockComponents::RANDOM_OFFSET;
 	}
 
 	public function getValue(): array {
 		return [
 		];
+	}
+
+	// TODO Needs more data on this
+	public static function fromJson(mixed $data): static {
+		return new self();
 	}
 }

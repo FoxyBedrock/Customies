@@ -32,7 +32,7 @@ class LiquidDetectionComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:liquid_detection";
+		return VanillaBlockComponents::LIQUID_DETECTION;
 	}
 
 	public function getValue(): array {
@@ -46,5 +46,15 @@ class LiquidDetectionComponent implements BlockComponent {
 				]				
 			]
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		$rule = $data["detectionRules"][0] ?? [];
+		return new self(
+			$rule["liquid_type"] ?? "water",
+			$rule["can_contain_liquid"] ?? false,
+			$rule["on_liquid_touches"] ?? self::BLOCKING,
+			$rule["stops_liquid_flowing_from_direction"] ?? []
+		);
 	}
 }

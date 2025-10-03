@@ -8,10 +8,10 @@
             }
         },
         "components": {
-            "minecraft:geometry": "geometry.custom_slime_block",
+            "minecraft:geometry": "minecraft:geometry.full_block",
             "minecraft:material_instances": {
                 "*": {
-                    "texture": "custom_slime_block",
+                    "texture": "slime_block",
                     "render_method": "blend"
                 }
             },

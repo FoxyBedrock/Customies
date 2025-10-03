@@ -32,7 +32,7 @@ class MovableComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:movable";
+		return VanillaBlockComponents::MOVABLE;
 	}
 
 	public function getValue(): array {
@@ -40,5 +40,12 @@ class MovableComponent implements BlockComponent {
 			"movement_type" => $this->movementType,
 			"sticky" => $this->sticky
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["movement_type"] ?? self::MOVEMENT_TYPE_PUSH_PULL,
+			$data["sticky"] ?? self::STICKY_NONE
+		);
 	}
 }

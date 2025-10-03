@@ -15,12 +15,16 @@ class LightEmissionComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:light_emission";
+		return VanillaBlockComponents::LIGHT_EMISSION;
 	}
 
 	public function getValue(): array {
 		return [
 			"lightLevel" => $this->emission
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? 0);
 	}
 }

@@ -18,7 +18,7 @@ class RedstoneConductivityComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:redstone_conductivity";
+		return VanillaBlockComponents::REDSTONE_CONDUCTIVITY;
 	}
 
 	public function getValue(): array {
@@ -26,5 +26,12 @@ class RedstoneConductivityComponent implements BlockComponent {
 			"allows_wire_to_step_down" => $this->allowsWireToStepDown,
 			"redstone_conductor" => $this->redstoneConductor
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["allows_wire_to_step_down"] ?? true,
+			$data["redstone_conductor"] ?? false
+		);
 	}
 }

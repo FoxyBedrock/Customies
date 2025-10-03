@@ -22,7 +22,7 @@ class MaterialInstancesComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:material_instances";
+		return VanillaBlockComponents::MATERIAL_INSTANCES;
 	}
 
 	public function getValue(): array {
@@ -34,5 +34,13 @@ class MaterialInstancesComponent implements BlockComponent {
 			"mappings" => [],
 			"materials" => $materials
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		$materials = [];
+		foreach($data as $target => $materialData){
+			$materials[] = Material::fromArray($target, $materialData);
+		}
+		return new self($materials);
 	}
 }

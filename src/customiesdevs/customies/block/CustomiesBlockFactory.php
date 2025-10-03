@@ -78,6 +78,10 @@ final class CustomiesBlockFactory {
 		);
 	}
 
+	/**
+	 * Loads all the creative groups from the CreativeInventory entries. This is used to ensure that all groups are
+	 * available when registering new blocks with creative inventory info.
+	 */
 	private function loadGroups() : void {
 		if($this->groups !== []){
 			return;
@@ -101,9 +105,12 @@ final class CustomiesBlockFactory {
 	/**
 	 * Register a block to the BlockFactory and all the required mappings. A custom stateReader and stateWriter can be
 	 * provided to allow for custom block state serialization.
-	 * @phpstan-param (Closure(): Block) $blockFunc
-	 * @phpstan-param null|(Closure(BlockStateWriter): Block) $serializer
-	 * @phpstan-param null|(Closure(Block): BlockStateReader) $deserializer
+	 * @param Closure $blockFunc A closure that returns a new instance of the block to register.
+	 * @param string $identifier The unique identifier for the block (e.g. "namespace:block_name").
+	 * @param CreativeInventoryInfo|null $creativeInfo Optional creative inventory information for the block.
+	 * @param Closure|null $serializer Optional closure that takes a BlockStateWriter and returns it after writing the block state.
+	 * @param Closure|null $deserializer Optional closure that takes a BlockStateReader and returns a new instance of the block after reading the state.
+	 * @throws InvalidArgumentException If the blockFunc does not return a Block instance.
 	 */
 	public function registerBlock(Closure $blockFunc, string $identifier, ?CreativeInventoryInfo $creativeInfo = null, ?Closure $serializer = null, ?Closure $deserializer = null): void {
 		$block = $blockFunc();
@@ -117,6 +124,8 @@ final class CustomiesBlockFactory {
 
 		$propertiesTag = CompoundTag::create();
 		$components = CompoundTag::create();
+
+		$nbt = $this->createBlockNBT($block, $creativeInfo);
 
 		// TODO 
 		if($block instanceof Permutable) {
@@ -172,8 +181,6 @@ final class CustomiesBlockFactory {
 		GlobalBlockStateHandlers::getSerializer()->map($block, $serializer);
 		GlobalBlockStateHandlers::getDeserializer()->map($identifier, $deserializer);
 
-		$nbt = $this->createBlockNBT($block, $creativeInfo);
-
 		if($creativeInfo !== null){
 			$this->loadGroups();
 			if($creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_ALL || $creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_COMMANDS){
@@ -211,11 +218,20 @@ final class CustomiesBlockFactory {
 		foreach($this->blockPaletteEntries as $i => $entry) {
 			/** @var CompoundTag $root */
 			$root = $entry->getStates()->getRoot();
-			$root->setTag("vanilla_block_data", CompoundTag::create()->setInt("block_id", 10000 + $i));
+			$root->setTag("vanilla_block_data", CompoundTag::create()
+					->setInt("block_id", 10000 + $i)
+					->setString("material", "dirt"));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));
 		}
 	}
 
+	/** 
+	 * Creates the NBT data for the block. This includes the components and their values.
+	 * If the block does not have components, an empty CompoundTag is returned.
+	 * @param Block $block The block to create the NBT data for.
+	 * @param CreativeInventoryInfo|null $creativeInfo Optional creative inventory information for the block.
+	 * @return CompoundTag The NBT data for the block.
+	 */
 	private function createBlockNBT(Block $block, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
 		$propertiesTag = CompoundTag::create();
 		$components = CompoundTag::create();
@@ -228,13 +244,16 @@ final class CustomiesBlockFactory {
 				}
 				$components->setTag($component->getName(), $tag);
 			}
+			if($creativeInfo !== null) {
+				$propertiesTag->setTag("menu_category", CompoundTag::create()
+					->setString("category", $creativeInfo->getCategory() ?? "")
+					->setString("group", $creativeInfo->getGroup() ?? ""));
+			}
 			$propertiesTag
 				->setTag("components", $components)
-				->setTag("menu_category", CompoundTag::create()
-					->setString("category", $creativeInfo->getCategory() ?? "")
-					->setString("group", $creativeInfo->getGroup() ?? ""))
 				->setInt("molangVersion", 12);
-			return $propertiesTag;	
+			\var_dump($propertiesTag->__toString());
+			return $propertiesTag;
 		}
 		return CompoundTag::create();
 	}

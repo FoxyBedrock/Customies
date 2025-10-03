@@ -16,7 +16,7 @@ class PlacementFilterComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:placement_filter";
+		return VanillaBlockComponents::PLACEMENT_FILTER;
 	}
 
 	public function getValue(): array {
@@ -28,5 +28,13 @@ class PlacementFilterComponent implements BlockComponent {
 				]
 			]
 		];
+	}
+
+	// TODO Needs more data on this
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["conditions"][0]["allowed_faces"] ?? [],
+			$data["conditions"][0]["block_filter"] ?? []
+		);
 	}
 }

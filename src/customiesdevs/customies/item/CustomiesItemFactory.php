@@ -74,7 +74,6 @@ final class CustomiesItemFactory {
 	/**
 	 * Registers the item to the item factory and assigns it an ID. It also updates the required mappings and stores the
 	 * item components if present.
-	 * @phpstan-param class-string $className
 	 * @param Closure $itemFunc A closure that returns an instance of the item to be registered
 	 * @param string $identifier The string identifier for the item, usually in the format "namespace:item_name"
 	 * @param CreativeInventoryInfo|null $creativeInfo The creative inventory info for the item, if any

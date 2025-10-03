@@ -15,12 +15,16 @@ class LightDampeningComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:light_dampening";
+		return VanillaBlockComponents::LIGHT_DAMPENING;
 	}
 
 	public function getValue(): array {
 		return [
 			"lightLevel" => $this->dampening
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? 15);
 	}
 }

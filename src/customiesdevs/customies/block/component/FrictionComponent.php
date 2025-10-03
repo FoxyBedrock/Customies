@@ -16,12 +16,16 @@ class FrictionComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:friction";
+		return VanillaBlockComponents::FRICTION;
 	}
 
 	public function getValue(): array {
 		return [
 			"value" => $this->friction
 		];
+	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data);
 	}
 }
