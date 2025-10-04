@@ -65,4 +65,9 @@ final class DiggerComponent implements ItemComponent {
 		];
 		return $this;
 	}
+
+	public static function fromJson(mixed $data): static {
+		$component = new self($data["use_efficiency"] ?? false, $data["destroy_speeds"] ?? []);
+		return $component;
+	}
 }

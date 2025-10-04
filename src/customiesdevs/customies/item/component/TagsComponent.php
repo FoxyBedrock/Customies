@@ -24,4 +24,8 @@ final class TagsComponent implements ItemComponent {
             "tags" => $this->tags
         ];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(is_array($data["tags"] ?? null) ? $data["tags"] : []);
+	}
 }

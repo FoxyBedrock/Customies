@@ -89,7 +89,7 @@ final class VanillaBlockComponents {
 	 * Get all component identifiers.
 	 * @return string[]
 	 */
-	public static function all(): array {
+	public static function getAll(): array {
 		return self::ALL;
 	}
 
@@ -107,7 +107,7 @@ final class VanillaBlockComponents {
 	 * @param string $identifier Component identifier
 	 * @return class-string<BlockComponent>|null
 	 */
-	public static function classFor(string $identifier): ?string {
+	public static function getClass(string $identifier): ?string {
 		return self::$classMap[$identifier] ?? null;
 	}
 

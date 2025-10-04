@@ -24,4 +24,8 @@ final class DyeableComponent implements ItemComponent {
 			"default_color" => $this->hex
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["default_color"] ?? "#ffffff");
+	}
 }

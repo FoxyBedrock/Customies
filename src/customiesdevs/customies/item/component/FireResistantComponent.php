@@ -24,4 +24,8 @@ final class FireResistantComponent implements ItemComponent {
 			"value" => $this->fireResistant
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

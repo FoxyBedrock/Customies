@@ -19,7 +19,7 @@ class CustomiesBlock extends Block implements BlockComponents {
 			new BlockTypeInfo(new BlockBreakInfo(1))
 		);
 		foreach ($components as $componentName => $componentData) {
-			$componentClass = VanillaBlockComponents::classFor($componentName) ?? null;
+			$componentClass = VanillaBlockComponents::getClass($componentName) ?? null;
 			if ($componentClass !== null && method_exists($componentClass, 'fromJson')) {
 				$this->addComponent($componentClass::fromJson($componentData));
 			}

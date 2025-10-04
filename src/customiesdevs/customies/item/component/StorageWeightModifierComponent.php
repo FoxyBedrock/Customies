@@ -24,4 +24,8 @@ final class StorageWeightModifierComponent implements ItemComponent {
 			"weight_in_storage_item" => $this->weightInStorageItem
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["weight_in_storage_item"] ?? 4);
+	}
 }

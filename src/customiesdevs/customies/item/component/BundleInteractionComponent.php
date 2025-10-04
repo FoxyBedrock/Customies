@@ -25,4 +25,9 @@ final class BundleInteractionComponent implements ItemComponent {
 			"num_viewable_slots" => $this->numViewableSlots
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["num_viewable_slots"] ?? 12);
+	}
+	
 }

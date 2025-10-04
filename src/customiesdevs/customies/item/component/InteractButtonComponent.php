@@ -29,4 +29,8 @@ final class InteractButtonComponent implements ItemComponent {
 			"requires_interact" => 1
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? "action.interact.use");
+	}
 }

@@ -24,4 +24,8 @@ final class CanDestroyInCreativeComponent implements ItemComponent {
 			"value" => $this->canDestroyInCreative
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

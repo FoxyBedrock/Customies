@@ -28,4 +28,8 @@ final class UseModifiersComponent implements ItemComponent {
 			"use_duration" => $this->useDuration
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["movement_modifier"] ?? 1.0, $data["use_duration"] ?? 0);
+	}
 }

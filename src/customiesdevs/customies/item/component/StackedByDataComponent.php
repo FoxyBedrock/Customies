@@ -25,4 +25,8 @@ final class StackedByDataComponent implements ItemComponent {
 			"value" => $this->stackedByData
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

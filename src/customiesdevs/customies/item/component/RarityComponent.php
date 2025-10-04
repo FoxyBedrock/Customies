@@ -30,4 +30,8 @@ final class RarityComponent implements ItemComponent {
 			"value" => $this->rarity
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? self::COMMON);
+	}
 }

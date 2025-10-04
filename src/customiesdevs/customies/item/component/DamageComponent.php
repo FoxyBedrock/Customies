@@ -25,4 +25,8 @@ final class DamageComponent implements ItemComponent {
 			"value" => $this->damage
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? 0);
+	}
 }

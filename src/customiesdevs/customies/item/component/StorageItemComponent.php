@@ -52,4 +52,15 @@ final class StorageItemComponent implements ItemComponent {
 			"weight_in_storage_item" => $this->weightInStorageItem
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["allow_nested_storage_items"] ?? true,
+			$data["allowed_items"] ?? [],
+			$data["banned_items"] ?? [],
+			$data["max_slots"] ?? 64,
+			$data["max_weight_limit"] ?? 64,
+			$data["weight_in_storage_item"] ?? 4
+		);
+	}
 }

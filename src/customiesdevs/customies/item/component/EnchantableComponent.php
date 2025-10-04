@@ -65,4 +65,8 @@ final class EnchantableComponent implements ItemComponent {
 			"value" => $this->value
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["slot"] ?? self::SLOT_ALL, $data["value"] ?? 1);
+	}
 }

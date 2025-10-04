@@ -25,4 +25,8 @@ final class HoverTextColorComponent implements ItemComponent {
 			"value" => $this->hoverTextColor
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? "white");
+	}
 }

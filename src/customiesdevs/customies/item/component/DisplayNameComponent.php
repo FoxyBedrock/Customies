@@ -25,4 +25,8 @@ final class DisplayNameComponent implements ItemComponent {
 			"value" => $this->name
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? "");
+	}
 }

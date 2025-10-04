@@ -24,4 +24,8 @@ final class FuelComponent implements ItemComponent {
 			"duration" => $this->duration
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["duration"] ?? 0.0);
+	}
 }

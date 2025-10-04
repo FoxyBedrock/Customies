@@ -27,4 +27,8 @@ final class DamageAbsorptionComponent implements ItemComponent {
 			"absorbable_causes" => $this->absorbableCauses
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["absorbable_causes"] ?? []);
+	}
 }

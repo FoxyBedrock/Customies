@@ -30,4 +30,8 @@ final class ProjectileComponent implements ItemComponent {
 			"projectile_entity" => $this->projectileEntity
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["minimum_critical_power"] ?? 0.0, $data["projectile_entity"] ?? "");
+	}
 }

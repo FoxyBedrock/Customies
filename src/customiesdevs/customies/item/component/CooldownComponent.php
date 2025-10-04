@@ -34,4 +34,8 @@ final class CooldownComponent implements ItemComponent {
 			"duration" => $this->duration
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["category"] ?? self::CATEGORY_SHIELD, $data["duration"] ?? 0.0);
+	}
 }

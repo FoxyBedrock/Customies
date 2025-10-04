@@ -24,4 +24,8 @@ final class AllowOffHandComponent implements ItemComponent {
 			"value" => $this->offHand
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

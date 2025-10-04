@@ -24,4 +24,8 @@ final class MaxStackSizeComponent implements ItemComponent {
 			"value" => $this->maxStackSize
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? 64);
+	}
 }

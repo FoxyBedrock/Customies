@@ -24,4 +24,8 @@ final class StorageWeightLimitComponent implements ItemComponent {
 			"max_weight_limit" => $this->maxWeightLimit
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["max_weight_limit"] ?? 64);
+	}
 }

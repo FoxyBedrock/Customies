@@ -47,4 +47,12 @@ final class WearableComponent implements ItemComponent {
 			"hides_player_location" => $this->hidePlayerLocation
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["slot"] ?? self::SLOT_NONE, 
+			$data["protection"] ?? 0, 
+			$data["hides_player_location"] ?? false
+		);
+	}
 }

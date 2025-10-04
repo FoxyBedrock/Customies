@@ -24,4 +24,8 @@ final class SwingDurationComponent implements ItemComponent {
 			"value" => $this->swingDuration
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? 0.3);
+	}
 }

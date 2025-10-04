@@ -24,4 +24,8 @@ final class ShouldDespawnComponent implements ItemComponent {
 			"value" => $this->shouldDespawn
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

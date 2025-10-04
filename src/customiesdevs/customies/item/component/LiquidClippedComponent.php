@@ -24,4 +24,8 @@ final class LiquidClippedComponent implements ItemComponent {
 			"value" => $this->liquidClipped
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

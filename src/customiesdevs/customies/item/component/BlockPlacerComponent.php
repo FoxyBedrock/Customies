@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace customiesdevs\customies\item\component;
 
 use pocketmine\block\Block;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\data\bedrock\block\upgrade\LegacyBlockIdToStringIdMap;
+use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\StringToItemParser;
 use pocketmine\world\format\io\GlobalBlockStateHandlers;
 
 final class BlockPlacerComponent implements ItemComponent {
@@ -46,5 +50,18 @@ final class BlockPlacerComponent implements ItemComponent {
 			];
 		}
 		return $this;
+	}
+
+	public static function fromJson(mixed $data): static {
+		$block = StringToItemParser::getInstance()->parse($data["block"] ?? "")?->getBlock();
+		$blocks = $data["use_on"] ?? [];
+		$useOn = [];
+		foreach($blocks as $blockData){
+			$blockId = StringToItemParser::getInstance()->parse($blockData)->getBlock();
+			if($blockId !== null){
+				$useOn[] = $blockId;
+			}
+		}
+		return new self($block ?? VanillaBlocks::AIR(), $data["replace_block_item"] ?? false)->useOn(...$useOn);
 	}
 }

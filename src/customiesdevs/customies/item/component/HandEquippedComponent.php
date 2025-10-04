@@ -24,4 +24,8 @@ final class HandEquippedComponent implements ItemComponent {
 			"value" => $this->handEquipped
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

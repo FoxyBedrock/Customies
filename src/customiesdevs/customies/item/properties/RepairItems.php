@@ -26,4 +26,14 @@ class RepairItems {
 		];
 	}
 
+	public static function fromArray(array $data): self {
+		$items = [];
+		if(is_array($data["items"] ?? null)) {
+			foreach($data["items"] as $item) {
+				$items[] = $item["name"] ?? "";
+			}
+		}
+		return new self($items, $data["repair_amount"] ?? 0);
+	}
+
 }

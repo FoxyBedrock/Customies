@@ -24,4 +24,8 @@ final class GlintComponent implements ItemComponent {
 			"value" => $this->glint
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data ?? true);
+	}
 }

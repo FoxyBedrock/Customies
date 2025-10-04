@@ -48,4 +48,14 @@ final class IconComponent implements ItemComponent {
 			]
 		];
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self(
+			$data["textures"]["default"] ?? "customies:missing_texture",
+			$data["textures"]["dyed"] ?? "",
+			$data["textures"]["icon_trim"] ?? "",
+			$data["textures"]["bundle_open_back"] ?? "",
+			$data["textures"]["bundle_open_front"] ?? ""
+		);
+	}
 }

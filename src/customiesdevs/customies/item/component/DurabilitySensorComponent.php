@@ -36,4 +36,8 @@ final class DurabilitySensorComponent implements ItemComponent {
 		];
 		return $this;
 	}
+
+	public static function fromJson(mixed $data): static {
+		return new self($data["durability_thresholds"] ?? []);
+	}
 }
