@@ -62,6 +62,8 @@ final class BlockPlacerComponent implements ItemComponent {
 				$useOn[] = $blockId;
 			}
 		}
-		return new self($block ?? VanillaBlocks::AIR(), $data["replace_block_item"] ?? false)->useOn(...$useOn);
+		$blockPlacer = new self($block ?? VanillaBlocks::AIR(), $data["replace_block_item"] ?? false);
+		$blockPlacer->useOn(...$useOn);
+		return $blockPlacer;
 	}
 }

@@ -2,7 +2,7 @@
     "format_version": "1.21.100",
     "minecraft:item": {
         "description": {
-            "identifier": "nk:allowoffhand",
+            "identifier": "customies:custom_example_item",
             "menu_category": {
                 "category": "items"
             }
@@ -25,7 +25,6 @@
             "minecraft:fuel": {
                 "duration": 3.0
             },
-            "minecraft:glint": true,
             "minecraft:hand_equipped": true,
             "minecraft:hover_text_color": "minecoin_gold",
             "minecraft:interact_button": "Use This Custom Item",
