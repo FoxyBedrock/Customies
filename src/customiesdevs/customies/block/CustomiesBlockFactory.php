@@ -219,8 +219,7 @@ final class CustomiesBlockFactory {
 			/** @var CompoundTag $root */
 			$root = $entry->getStates()->getRoot();
 			$root->setTag("vanilla_block_data", CompoundTag::create()
-					->setInt("block_id", 10000 + $i)
-					->setString("material", "dirt"));
+					->setInt("block_id", 10000 + $i));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));
 		}
 	}
@@ -251,8 +250,7 @@ final class CustomiesBlockFactory {
 			}
 			$propertiesTag
 				->setTag("components", $components)
-				->setInt("molangVersion", 12);
-			\var_dump($propertiesTag->__toString());
+				->setInt("molangVersion", 13);
 			return $propertiesTag;
 		}
 		return CompoundTag::create();

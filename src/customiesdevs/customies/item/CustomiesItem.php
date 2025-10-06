@@ -4,7 +4,7 @@ namespace customiesdevs\customies\item;
 
 use customiesdevs\customies\item\component\VanillaItemComponents;
 use customiesdevs\customies\item\ItemComponents;
-use customiesdevs\customies\item\ItemComponentsTrait;
+use customiesdevs\customies\item\traits\ItemComponentsTrait;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemTypeIds;

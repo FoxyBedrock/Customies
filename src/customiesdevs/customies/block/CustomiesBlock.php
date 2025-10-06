@@ -3,6 +3,7 @@
 namespace customiesdevs\customies\block;
 
 use customiesdevs\customies\block\component\VanillaBlockComponents;
+use customiesdevs\customies\block\traits\BlockComponentsTrait;
 use pocketmine\block\Block;
 use pocketmine\block\BlockBreakInfo;
 use pocketmine\block\BlockIdentifier;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace customiesdevs\customies\item;
 
 use Closure;
-use customiesdevs\customies\util\NBT;
 use InvalidArgumentException;
 use pocketmine\block\Block;
 use pocketmine\data\bedrock\item\BlockItemIdMap;
@@ -22,8 +21,8 @@ use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
+use customiesdevs\customies\item\properties\ItemProperties;
 use ReflectionClass;
-use RuntimeException;
 
 use function array_values;
 
@@ -135,97 +134,20 @@ final class CustomiesItemFactory {
 	 * @return CompoundTag The NBT data for the item
 	 */
 	private function createItemNbt(Item $item, string $identifier, int $itemId, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
-		$components = CompoundTag::create();
-		$properties = CompoundTag::create();
-
-		if($item instanceof ItemComponents) {
-			// Set default values for all properties first
-			$properties->setTag("allow_off_hand", NBT::getTagType(false));
-			$properties->setTag("can_destroy_in_creative", NBT::getTagType(true));
-			$properties->setTag("damage", NBT::getTagType(0));
-			$properties->setTag("enchantable_slot", NBT::getTagType("none"));
-			$properties->setTag("enchantable_value", NBT::getTagType(0));
-			$properties->setTag("foil", NBT::getTagType(false));
-			$properties->setTag("frame_count", NBT::getTagType(1));
-			$properties->setTag("hand_equipped", NBT::getTagType(false));
-			$properties->setTag("liquid_clipped", NBT::getTagType(false));
-			$properties->setTag("max_stack_size", NBT::getTagType(64));
-			$properties->setTag("mining_speed", NBT::getTagType(1));
-			$properties->setTag("should_despawn", NBT::getTagType(true));
-			$properties->setTag("stacked_by_data", NBT::getTagType(false));
-			$properties->setTag("use_animation", NBT::getTagType(0));
-			$properties->setTag("use_duration", NBT::getTagType(0));
-			
-			foreach($item->getComponents() as $component) {
-				$tag = NBT::getTagType($component->getValue());
-				if($tag === null) {
-					throw new RuntimeException("Failed to get tag type for component " . $component->getName());
-				}
-				
-				// Override defaults with component-specific values
-				switch($component->getName()) {
-					case "minecraft:allow_off_hand":
-						$properties->setTag("allow_off_hand", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:can_destroy_in_creative":
-						$properties->setTag("can_destroy_in_creative", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:damage":
-						$properties->setTag("damage", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:enchantable":
-						$properties->setTag("enchantable_slot", NBT::getTagType($component->getValue()["slot"]));
-						$properties->setTag("enchantable_value", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:glint":
-						$properties->setTag("foil", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:hand_equipped":
-						$properties->setTag("hand_equipped", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:hover_text_color":
-						$properties->setTag("hover_text_color", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:liquid_clipped":
-						$properties->setTag("liquid_clipped", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:max_stack_size":
-						$properties->setTag("max_stack_size", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:icon":
-						$properties->setTag("minecraft:icon", $tag);
-						break;
-					case "minecraft:should_despawn":
-						$properties->setTag("should_despawn", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:stacked_by_data":
-						$properties->setTag("stacked_by_data", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:use_animation":
-						$properties->setTag("use_animation", NBT::getTagType($component->getValue()["value"]));
-						break;
-					case "minecraft:use_modifiers":
-						$properties->setTag("use_duration", NBT::getTagType($component->getValue()["use_duration"]));
-						break;
-				}
-				
-				// Setting the actual component
-				// The icon component is already set in item_properties, no need to set it again
-				if($component->getName() !== "minecraft:icon") {
-					$components->setTag($component->getName(), $tag);
-				}
-			}
-			if($creativeInfo !== null) {
-				$properties->setTag("creative_category", NBT::getTagType($creativeInfo->getNumericCategory()));
-				$properties->setTag("creative_group", NBT::getTagType($creativeInfo->getGroup()));
-			}
-			$components->setTag("item_properties", $properties);
-			return CompoundTag::create()
-				->setTag("components", $components)
-				->setInt("id", $itemId)
-				->setString("name", $identifier);
+		if (!($item instanceof ItemComponents)) {
+			return CompoundTag::create();
 		}
-		return CompoundTag::create();
+
+		$builder = new ItemProperties();
+		$builder->applyComponents($item->getComponents());
+		$builder->setCreativeInfo($creativeInfo);
+
+		$components = $builder->buildComponentsTag();
+		
+		return CompoundTag::create()
+			->setTag('components', $components)
+			->setInt('id', $itemId)
+			->setString('name', $identifier);
 	}
 
 	/**

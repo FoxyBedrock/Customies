@@ -20,7 +20,7 @@ class LightEmissionComponent implements BlockComponent {
 
 	public function getValue(): array {
 		return [
-			"lightLevel" => $this->emission
+			"emission" => $this->emission
 		];
 	}
 

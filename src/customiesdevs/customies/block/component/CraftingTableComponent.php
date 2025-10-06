@@ -24,7 +24,8 @@ class CraftingTableComponent implements BlockComponent {
 	public function getValue(): array {
 		return [
 			"crafting_tags" => $this->craftingTags,
-			"table_name" => $this->tableName
+			"table_name" => $this->tableName,
+			"grid_size" => 3
 		];
 	}
 
