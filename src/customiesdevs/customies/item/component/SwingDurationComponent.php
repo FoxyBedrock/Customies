@@ -16,7 +16,7 @@ final class SwingDurationComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:swing_duration";
+		return VanillaItemComponents::SWING_DURATION;
 	}
 
 	public function getValue(): array {

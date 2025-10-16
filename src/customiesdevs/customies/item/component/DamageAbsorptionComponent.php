@@ -19,7 +19,7 @@ final class DamageAbsorptionComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:damage_absorption";
+		return VanillaItemComponents::DAMAGE_ABSORPTION;
 	}
 
 	public function getValue(): array {

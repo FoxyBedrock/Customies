@@ -38,7 +38,7 @@ final class ThrowableComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:throwable";
+		return VanillaItemComponents::THROWABLE;
 	}
 
 	public function getValue(): array {

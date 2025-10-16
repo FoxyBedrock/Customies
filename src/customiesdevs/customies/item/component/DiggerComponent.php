@@ -23,7 +23,7 @@ final class DiggerComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:digger";
+		return VanillaItemComponents::DIGGER;
 	}
 
 	public function getValue(): array {

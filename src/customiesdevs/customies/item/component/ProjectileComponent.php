@@ -21,7 +21,7 @@ final class ProjectileComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:projectile";
+		return VanillaItemComponents::PROJECTILE;
 	}
 
 	public function getValue(): array {

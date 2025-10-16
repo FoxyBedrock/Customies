@@ -16,7 +16,7 @@ final class FireResistantComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:fire_resistant";
+		return VanillaItemComponents::FIRE_RESISTANT;
 	}
 
 	public function getValue(): array {

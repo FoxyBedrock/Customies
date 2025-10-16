@@ -17,7 +17,7 @@ final class DamageComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:damage";
+		return VanillaItemComponents::DAMAGE;
 	}
 
 	public function getValue(): array {

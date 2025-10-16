@@ -16,7 +16,7 @@ final class CanDestroyInCreativeComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:can_destroy_in_creative";
+		return VanillaItemComponents::CAN_DESTROY_IN_CREATIVE;
 	}
 
 	public function getValue(): array {

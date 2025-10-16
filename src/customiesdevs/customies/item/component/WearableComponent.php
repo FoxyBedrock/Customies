@@ -37,7 +37,7 @@ final class WearableComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:wearable";
+		return VanillaItemComponents::WEARABLE;
 	}
 
 	public function getValue(): array {

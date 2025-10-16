@@ -39,7 +39,7 @@ final class StorageItemComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:storage_item";
+		return VanillaItemComponents::STORAGE_ITEM;
 	}
 
 	public function getValue(): array {

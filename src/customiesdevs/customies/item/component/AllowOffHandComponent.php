@@ -16,7 +16,7 @@ final class AllowOffHandComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:allow_off_hand";
+		return VanillaItemComponents::ALLOW_OFF_HAND;
 	}
 
 	public function getValue(): array {

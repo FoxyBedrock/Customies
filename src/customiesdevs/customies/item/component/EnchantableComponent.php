@@ -56,7 +56,7 @@ final class EnchantableComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:enchantable";
+		return VanillaItemComponents::ENCHANTABLE;
 	}
 
 	public function getValue(): array {

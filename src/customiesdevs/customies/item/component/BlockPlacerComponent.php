@@ -27,7 +27,7 @@ final class BlockPlacerComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:block_placer";
+		return VanillaItemComponents::BLOCK_PLACER;
 	}
 
 	public function getValue(): array {

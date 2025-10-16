@@ -17,7 +17,7 @@ final class DisplayNameComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:display_name";
+		return VanillaItemComponents::DISPLAY_NAME;
 	}
 
 	public function getValue(): array {
@@ -27,6 +27,6 @@ final class DisplayNameComponent implements ItemComponent {
 	}
 
 	public static function fromJson(mixed $data): static {
-		return new self($data ?? "");
+		return new self($data["value"] ?? "");
 	}
 }

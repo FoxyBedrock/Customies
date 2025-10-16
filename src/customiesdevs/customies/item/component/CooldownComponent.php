@@ -25,7 +25,7 @@ final class CooldownComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:cooldown";
+		return VanillaItemComponents::COOLDOWN;
 	}
 
 	public function getValue(): array {

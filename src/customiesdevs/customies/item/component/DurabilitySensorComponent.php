@@ -16,7 +16,7 @@ final class DurabilitySensorComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:durability_sensor";
+		return VanillaItemComponents::DURABILITY_SENSOR;
 	}
 
 	public function getValue(): array {

@@ -16,7 +16,7 @@ final class StorageWeightLimitComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:storage_weight_limit";
+		return VanillaItemComponents::STORAGE_WEIGHT_LIMIT;
 	}
 
 	public function getValue(): array {

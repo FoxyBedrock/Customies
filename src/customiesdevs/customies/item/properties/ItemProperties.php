@@ -18,6 +18,7 @@ use RuntimeException;
  * - tags handling
  */
 final class ItemProperties {
+
 	/**
 	 * Default property values placed under item_properties
 	 */
@@ -44,19 +45,19 @@ final class ItemProperties {
 	 * componentName => [ propertyName => keyInsideComponentValue ]
 	 */
 	private const MAPPINGS = [
-		'minecraft:allow_off_hand'      => ['allow_off_hand' => 'value'],
+		'minecraft:allow_off_hand' => ['allow_off_hand' => 'value'],
 		'minecraft:can_destroy_in_creative' => ['can_destroy_in_creative' => 'value'],
-		'minecraft:damage'              => ['damage' => 'value'],
-		'minecraft:enchantable'         => ['enchantable_slot' => 'slot', 'enchantable_value' => 'value'],
-		'minecraft:glint'               => ['foil' => 'value'],
-		'minecraft:hand_equipped'       => ['hand_equipped' => 'value'],
-		'minecraft:hover_text_color'    => ['hover_text_color' => 'value'],
-		'minecraft:liquid_clipped'      => ['liquid_clipped' => 'value'],
-		'minecraft:max_stack_size'      => ['max_stack_size' => 'value'],
-		'minecraft:should_despawn'      => ['should_despawn' => 'value'],
-		'minecraft:stacked_by_data'     => ['stacked_by_data' => 'value'],
-		'minecraft:use_animation'       => ['use_animation' => 'value'],
-		'minecraft:use_modifiers'       => ['use_duration' => 'use_duration'],
+		'minecraft:damage' => ['damage' => 'value'],
+		'minecraft:enchantable' => ['enchantable_slot' => 'slot', 'enchantable_value' => 'value'],
+		'minecraft:glint' => ['foil' => 'value'],
+		'minecraft:hand_equipped' => ['hand_equipped' => 'value'],
+		'minecraft:hover_text_color' => ['hover_text_color' => 'value'],
+		'minecraft:liquid_clipped' => ['liquid_clipped' => 'value'],
+		'minecraft:max_stack_size' => ['max_stack_size' => 'value'],
+		'minecraft:should_despawn' => ['should_despawn' => 'value'],
+		'minecraft:stacked_by_data' => ['stacked_by_data' => 'value'],
+		'minecraft:use_animation' => ['use_animation' => 'value'],
+		'minecraft:use_modifiers' => ['use_duration' => 'use_duration'],
 	];
 
 	private CompoundTag $properties;
@@ -75,8 +76,8 @@ final class ItemProperties {
 	}
 
 	/**
-	 * Applies a list of components, updating both item_properties and the components tag.
-	 * The raw component is always added to components (except for minecraft:icon which belongs under item_properties).
+	 * Applies the given item components to the properties builder.
+	 * This updates both item_properties and the components tag.
 	 * @param ItemComponent[] $components
 	 */
 	public function applyComponents(array $components): void {
@@ -106,9 +107,10 @@ final class ItemProperties {
 					}
 					$this->properties->setTag($prop, NBT::getTagType($value[$key]));
 				}
+				continue;
 			}
 
-			// Always record the raw component (except icon, handled above)
+			// Always record the raw component (except icon and item properties, handled above)
 			$this->components->setTag($name, $tag);
 		}
 	}

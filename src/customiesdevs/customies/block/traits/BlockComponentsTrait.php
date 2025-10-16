@@ -17,6 +17,10 @@ trait BlockComponentsTrait {
 		return isset($this->components[$name]);
 	}
 
+	public function getComponent(string $name): ?BlockComponent {
+		return $this->components[$name] ?? null;
+	}
+
 	/**
 	 * @return BlockComponent[]
 	 */

@@ -16,7 +16,7 @@ final class ShouldDespawnComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:should_despawn";
+		return VanillaItemComponents::SHOULD_DESPAWN;
 	}
 
 	public function getValue(): array {

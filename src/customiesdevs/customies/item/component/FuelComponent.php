@@ -16,7 +16,7 @@ final class FuelComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:fuel";
+		return VanillaItemComponents::FUEL;
 	}
 
 	public function getValue(): array {

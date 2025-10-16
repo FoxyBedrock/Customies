@@ -17,7 +17,7 @@ final class StackedByDataComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:stacked_by_data";
+		return VanillaItemComponents::STACKED_BY_DATA;
 	}
 
 	public function getValue(): array {

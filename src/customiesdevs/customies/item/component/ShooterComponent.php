@@ -36,7 +36,7 @@ final class ShooterComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:shooter";
+		return VanillaItemComponents::SHOOTER;
 	}
 
 	public function getValue(): array {

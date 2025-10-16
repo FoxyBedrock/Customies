@@ -16,7 +16,7 @@ final class GlintComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:glint";
+		return VanillaItemComponents::GLINT;
 	}
 
 	public function getValue(): array {

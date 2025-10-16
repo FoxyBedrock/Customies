@@ -20,7 +20,7 @@ final class InteractButtonComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:interact_button";
+		return VanillaItemComponents::INTERACT_BUTTON;
 	}
 
 	public function getValue(): array {

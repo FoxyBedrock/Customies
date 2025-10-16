@@ -17,7 +17,7 @@ final class BundleInteractionComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:bundle_interaction";
+		return VanillaItemComponents::BUNDLE_INTERACTION;
 	}
 
 	public function getValue(): array {

@@ -99,7 +99,7 @@ final class VanillaBlockComponents {
 	 * @return bool True if the identifier is known, false otherwise.
 	 */
 	public static function isValid(string $identifier): bool {
-		return in_array($identifier, self::ALL, true);
+		return in_array($identifier, self::ALL, true) || isset(self::$classMap[$identifier]);
 	}
 
 	/**
@@ -125,13 +125,41 @@ final class VanillaBlockComponents {
 	 * @param string $identifier Component identifier (must be one of the known constants)
 	 * @param class-string<BlockComponent> $fqcn Fully qualified class name implementing BlockComponent
 	 */
-	public static function registerClass(string $identifier, string $fqcn): void {
+	public static function registerComponent(string $identifier, string $fqcn): void {
 		if (!self::isValid($identifier)) {
 			throw new \InvalidArgumentException("Unknown component id: $identifier");
 		}
 		if (!is_subclass_of($fqcn, BlockComponent::class)) {
 			throw new \InvalidArgumentException("Class $fqcn must implement " . BlockComponent::class);
 		}
+		self::$classMap[$identifier] = $fqcn;
+	}
+
+	/**
+	 * Register a custom (non-vanilla) component identifier to a class at runtime.
+	 * This allows plugins to introduce new components beyond the built-in list.
+	 *
+	 * Rules:
+	 * - Identifier must follow a simple namespaced pattern (e.g. "myplugin:my_component")
+	 * - Identifier must not be one of the known vanilla identifiers (use registerClass() to override those)
+	 * - The class must implement BlockComponent
+	 *
+	 * @param string $identifier Custom component identifier
+	 * @param class-string<BlockComponent> $fqcn Fully qualified class name implementing BlockComponent
+	 */
+	public static function registerCustomComponent(string $identifier, string $fqcn): void {
+		// Basic identifier format check: namespace:name (lowercase, digits, underscore, dash, dot, slash)
+		if(!preg_match('/^[a-z0-9_\-\.]+:[a-z0-9_\-\.\/]+$/', $identifier)) {
+			throw new \InvalidArgumentException("Invalid component identifier format: $identifier");
+		}
+		// Reserve minecraft namespace for vanilla identifiers
+		if(str_starts_with($identifier, 'minecraft:')) {
+			throw new \InvalidArgumentException("The namespace 'minecraft' is reserved for vanilla component identifiers. Use registerClass() to override existing ones.");
+		}
+		if (!is_subclass_of($fqcn, BlockComponent::class)) {
+			throw new \InvalidArgumentException("Class $fqcn must implement " . BlockComponent::class);
+		}
+		// Register or override existing custom mapping
 		self::$classMap[$identifier] = $fqcn;
 	}
 }

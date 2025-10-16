@@ -16,7 +16,7 @@ final class TagsComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:tags";
+		return VanillaItemComponents::TAGS;
 	}
 
 	public function getValue(): array {

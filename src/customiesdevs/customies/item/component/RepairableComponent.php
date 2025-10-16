@@ -16,7 +16,7 @@ final class RepairableComponent implements ItemComponent {
     ) {}
 
 	public function getName(): string {
-		return "minecraft:repairable";
+		return VanillaItemComponents::REPAIRABLE;
 	}
 
 	public function getValue(): array {

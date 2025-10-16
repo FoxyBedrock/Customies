@@ -22,7 +22,7 @@ final class RecordComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:record";
+		return VanillaItemComponents::RECORD;
 	}
 
 	public function getValue(): array {

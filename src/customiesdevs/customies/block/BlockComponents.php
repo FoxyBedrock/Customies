@@ -22,6 +22,13 @@ interface BlockComponents {
 	public function hasComponent(string $name): bool;
 
 	/**
+	 * Returns the component with the provided name, or null if it does not exist.
+	 * @param string $name
+	 * @return BlockComponent|null
+	 */
+	public function getComponent(string $name): ?BlockComponent;
+
+	/**
 	 * @return BlockComponent[]
 	 */
 	public function getComponents(): array;

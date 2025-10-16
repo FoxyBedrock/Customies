@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace customiesdevs\customies;
 
 use customiesdevs\customies\block\BlockManager;
+use customiesdevs\customies\block\component\custom\BlockBreakInfoComponent;
+use customiesdevs\customies\block\component\VanillaBlockComponents;
 use customiesdevs\customies\block\CustomiesBlockFactory;
 use customiesdevs\customies\item\ItemManager;
 use pocketmine\plugin\PluginBase;
@@ -15,6 +17,7 @@ final class Customies extends PluginBase {
 
 	public function onLoad(): void{
 		self::setInstance($this);
+		VanillaBlockComponents::registerCustomComponent("customies:block_break_info", BlockBreakInfoComponent::class);
 	}
 
 	protected function onEnable(): void {

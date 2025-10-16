@@ -18,6 +18,10 @@ trait ItemComponentsTrait {
 		return isset($this->components[$name]);
 	}
 
+	public function getComponent(string $name): ?ItemComponent {
+		return $this->components[$name] ?? null;
+	}
+
 	/**
 	 * @return ItemComponent[]
 	 */

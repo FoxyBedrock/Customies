@@ -2,6 +2,8 @@
 
 namespace customiesdevs\customies\block\component;
 
+use pocketmine\nbt\tag\CompoundTag;
+
 class LightEmissionComponent implements BlockComponent {
 
 	private int $emission;
@@ -18,10 +20,9 @@ class LightEmissionComponent implements BlockComponent {
 		return VanillaBlockComponents::LIGHT_EMISSION;
 	}
 
-	public function getValue(): array {
-		return [
-			"emission" => $this->emission
-		];
+	public function getValue(): CompoundTag {
+		return CompoundTag::create()
+			->setByte("emission", $this->emission);
 	}
 
 	public static function fromJson(mixed $data): static {

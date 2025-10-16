@@ -19,7 +19,7 @@ final class UseModifiersComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:use_modifiers";
+		return VanillaItemComponents::USE_MODIFIERS;
 	}
 
 	public function getValue(): array {

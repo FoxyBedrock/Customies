@@ -16,7 +16,7 @@ final class LiquidClippedComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:liquid_clipped";
+		return VanillaItemComponents::LIQUID_CLIPPED;
 	}
 
 	public function getValue(): array {

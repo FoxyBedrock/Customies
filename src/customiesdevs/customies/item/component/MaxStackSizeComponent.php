@@ -16,7 +16,7 @@ final class MaxStackSizeComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:max_stack_size";
+		return VanillaItemComponents::MAX_STACK_SIZE;
 	}
 
 	public function getValue(): array {

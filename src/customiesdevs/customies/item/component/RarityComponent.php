@@ -22,7 +22,7 @@ final class RarityComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:rarity";
+		return VanillaItemComponents::RARITY;
 	}
 
 	public function getValue(): array {

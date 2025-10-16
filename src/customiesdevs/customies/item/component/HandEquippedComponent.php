@@ -16,7 +16,7 @@ final class HandEquippedComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:hand_equipped";
+		return VanillaItemComponents::HAND_EQUIPPED;
 	}
 
 	public function getValue(): array {

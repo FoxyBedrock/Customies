@@ -16,7 +16,7 @@ final class StorageWeightModifierComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:storage_weight_modifier";
+		return VanillaItemComponents::STORAGE_WEIGHT_MODIFIER;
 	}
 
 	public function getValue(): array {

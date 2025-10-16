@@ -25,7 +25,7 @@ final class FoodComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:food";
+		return VanillaItemComponents::FOOD;
 	}
 
 	public function getValue(): array {

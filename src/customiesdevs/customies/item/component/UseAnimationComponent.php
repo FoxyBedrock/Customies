@@ -27,7 +27,7 @@ final class UseAnimationComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:use_animation";
+		return VanillaItemComponents::USE_ANIMATION;
 	}
 
 	public function getValue(): array {

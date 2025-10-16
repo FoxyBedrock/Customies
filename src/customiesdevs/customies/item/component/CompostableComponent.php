@@ -16,7 +16,7 @@ final class CompostableComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:compostable";
+		return VanillaItemComponents::COMPOSTABLE;
 	}
 
 	public function getValue(): array {

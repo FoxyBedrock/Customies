@@ -23,6 +23,13 @@ interface ItemComponents {
 	public function hasComponent(string $name): bool;
 
 	/**
+	 * Returns the component with the provided name, or null if it does not exist.
+	 * @param string $name
+	 * @return ItemComponent|null
+	 */
+	public function getComponent(string $name): ?ItemComponent;
+
+	/**
 	 * Returns the fully-structured CompoundTag that can be sent to a client in the ItemComponentsPacket.
 	 * @return ItemComponent[]
 	 */

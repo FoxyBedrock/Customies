@@ -17,7 +17,7 @@ final class HoverTextColorComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:hover_text_color";
+		return VanillaItemComponents::HOVER_TEXT_COLOR;
 	}
 
 	public function getValue(): array {

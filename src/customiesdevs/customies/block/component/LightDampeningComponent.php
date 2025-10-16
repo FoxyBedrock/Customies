@@ -2,6 +2,8 @@
 
 namespace customiesdevs\customies\block\component;
 
+use pocketmine\nbt\tag\CompoundTag;
+
 class LightDampeningComponent implements BlockComponent {
 
 	private int $dampening;
@@ -18,10 +20,9 @@ class LightDampeningComponent implements BlockComponent {
 		return VanillaBlockComponents::LIGHT_DAMPENING;
 	}
 
-	public function getValue(): array {
-		return [
-			"lightLevel" => $this->dampening
-		];
+	public function getValue(): CompoundTag {
+		return CompoundTag::create()
+			->setByte("lightLevel", $this->dampening);
 	}
 
 	public static function fromJson(mixed $data): static {

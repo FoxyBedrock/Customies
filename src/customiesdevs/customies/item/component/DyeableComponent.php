@@ -16,7 +16,7 @@ final class DyeableComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:dyeable";
+		return VanillaItemComponents::DYEABLE;
 	}
 
 	public function getValue(): array {

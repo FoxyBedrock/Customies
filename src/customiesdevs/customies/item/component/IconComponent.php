@@ -34,7 +34,7 @@ final class IconComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:icon";
+		return VanillaItemComponents::ICON;
 	}
 
 	public function getValue(): array {

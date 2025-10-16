@@ -17,8 +17,13 @@
                 }
             },
             "minecraft:display_name": "Custom Example Block",
+            "customies:block_break_info": {
+                "hardness": 3,
+                "tool_type": "pickaxe",
+                "tool_harvest_level": 4
+            },
             "minecraft:destructible_by_mining": {
-                "seconds_to_destroy": 0.033
+                "seconds_to_destroy": 0.6
             },
             "minecraft:friction": 0.1,
             "minecraft:destructible_by_explosion": {

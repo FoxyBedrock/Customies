@@ -22,7 +22,7 @@ final class DurabilityComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "minecraft:durability";
+		return VanillaItemComponents::DURABILITY;
 	}
 
 	public function getValue(): array {
