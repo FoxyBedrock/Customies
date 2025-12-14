@@ -26,7 +26,7 @@ final class HandEquippedComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['hand_equipped' => 'value'];
+		return ['hand_equipped' => $this->handEquipped];
 	}
 
 	public static function fromJson(mixed $data): static {

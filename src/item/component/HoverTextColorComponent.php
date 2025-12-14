@@ -27,7 +27,7 @@ final class HoverTextColorComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['hover_text_color' => 'value'];
+		return ['hover_text_color' => $this->hoverTextColor];
 	}
 
 	public static function fromJson(mixed $data): static {

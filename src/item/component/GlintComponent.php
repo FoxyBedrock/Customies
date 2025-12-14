@@ -26,7 +26,7 @@ final class GlintComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['foil' => 'value'];
+		return ['foil' => $this->glint];
 	}
 
 	public static function fromJson(mixed $data): static {

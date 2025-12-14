@@ -30,7 +30,7 @@ final class UseModifiersComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['use_duration' => 'use_duration'];
+		return ['use_duration' => $this->useDuration];
 	}
 
 	public static function fromJson(mixed $data): static {

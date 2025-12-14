@@ -27,7 +27,7 @@ final class DamageComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['damage' => 'value'];
+		return ['damage' => $this->damage];
 	}
 
 	public static function fromJson(mixed $data): static {

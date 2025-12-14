@@ -188,16 +188,15 @@ final class CustomiesItemFactory {
 				continue;
 			}
 
-			// Components with property mappings override item_properties
+			// Components with property mappings also update item_properties
 			$mapping = $component->getPropertyMapping();
 			if($mapping !== null) {
-				foreach($mapping as $prop => $key) {
-					$properties->setTag($prop, NBT::getTagType($value[$key]));
+				foreach($mapping as $prop => $propValue) {
+					$properties->setTag($prop, NBT::getTagType($propValue));
 				}
-				continue;
 			}
 
-			// Everything else goes to components
+			// All components go to components tag
 			$componentsTag->setTag($name, $tag);
 		}
 
@@ -206,6 +205,7 @@ final class CustomiesItemFactory {
 			->setTag('item_tags', NBT::getTagType($tags))
 			->merge($componentsTag);
 
+		\var_dump($components->__toString());
 		return CompoundTag::create()
 			->setTag('components', $components)
 			->setInt('id', $itemId)

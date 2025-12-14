@@ -67,7 +67,7 @@ final class EnchantableComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['enchantable_slot' => 'slot', 'enchantable_value' => 'value'];
+		return ['enchantable_slot' => $this->slot, 'enchantable_value' => $this->value];
 	}
 
 	public static function fromJson(mixed $data): static {

@@ -27,7 +27,7 @@ final class StackedByDataComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['stacked_by_data' => 'value'];
+		return ['stacked_by_data' => $this->stackedByData];
 	}
 
 	public static function fromJson(mixed $data): static {

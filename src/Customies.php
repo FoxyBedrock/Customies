@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace customiesdevs\customies;
 
 use customiesdevs\customies\block\CustomiesBlockFactory;
-use customiesdevs\customies\json\BlockManager;
-use customiesdevs\customies\json\ItemManager;
+use customiesdevs\customies\json\BehaviorManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\SingletonTrait;
@@ -19,9 +18,8 @@ final class Customies extends PluginBase {
 
 	protected function onEnable(): void {
 		$this->getServer()->getPluginManager()->registerEvents(new CustomiesListener(), $this);
-		
-		ItemManager::getInstance()->registerItems();
-		BlockManager::getInstance()->registerBlocks();
+
+		BehaviorManager::getInstance()->registerAll();
 
 		$cachePath = $this->getDataFolder() . "idcache";
 		$this->getScheduler()->scheduleDelayedTask(new ClosureTask(static function () use ($cachePath): void {

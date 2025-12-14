@@ -26,7 +26,7 @@ final class ShouldDespawnComponent implements ItemComponent {
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['should_despawn' => 'value'];
+		return ['should_despawn' => $this->shouldDespawn];
 	}
 
 	public static function fromJson(mixed $data): static {

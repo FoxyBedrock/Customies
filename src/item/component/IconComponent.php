@@ -38,15 +38,12 @@ final class IconComponent implements ItemComponent {
 	}
 
 	public function getValue(): array {
-		return [
-			"textures" => [
-				"default" => $this->default_texture,
-				"dyed" => $this->dyed_texture == "" ? $this->default_texture : $this->dyed_texture,
-				"icon_trim" => $this->trim_texture == "" ? $this->default_texture : $this->trim_texture,
-				"bundle_open_back" => $this->bundle_open_back_texture == "" ? $this->default_texture : $this->bundle_open_back_texture,
-				"bundle_open_front" => $this->bundle_open_front_texture == "" ? $this->default_texture : $this->bundle_open_front_texture
-			]
-		];
+		$textures = ["default" => $this->default_texture];
+		if($this->dyed_texture !== "") $textures["dyed"] = $this->dyed_texture;
+		if($this->trim_texture !== "") $textures["icon_trim"] = $this->trim_texture;
+		if($this->bundle_open_back_texture !== "") $textures["bundle_open_back"] = $this->bundle_open_back_texture;
+		if($this->bundle_open_front_texture !== "") $textures["bundle_open_front"] = $this->bundle_open_front_texture;
+		return ["textures" => $textures];
 	}
 
 	public function getPropertyMapping(): ?array {
