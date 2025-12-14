@@ -251,6 +251,7 @@ final class CustomiesBlockFactory {
 			$propertiesTag
 				->setTag("components", $components)
 				->setInt("molangVersion", 13);
+			\var_dump($propertiesTag->__toString());
 			return $propertiesTag;
 		}
 		return CompoundTag::create();

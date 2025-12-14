@@ -1,29 +1,45 @@
 <?php
+declare(strict_types=1);
 
 namespace customiesdevs\customies\block\component;
 
+use customiesdevs\customies\block\properties\Box;
 use pocketmine\math\Vector3;
 
 class CollisionBoxComponent implements BlockComponent {
 
-	private bool $useCollisionBox;
-	private Vector3 $origin;
-	private Vector3 $size;
+	private bool $enabled;
+	/** @var Box[] */
+	private array $boxes = [];
 
 	/**
-	 * Defines the area of the block that collides with entities. If set to true, default values are used. If set to false, the block's collision with entities is disabled. If this component is omitted, default values are used.
-	 * @param Vector3 $origin Minimal position of the bounds of the collision box. "origin" is specified as [x, y, z] and must be in the range (-8, 0, -8) to (8, 16, 8), inclusive.
-	 * @param Vector3 $size Size of each side of the collision box. Size is specified as [x, y, z]. "origin" + "size" must be in the range (-8, 0, -8) to (8, 16, 8), inclusive.
-	 * @param bool $useCollisionBox If collision should be enabled, default is set to `true`.
+	 * Defines the area of the block that collides with entities.
+	 * @param bool $enabled If collision should be enabled
 	 */
-	public function __construct(
-		bool $useCollisionBox = true, 
-		Vector3 $origin = new Vector3(-8, 0, -8), 
-		Vector3 $size = new Vector3(16, 16, 16)
-	) {
-		$this->useCollisionBox = $useCollisionBox;
-		$this->origin = $origin;
-		$this->size = $size;
+	public function __construct(bool $enabled = true) {
+		$this->enabled = $enabled;
+	}
+
+	/**
+	 * Add a collision box.
+	 * @param Box $box The box to add
+	 * @return $this
+	 */
+	public function addBox(Box $box): self {
+		$this->boxes[] = $box;
+		return $this;
+	}
+
+	/**
+	 * Add collision boxes.
+	 * @param Box[] $boxes The boxes to add
+	 * @return $this
+	 */
+	public function addBoxes(array $boxes): self {
+		foreach($boxes as $box) {
+			$this->boxes[] = $box;
+		}
+		return $this;
 	}
 
 	public function getName(): string {
@@ -31,37 +47,48 @@ class CollisionBoxComponent implements BlockComponent {
 	}
 
 	public function getValue(): array {
+		$convertedBoxes = [];
+		foreach($this->boxes as $box) {
+			$convertedBoxes[] = $box->toNbtArray();
+		}
 		return [
-			"enabled" => $this->useCollisionBox,
-			"origin" => [
-				$this->origin->getX(), 
-				$this->origin->getY(), 
-				$this->origin->getZ()
-			],
-			"size" => [
-				$this->size->getX(), 
-				$this->size->getY(), 
-				$this->size->getZ()
-			]
+			"enabled" => $this->enabled ? 1 : 0,
+			"boxes" => $convertedBoxes
 		];
 	}
 
 	public static function fromJson(mixed $data): static {
-		if (is_bool($data)) {
+		// false or true
+		if(is_bool($data)) {
 			return new self($data);
 		}
-		return new self(
-			true,
-			new Vector3(
-				$data["origin"][0] ?? -8,
-				$data["origin"][1] ?? 0,
-				$data["origin"][2] ?? -8
-			),
-			new Vector3(
-				$data["size"][0] ?? 16,
-				$data["size"][1] ?? 16,
-				$data["size"][2] ?? 16
-			)
-		);
+		
+		$component = new self(true);
+		$boxes = [];
+		
+		// Array of boxes
+		if(is_array($data) && isset($data[0])) {
+			foreach($data as $box) {
+				$origin = $box['origin'] ?? [-8, 0, -8];
+				$size = $box['size'] ?? [16, 24, 16];
+				$boxes[] = new Box(
+					new Vector3($origin[0], $origin[1], $origin[2]),
+					new Vector3($size[0], $size[1], $size[2])
+				);
+			}
+			return $component->addBoxes($boxes);
+		}
+		
+		// Single box object
+		if(is_array($data) && isset($data['origin'])) {
+			$origin = $data['origin'];
+			$size = $data['size'] ?? [16, 24, 16];
+			return $component->addBox(new Box(
+				new Vector3($origin[0], $origin[1], $origin[2]),
+				new Vector3($size[0], $size[1], $size[2])
+			));
+		}
+		
+		return $component;
 	}
 }
