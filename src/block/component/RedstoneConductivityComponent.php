@@ -23,15 +23,15 @@ class RedstoneConductivityComponent implements BlockComponent {
 
 	public function getValue(): array {
 		return [
-			"allows_wire_to_step_down" => $this->allowsWireToStepDown,
-			"redstone_conductor" => $this->redstoneConductor
+			"allowsWireToStepDown" => $this->allowsWireToStepDown,
+			"redstoneConductor" => $this->redstoneConductor
 		];
 	}
 
 	public static function fromJson(mixed $data): static {
 		return new self(
-			$data["allows_wire_to_step_down"] ?? true,
-			$data["redstone_conductor"] ?? false
+			$data["allowsWireToStepDown"] ?? true,
+			$data["allowsWireToStepDown"] ?? false
 		);
 	}
 }

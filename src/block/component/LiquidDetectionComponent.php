@@ -43,7 +43,7 @@ class LiquidDetectionComponent implements BlockComponent {
 					"canContainLiquid" => $this->canContainLiquid,
 					"onLiquidTouches" => $this->onLiquidTouches,
 					"stopsLiquidFromDirection" => $this->stopsLiquidFlowingFromDirection,
-				]				
+				]
 			]
 		];
 	}

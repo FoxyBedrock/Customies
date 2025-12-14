@@ -48,7 +48,7 @@ final class Material {
 			RenderMethod::tryFrom($data["render_method"] ?? "") ?? RenderMethod::OPAQUE,
 			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE,
 			(float)($data["ambient_occlusion"] ?? 1.0),
-			(bool)($data["face_dimming"] ?? false),
+			(bool)($data["packed_bools"] ?? 0x01),
 			(bool)($data["isotropic"] ?? false)
 		);
 	}	
@@ -59,7 +59,7 @@ final class Material {
 			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,	
-			"face_dimming" => $this->faceDimming,
+			"packed_bools" => $this->faceDimming,
 			"isotropic" => $this->isotropic
 		];
 	}

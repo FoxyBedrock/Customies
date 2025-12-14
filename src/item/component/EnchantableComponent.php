@@ -22,6 +22,7 @@ final class EnchantableComponent implements ItemComponent {
 	public const SLOT_SHEARS = "shears";
 	public const SLOT_SHIELD = "shield";
 	public const SLOT_SHOVEL = "shovel";
+	public const SLOT_SPEAR = "melee_spear";
 	public const SLOT_SWORD = "sword";
 
 	// Armor Enchantability

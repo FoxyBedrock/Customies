@@ -3,39 +3,27 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
+use pocketmine\item\Item;
+
 final class StorageItemComponent implements ItemComponent {
 
 	private bool $allowNestedStorageItems;
-	private array $allowedItems;
-	private array $bannedItems;
+	private array $allowedItems = [];
+	private array $bannedItems = [];
 	private int $maxSlots;
-	private int $maxWeightLimit;
-	private int $weightInStorageItem;
 
 	/**
 	 * Enables an item to store data of the dynamic container associated with it. 
 	 * A dynamic container is a container for storing items that is linked to an item instead of a block or an entity.
 	 * @param bool $allowNestedStorageItems Determines whether another Storage Item is allowed inside of this item. Default is true.
-	 * @param array $allowedItems List of items that are exclusively allowed in this Storage Item. If empty all items are allowed.
-	 * @param array $bannedItems List of items that are not allowed in this Storage Item.
 	 * @param int $maxSlots The maximum allowed weight of the sum of all contained items. Maximum is 64. Default is 64. Value must be >= 0.
-	 * @param int $maxWeightLimit The maximum weight limit for the storage item. Maximum is 64. Default is 64. Value must be >= 0.
-	 * @param int $weightInStorageItem The weight that the storage item itself contributes to the total weight of the items it contains. Value must be >= 0.
 	 */
 	public function __construct(
-		bool $allowNestedStorageItems = true, 
-		array $allowedItems = [], 
-		array $bannedItems = [], 
-		int $maxSlots = 64, 
-		int $maxWeightLimit = 64, 
-		int $weightInStorageItem = 4
+		bool $allowNestedStorageItems = true,
+		int $maxSlots = 64
 	) {
 		$this->allowNestedStorageItems = $allowNestedStorageItems;
-		$this->allowedItems = $allowedItems;
-		$this->bannedItems = $bannedItems;
 		$this->maxSlots = $maxSlots;
-		$this->maxWeightLimit = $maxWeightLimit;
-		$this->weightInStorageItem = $weightInStorageItem;
 	}
 
 	public function getName(): string {
@@ -47,9 +35,7 @@ final class StorageItemComponent implements ItemComponent {
 			"allow_nested_storage_items" => $this->allowNestedStorageItems,
 			"allowed_items" => $this->allowedItems,
 			"banned_items" => $this->bannedItems,
-			"max_slots" => $this->maxSlots,
-			"max_weight_limit" => $this->maxWeightLimit,
-			"weight_in_storage_item" => $this->weightInStorageItem
+			"max_slots" => $this->maxSlots
 		];
 	}
 
@@ -57,14 +43,62 @@ final class StorageItemComponent implements ItemComponent {
 		return null;
 	}
 
+	/**
+	 * List of items that are exclusively allowed in this Storage Item.
+	 * If empty, all items are allowed.
+	 * @param Item|Item[] $items
+	 */
+	public function allowItem(Item|array $items): self {
+		foreach($this->normalizeItems($items) as $name){
+			if(!$this->containsItem($this->allowedItems, $name)){
+				$this->allowedItems[] = ["name" => $name];
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * List of items that are NOT allowed in this Storage Item.
+	 * @param Item|Item[] $items
+	 */
+	public function banItem(Item|array $items): self {
+		foreach($this->normalizeItems($items) as $name){
+			if(!$this->containsItem($this->bannedItems, $name)){
+				$this->bannedItems[] = ["name" => $name];
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	private function normalizeItems(Item|array $items): array {
+		$items = is_array($items) ? $items : [$items];
+		$names = [];
+		foreach($items as $item){
+			if(!$item instanceof Item) continue;
+			$names[] = $item->nbtSerialize()->getString("Name", "unknown");
+		}
+		return array_unique($names);
+	}
+
+	private function containsItem(array $list, string $name): bool {
+		foreach($list as $entry){
+			if(($entry["name"] ?? null) === $name){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static function fromJson(mixed $data): static {
-		return new self(
+		$self = new self(
 			$data["allow_nested_storage_items"] ?? true,
-			$data["allowed_items"] ?? [],
-			$data["banned_items"] ?? [],
-			$data["max_slots"] ?? 64,
-			$data["max_weight_limit"] ?? 64,
-			$data["weight_in_storage_item"] ?? 4
+			$data["max_slots"] ?? 64
 		);
+		$self->allowedItems = $data["allowed_items"] ?? [];
+		$self->bannedItems = $data["banned_items"] ?? [];
+		return $self;
 	}
 }

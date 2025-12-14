@@ -7,15 +7,26 @@ final class UseModifiersComponent implements ItemComponent {
 
 	private float $useDuration;
 	private float $movementModifier;
+	private bool $emitVibrations;
+	private ?string $startSound;
 
 	/**
-	 * Determines how long an item takes to use in combination with components such as Shooter, Throwable, or Food.
-	 * @param float $useDuration How long the item takes to use in seconds
-	 * @param float $movementModifier Modifier value to scale the players movement speed when item is in use
+	 * Determines how an item behaves while being used.
+	 * @param float       $movementModifier Modifier applied to player movement speed
+	 * @param float       $useDuration       How long the item takes to use (seconds)
+	 * @param bool        $emitVibrations    Whether the item emits vibration events
+	 * @param string|null $startSound        Sound played when use starts
 	 */
-	public function __construct(float $movementModifier, float $useDuration = 0) {
-		$this->useDuration = $useDuration;
+	public function __construct(
+		float $movementModifier = 1.0,
+		float $useDuration = 0.0,
+		bool $emitVibrations = false,
+		?string $startSound = null
+	) {
 		$this->movementModifier = $movementModifier;
+		$this->useDuration = $useDuration;
+		$this->emitVibrations = $emitVibrations;
+		$this->startSound = $startSound;
 	}
 
 	public function getName(): string {
@@ -23,10 +34,15 @@ final class UseModifiersComponent implements ItemComponent {
 	}
 
 	public function getValue(): array {
-		return [
+		$value = [
 			"movement_modifier" => $this->movementModifier,
-			"use_duration" => $this->useDuration
+			"use_duration" => $this->useDuration,
+			"emit_vibrations" => $this->emitVibrations
 		];
+		if($this->startSound !== null){
+			$value["start_sound"] = $this->startSound;
+		}
+		return $value;
 	}
 
 	public function getPropertyMapping(): ?array {
@@ -34,6 +50,11 @@ final class UseModifiersComponent implements ItemComponent {
 	}
 
 	public static function fromJson(mixed $data): static {
-		return new self($data["movement_modifier"] ?? 1.0, $data["use_duration"] ?? 0);
+		return new self(
+			(float) ($data["movement_modifier"] ?? 1.0),
+			(float) ($data["use_duration"] ?? 0.0),
+			(bool) ($data["emit_vibrations"] ?? false),
+			$data["start_sound"] ?? null
+		);
 	}
 }

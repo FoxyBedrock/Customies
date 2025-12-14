@@ -43,7 +43,7 @@ final class CustomiesItemFactory {
 		'hand_equipped' => false,
 		'liquid_clipped' => false,
 		'max_stack_size' => 64,
-		'mining_speed' => 1,
+		'mining_speed' => 1.0,
 		'should_despawn' => true,
 		'stacked_by_data' => false,
 		'use_animation' => 0,
@@ -157,7 +157,9 @@ final class CustomiesItemFactory {
 		// Initialize item_properties with defaults
 		$properties = CompoundTag::create();
 		foreach(self::PROPERTY_DEFAULTS as $name => $default) {
-			$properties->setTag($name, NBT::getTagType($default));
+			$properties
+				->setTag($name, NBT::getTagType($default))
+				->setByte("hidden_in_commands", 2);
 		}
 
 		// Set creative info
