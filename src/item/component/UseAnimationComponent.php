@@ -36,6 +36,10 @@ final class UseAnimationComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return ['use_animation' => 'value'];
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data ?? self::ANIMATION_NONE);
 	}

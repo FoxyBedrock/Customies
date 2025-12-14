@@ -27,6 +27,10 @@ final class DurabilitySensorComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	// I dont know if this will work | TODO test it and see what it outputs
 	public function addDurabilityThreshold(int $durability, string $particleType = "", string $soundEvent = ""): self {
 		$this->durabilityThresholds[] = [

@@ -1,6 +1,6 @@
 <?php
 
-namespace customiesdevs\customies\item;
+namespace customiesdevs\customies\json;
 
 use customiesdevs\customies\item\component\AllowOffHandComponent;
 use customiesdevs\customies\item\component\BlockPlacerComponent;

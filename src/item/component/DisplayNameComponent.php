@@ -26,6 +26,10 @@ final class DisplayNameComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data["value"] ?? "");
 	}

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies;
 
-use customiesdevs\customies\block\BlockManager;
 use customiesdevs\customies\block\CustomiesBlockFactory;
-use customiesdevs\customies\item\ItemManager;
+use customiesdevs\customies\json\BlockManager;
+use customiesdevs\customies\json\ItemManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\SingletonTrait;

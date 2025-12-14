@@ -1,7 +1,8 @@
 <?php
 
-namespace customiesdevs\customies\block;
+namespace customiesdevs\customies\json;
 
+use customiesdevs\customies\block\BlockComponents;
 use customiesdevs\customies\block\component\BlockComponent;
 use customiesdevs\customies\block\component\CollisionBoxComponent;
 use customiesdevs\customies\block\component\CraftingTableComponent;

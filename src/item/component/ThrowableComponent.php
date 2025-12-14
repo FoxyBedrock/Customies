@@ -52,6 +52,10 @@ final class ThrowableComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self(
 			$data["do_swing_animation"] ?? false, 

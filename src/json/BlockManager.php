@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block;
+namespace customiesdevs\customies\json;
 
+use customiesdevs\customies\block\CustomiesBlockFactory;
 use customiesdevs\customies\Customies;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use pocketmine\block\Block;

@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class ItemVisualComponent implements BlockComponent {
+class EmbeddedVisualComponent implements BlockComponent {
 
 	private GeometryComponent $geometry;
 	private MaterialInstancesComponent $materialInstances;
@@ -13,13 +13,13 @@ class ItemVisualComponent implements BlockComponent {
 	}
 
 	public function getName(): string {
-		return 'minecraft:item_visual';
+		return 'minecraft:embedded_visual';
 	}
 
 	public function getValue(): array {
 		return [
-			"geometryDescription" => $this->geometry->getValue(),
-			"materialInstancesDescription" => $this->materialInstances->getValue()
+			"geometry" => $this->geometry->getValue(),
+			"material_instances" => $this->materialInstances->getValue()
 		];
 	}
 

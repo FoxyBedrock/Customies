@@ -25,6 +25,10 @@ final class AllowOffHandComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return ['allow_off_hand' => 'value'];
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data ?? true);
 	}

@@ -21,13 +21,34 @@ use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
-use customiesdevs\customies\item\properties\ItemProperties;
+use customiesdevs\customies\util\NBT;
 use ReflectionClass;
 
 use function array_values;
 
 final class CustomiesItemFactory {
 	use SingletonTrait;
+
+	/**
+	 * Default property values for item_properties
+	 */
+	private const PROPERTY_DEFAULTS = [
+		'allow_off_hand' => false,
+		'can_destroy_in_creative' => true,
+		'damage' => 0,
+		'enchantable_slot' => 'none',
+		'enchantable_value' => 0,
+		'foil' => false,
+		'frame_count' => 1,
+		'hand_equipped' => false,
+		'liquid_clipped' => false,
+		'max_stack_size' => 64,
+		'mining_speed' => 1,
+		'should_despawn' => true,
+		'stacked_by_data' => false,
+		'use_animation' => 0,
+		'use_duration' => 0,
+	];
 
 	/**
 	 * @var ItemTypeEntry[]
@@ -127,23 +148,64 @@ final class CustomiesItemFactory {
 	/**
 	 * Creates the NBT data for the item. This includes the components and their values.
 	 * If the item does not have components, an empty CompoundTag is returned.
-	 * @param Item $item The item for which to create the NBT data
-	 * @param string $identifier The string identifier for the item, usually in the format "namespace:item_name"
-	 * @param int $itemId The numerical ID to be assigned to the item
-	 * @param CreativeInventoryInfo|null $creativeInfo The creative inventory info for the item, if any
-	 * @return CompoundTag The NBT data for the item
 	 */
 	private function createItemNbt(Item $item, string $identifier, int $itemId, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
-		if (!($item instanceof ItemComponents)) {
+		if(!($item instanceof ItemComponents)) {
 			return CompoundTag::create();
 		}
 
-		$builder = new ItemProperties();
-		$builder->applyComponents($item->getComponents());
-		$builder->setCreativeInfo($creativeInfo);
+		// Initialize item_properties with defaults
+		$properties = CompoundTag::create();
+		foreach(self::PROPERTY_DEFAULTS as $name => $default) {
+			$properties->setTag($name, NBT::getTagType($default));
+		}
 
-		$components = $builder->buildComponentsTag();
-		
+		// Set creative info
+		if($creativeInfo !== null) {
+			$properties->setTag('creative_category', NBT::getTagType($creativeInfo->getNumericCategory()));
+			$properties->setTag('creative_group', NBT::getTagType($creativeInfo->getGroup()));
+		}
+
+		$tags = [];
+		$componentsTag = CompoundTag::create();
+
+		// Process each component
+		foreach($item->getComponents() as $component) {
+			$name = $component->getName();
+			$value = $component->getValue();
+			$tag = NBT::getTagType($value);
+
+			// Icon goes to item_properties
+			if($name === 'minecraft:icon') {
+				$properties->setTag('minecraft:icon', $tag);
+				continue;
+			}
+
+			// Tags go to item_tags
+			if($name === 'minecraft:tags') {
+				$tags = $value['tags'] ?? [];
+				$componentsTag->setTag($name, $tag);
+				continue;
+			}
+
+			// Components with property mappings override item_properties
+			$mapping = $component->getPropertyMapping();
+			if($mapping !== null) {
+				foreach($mapping as $prop => $key) {
+					$properties->setTag($prop, NBT::getTagType($value[$key]));
+				}
+				continue;
+			}
+
+			// Everything else goes to components
+			$componentsTag->setTag($name, $tag);
+		}
+
+		$components = CompoundTag::create()
+			->setTag('item_properties', $properties)
+			->setTag('item_tags', NBT::getTagType($tags))
+			->merge($componentsTag);
+
 		return CompoundTag::create()
 			->setTag('components', $components)
 			->setInt('id', $itemId)

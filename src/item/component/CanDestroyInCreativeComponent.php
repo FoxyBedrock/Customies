@@ -25,6 +25,10 @@ final class CanDestroyInCreativeComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return ['can_destroy_in_creative' => 'value'];
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data ?? true);
 	}

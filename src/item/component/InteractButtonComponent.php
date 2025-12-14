@@ -30,6 +30,10 @@ final class InteractButtonComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data ?? "action.interact.use");
 	}

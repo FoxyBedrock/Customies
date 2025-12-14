@@ -25,6 +25,10 @@ final class DyeableComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	public static function fromJson(mixed $data): static {
 		return new self($data["default_color"] ?? "#ffffff");
 	}

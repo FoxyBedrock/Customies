@@ -33,6 +33,10 @@ final class DiggerComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	/**
 	 * Add blocks to the `destroy_speeds` array in the required format.
 	 * @param int $speed Digging speed for the correlating block(s)

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace customiesdevs\customies\item;
+namespace customiesdevs\customies\json;
 
 use customiesdevs\customies\Customies;
 use customiesdevs\customies\item\CreativeInventoryInfo;

@@ -38,6 +38,10 @@ final class BlockPlacerComponent implements ItemComponent {
 		];
 	}
 
+	public function getPropertyMapping(): ?array {
+		return null;
+	}
+
 	/**
 	 * TODO: Update this
 	 * Add blocks to the `use_on` array in the required format.
