@@ -66,7 +66,8 @@ trait RotatableTrait {
 					->setFloat("SZP", 0.0)
 					->setFloat("TX", 0.0)
 					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)->setByte("hasJsonVersionBeforeValidation", 0)
+					->setFloat("TZ", 0.0)
+					->setByte("hasJsonVersionBeforeValidation", 0)
 				),
 			(new Permutation("q.block_state('customies:rotation') == 4"))
 				->withComponent("minecraft:transformation", CompoundTag::create()
@@ -84,7 +85,8 @@ trait RotatableTrait {
 					->setFloat("SZP", 0.0)
 					->setFloat("TX", 0.0)
 					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)->setByte("hasJsonVersionBeforeValidation", 0)
+					->setFloat("TZ", 0.0)
+					->setByte("hasJsonVersionBeforeValidation", 0)
 				),
 			(new Permutation("q.block_state('customies:rotation') == 5"))
 				->withComponent("minecraft:transformation", CompoundTag::create()
@@ -102,7 +104,8 @@ trait RotatableTrait {
 					->setFloat("SZP", 0.0)
 					->setFloat("TX", 0.0)
 					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)->setByte("hasJsonVersionBeforeValidation", 0)
+					->setFloat("TZ", 0.0)
+					->setByte("hasJsonVersionBeforeValidation", 0)
 				),
 		];
 	}
