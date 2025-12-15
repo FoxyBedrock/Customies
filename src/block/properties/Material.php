@@ -14,14 +14,43 @@ final class Material {
 	public const TARGET_SOUTH = "south";
 	public const TARGET_WEST = "west";
 
+	/* packed_bools bit flags (byte) */
+	/** Enables directional face shading */
+	public const FLAG_FACE_DIMMING       = 0x01;
+	/** Enables randomized UV rotation per face */
+	public const FLAG_RANDOM_UV_ROTATION = 0x02;
+	/** Enables texture variation support */
+	public const FLAG_TEXTURE_VARIATION  = 0x04;
+
 	/**
-	 * @param string $target The targeted face for the material. Possible values are: "*", "sides", "up", "down", "north", "east", "south", "west".
-	 * @param string $texture Texture name for the material.
-	 * @param RenderMethod $renderMethod The render method to use.
-	 * @param TintMethod $tintMethod Tint multiplied to the color. Tint method logic varies, but often refers to the "rain" and "temperature" of the biome the block is placed in to compute the tint.
-	 * @param float $ambientOcclusion If this material has ambient occlusion applied when lighting, shadows will be created around and underneath the block. Decimal value controls exponent applied to a value after lighting.
-	 * @param boolean $faceDimming This material should be dimmed by the direction it's facing.
-	 * @param boolean $isotropic Should the faces that this material is applied to randomize their UVs?
+	 * @param string $target
+	 * Targeted face for the material.
+	 * Valid values:
+	 *  - "*"
+	 *  - "sides"
+	 *  - "up"
+	 *  - "down"
+	 *  - "north"
+	 *  - "east"
+	 *  - "south"
+	 *  - "west"
+	 * @param string $texture
+	 * Texture identifier used by this material instance.
+	 * @param RenderMethod $renderMethod
+	 * Render method controlling how the block is drawn
+	 * (opaque, blend, alpha_test, etc).
+	 * @param TintMethod $tintMethod
+	 * Tint logic applied to the texture (biome-based, none, etc).
+	 * @param float $ambientOcclusion
+	 * Ambient occlusion strength. Typically `1.0`.
+	 * @param int $packedBools
+	 * Bitmask controlling material behavior.
+	 * Supported flags:
+	 *  - {@see self::FLAG_FACE_DIMMING}
+	 *  - {@see self::FLAG_RANDOM_UV_ROTATION}
+	 *  - {@see self::FLAG_TEXTURE_VARIATION}
+	 * @param bool $alphaMaskedTint
+	 * Whether the tint should only apply to alpha-masked pixels.
 	 */
 	public function __construct(
 		private readonly string $target,
@@ -29,8 +58,8 @@ final class Material {
 		private readonly RenderMethod $renderMethod = RenderMethod::OPAQUE,
 		private readonly TintMethod $tintMethod = TintMethod::NONE,
 		private readonly float $ambientOcclusion = 1.0,
-		private readonly bool $faceDimming = false,
-		private readonly bool $isotropic = false
+		private readonly int $packedBools = self::FLAG_FACE_DIMMING,
+		private readonly bool $alphaMaskedTint = false,
 	) {}
 
 	/**
@@ -41,26 +70,63 @@ final class Material {
 		return $this->target;
 	}
 
+	/**
+	 * Creates a Material instance from a decoded material definition.
+	 * @param string $target
+	 * @param array{
+	 *   texture: string,
+	 *   render_method?: string,
+	 *   tint_method?: string,
+	 *   ambient_occlusion?: float|int,
+	 *   packed_bools?: int,
+	 *   face_dimming?: bool|int,
+	 *   isotropic?: bool|int,
+	 *   alpha_masked_tint?: bool|int
+	 * } $data
+	 */
 	public static function fromArray(string $target, array $data): self {
+		$packedBools = 0;
+		if(isset($data["packed_bools"])){
+			$packedBools = (int) $data["packed_bools"];
+		}else{
+			if(!empty($data["face_dimming"])){
+				$packedBools |= self::FLAG_FACE_DIMMING;
+			}
+			if(!empty($data["isotropic"])){
+				$packedBools |= self::FLAG_RANDOM_UV_ROTATION;
+			}
+		}
 		return new self(
 			$target,
 			$data["texture"],
 			RenderMethod::tryFrom($data["render_method"] ?? "") ?? RenderMethod::OPAQUE,
 			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE,
-			(float)($data["ambient_occlusion"] ?? 1.0),
-			(bool)($data["packed_bools"] ?? 0x01),
-			(bool)($data["isotropic"] ?? false)
+			(float) ($data["ambient_occlusion"] ?? 1.0),
+			$packedBools,
+			(bool) ($data["alpha_masked_tint"] ?? false)
 		);
-	}	
-	
+	}
+
+	/**
+	 * Converts the material into Bedrock-compatible NBT/JSON format.
+	 *
+	 * @return array{
+	 *   texture: string,
+	 *   render_method: string,
+	 *   tint_method: string,
+	 *   ambient_occlusion: float,
+	 *   packed_bools: int,
+	 *   alpha_masked_tint: bool
+	 * }
+	 */
 	public function toArray(): array {
 		return [
 			"texture" => $this->texture,
 			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
-			"ambient_occlusion" => $this->ambientOcclusion,	
-			"packed_bools" => $this->faceDimming,
-			"isotropic" => $this->isotropic
+			"ambient_occlusion" => $this->ambientOcclusion,
+			"packed_bools" => $this->packedBools,
+			"alpha_masked_tint" => $this->alphaMaskedTint
 		];
 	}
 }

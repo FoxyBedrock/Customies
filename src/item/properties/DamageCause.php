@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\properties;
 
-final class DamageCause {
+/**
+ * Represents all possible causes of damage in the game.
+ */
+enum DamageCause: string {
 	const NONE = "none";
 	const ALL = "all";
 	const ANVIL = "anvil";

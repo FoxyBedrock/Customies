@@ -38,7 +38,10 @@ use function strcmp;
 use function usort;
 
 final class CustomiesBlockFactory {
-	use SingletonTrait;
+	use SingletonTrait {
+		setInstance as private;
+		reset as private;
+	}
 
 	/**
 	 * @var Closure[]
@@ -47,28 +50,28 @@ final class CustomiesBlockFactory {
 	private array $blockFuncs = [];
 	/** @var BlockPaletteEntry[] */
 	private array $blockPaletteEntries = [];
-	/** @var array<string, Block> */
+	/** @var array<string, Block> Map of block identifiers to block instances */
 	private array $customBlocks = [];
+	/** @var array<string, CreativeGroup> Map of group names to creative groups */
 	private array $groups = [];
 
 	/**
 	 * Adds a worker initialize hook to the async pool to sync the BlockFactory for every thread worker that is created.
 	 * It is especially important for the workers that deal with chunk encoding, as using the wrong runtime ID mappings
 	 * can result in massive issues with almost every block showing as the wrong thing and causing lag to clients.
-	 * @param string $cachePath The path where the block state cache file is located (usually server's root folder).
 	 */
-	public function addWorkerInitHook(string $cachePath): void {
+	public function addWorkerInitHook(): void {
 		$server = Server::getInstance();
 		$blocks = $this->blockFuncs;
-		$server->getAsyncPool()->addWorkerStartHook(static function (int $worker) use ($cachePath, $server, $blocks): void {
-			$server->getAsyncPool()->submitTaskToWorker(new AsyncRegisterBlocksTask($cachePath, $blocks), $worker);
+		$server->getAsyncPool()->addWorkerStartHook(static function (int $worker) use ($server, $blocks): void {
+			$server->getAsyncPool()->submitTaskToWorker(new AsyncRegisterBlocksTask($blocks), $worker);
 		});
 	}
 
 	/**
 	 * Get a custom block from its identifier. An exception will be thrown if the block is not registered.
-	 * @param string $identifier
-	 * @throws InvalidArgumentException
+	 * @param string $identifier Unique block identifier (e.g. "namespace:block_name")
+	 * @throws InvalidArgumentException If the block is not registered
 	 * @return Block A clone of the registered block.
 	 */
 	public function get(string $identifier): Block {
@@ -112,7 +115,13 @@ final class CustomiesBlockFactory {
 	 * @param Closure|null $deserializer Optional closure that takes a BlockStateReader and returns a new instance of the block after reading the state.
 	 * @throws InvalidArgumentException If the blockFunc does not return a Block instance.
 	 */
-	public function registerBlock(Closure $blockFunc, string $identifier, ?CreativeInventoryInfo $creativeInfo = null, ?Closure $serializer = null, ?Closure $deserializer = null): void {
+	public function registerBlock(
+		Closure $blockFunc,
+		string $identifier,
+		?CreativeInventoryInfo $creativeInfo = null,
+		?Closure $serializer = null,
+		?Closure $deserializer = null
+	): void {
 		$block = $blockFunc();
 		if(!$block instanceof Block) {
 			throw new InvalidArgumentException("Class returned from closure is not a Block");
@@ -136,7 +145,6 @@ final class CustomiesBlockFactory {
 				$blockProperties[] = $blockProperty->toNBT();
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
-
 			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 			// it a smoother experience for the end-user.
 			$components->setTag("minecraft:on_player_placing", CompoundTag::create());
@@ -157,12 +165,12 @@ final class CustomiesBlockFactory {
 				BlockPalette::getInstance()->insertState($blockState, $meta);
 			}
 
-			$serializer ??= static function (Permutable $block) use ($identifier, $blockPropertyNames) : BlockStateWriter {
+			$serializer ??= static function (Permutable $block) use ($identifier) : BlockStateWriter {
 				$b = BlockStateWriter::create($identifier);
 				$block->serializeState($b);
 				return $b;
 			};
-			$deserializer ??= static function (BlockStateReader $in) use ($block, $identifier, $blockPropertyNames) : Permutable {
+			$deserializer ??= static function (BlockStateReader $in) use ($identifier) : Permutable {
 				$b = CustomiesBlockFactory::getInstance()->get($identifier);
 				assert($b instanceof Permutable);
 				$b->deserializeState($in);
@@ -201,7 +209,7 @@ final class CustomiesBlockFactory {
 				CreativeInventoryInfo::CATEGORY_ITEMS => CreativeCategory::ITEMS,
 				CreativeInventoryInfo::CATEGORY_NATURE => CreativeCategory::NATURE,
 				CreativeInventoryInfo::CATEGORY_EQUIPMENT => CreativeCategory::EQUIPMENT,
-				default => throw new AssumptionFailedError("Unknown category")
+				default => throw new AssumptionFailedError("Unknown Creative Category")
 			};
 
 			CreativeInventory::getInstance()->add($block->asItem(), $category, $group);
@@ -218,8 +226,7 @@ final class CustomiesBlockFactory {
 		foreach($this->blockPaletteEntries as $i => $entry) {
 			/** @var CompoundTag $root */
 			$root = $entry->getStates()->getRoot();
-			$root->setTag("vanilla_block_data", CompoundTag::create()
-					->setInt("block_id", 10000 + $i));
+			$root->setTag("vanilla_block_data", CompoundTag::create()->setInt("block_id", 10000 + $i));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));
 		}
 	}

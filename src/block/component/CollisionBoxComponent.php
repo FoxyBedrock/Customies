@@ -21,8 +21,9 @@ class CollisionBoxComponent implements BlockComponent {
 	}
 
 	/**
-	 * Add a collision box.
-	 * @param Box $box The box to add
+	 * Adds a single collision box.
+	 * @param Box $box
+	 * The collision box to add.
 	 * @return $this
 	 */
 	public function addBox(Box $box): self {
@@ -31,8 +32,9 @@ class CollisionBoxComponent implements BlockComponent {
 	}
 
 	/**
-	 * Add collision boxes.
-	 * @param Box[] $boxes The boxes to add
+	 * Adds multiple collision boxes.
+	 * @param Box[] $boxes
+	 * An array of collision boxes to add.
 	 * @return $this
 	 */
 	public function addBoxes(array $boxes): self {

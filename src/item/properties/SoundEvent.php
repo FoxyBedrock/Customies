@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\properties;
 
-final class SoundEvent {
+/**
+ * Represents all possible sound events in the game.
+ */
+enum SoundEvent: string {
 	const ITEM_USE_ON = "item.use.on";
 	const HIT = "hit";
 	const STEP = "step";

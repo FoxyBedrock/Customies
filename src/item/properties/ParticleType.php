@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\properties;
 
-final class ParticleType {
+/**
+ * Represents all available particle types in the game.
+ */
+enum ParticleType: string {
 	const NONE = "none";
 	const BUBBLE = "bubble";
 	const BUBBLE_MANUAL = "bubblemanual";

@@ -4,27 +4,51 @@ namespace customiesdevs\customies\block\component;
 
 class LiquidDetectionComponent implements BlockComponent {
 
+	/** The block stops liquid flow (default behavior). */
 	public const BLOCKING = "blocking";
+	/** The block is destroyed completely when touched by liquid. */
 	public const BROKEN = "broken";
+	/** The block is destroyed and drops its item form. */
 	public const POPPED = "popped";
+	/** The block does not react; liquid visually flows through it. */
 	public const NO_REACTION = "no_reaction";
 
+	/** @var string The liquid type this rule applies to (currently only "water"). */
 	private string $liquidType;
+	/** @var bool Whether the block can contain the liquid (e.g. waterlogged). */
 	private bool $canContainLiquid;
+	/** @var string Reaction when liquid touches the block. */
 	private string $onLiquidTouches;
+	/**
+	 * @var string[]
+	 * Directions from which liquid flow is blocked.
+	 * Valid values: "up", "down", "north", "south", "east", "west"
+	 */
 	private array $stopsLiquidFlowingFromDirection;
 
 	/**
-	 * @param string $liquidType The type of liquid this detection rule is for. Currently, water is the only supported liquid type. If this field is omitted, water will be the liquid type by default.
-	 * @param bool $canContainLiquid Whether this block can contain the liquid. For example, if the liquid type is water, this means the block can be waterlogged.
-	 * @param string $onLiquidTouches How the block reacts to flowing water. Must be one of the following options:
-					- "blocking" - The default value for this field. The block stops the liquid from flowing.
-					- "broken" - The block is destroyed completely.
-					- "popped" - The block is destroyed and its item is spawned.
-					- "no_reaction" - The block is unaffected; visually, the liquid will flow through the block.
-	 * @param array $stopsLiquidFlowingFromDirection When a block contains a liquid, controls the directions in which the liquid can't flow out from the block. Also controls the directions in which a block can stop liquid flowing into it if no_reaction is set for the on_liquid_touches field. Can be a list of the following directions: "up", "down", "north", "south", "east", "west". The default is an empty list; this means that liquid can flow out of all directions by default.	
+	 * Creates a new liquid detection rule.
+	 * @param string $liquidType
+	 * The liquid type this rule applies to. Defaults to `"water"`.
+	 * @param bool $canContainLiquid
+	 * Whether the block can contain the liquid (e.g. waterlogging).
+	 * @param string $onLiquidTouches
+	 * How the block reacts when liquid touches it.
+	 * Must be one of:
+	 * - {@see self::BLOCKING}
+	 * - {@see self::BROKEN}
+	 * - {@see self::POPPED}
+	 * - {@see self::NO_REACTION}
+	 * @param string[] $stopsLiquidFlowingFromDirection
+	 * Directions in which liquid is prevented from flowing.
+	 * If empty, liquid can flow freely in all directions.
 	 */
-	public function __construct(string $liquidType = "water", bool $canContainLiquid = false, string $onLiquidTouches = self::BLOCKING, array $stopsLiquidFlowingFromDirection = []) {
+	public function __construct(
+		string $liquidType = "water",
+		bool $canContainLiquid = false,
+		string $onLiquidTouches = self::BLOCKING,
+		array $stopsLiquidFlowingFromDirection = []
+	) {
 		$this->liquidType = $liquidType;
 		$this->canContainLiquid = $canContainLiquid;
 		$this->onLiquidTouches = $onLiquidTouches;

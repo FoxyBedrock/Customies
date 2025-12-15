@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
+use customiesdevs\customies\item\properties\DamageCause;
+
 final class DamageAbsorptionComponent implements ItemComponent {
 
+	 /**
+	 * List of damage causes that can be absorbed by the item.
+	 * @var DamageCause[] Must contain at least 1 item for meaningful effect.
+	 */
 	private array $absorbableCauses;
 
 	/**
@@ -14,7 +20,7 @@ final class DamageAbsorptionComponent implements ItemComponent {
 	 * Because of this, the item also needs a `minecraft:durability` component.
 	 * @param array $absorbableCauses List of damage causes that can be absorbed by the item. By default, no damage cause is absorbed. Value must have at least 1 items.
 	 */
-	public function __construct(array $absorbableCauses) {
+	public function __construct(array $absorbableCauses = []) {
 		$this->absorbableCauses = $absorbableCauses;
 	}
 
@@ -24,7 +30,10 @@ final class DamageAbsorptionComponent implements ItemComponent {
 
 	public function getValue(): array {
 		return [
-			"absorbable_causes" => $this->absorbableCauses
+			"absorbable_causes" => array_map(
+				fn(DamageCause $cause) => $cause->value,
+				$this->absorbableCauses
+			)
 		];
 	}
 
@@ -32,7 +41,29 @@ final class DamageAbsorptionComponent implements ItemComponent {
 		return null;
 	}
 
+	/**
+	 * Adds a single damage cause to the absorbable list.
+	 * @param DamageCause $cause
+	 */
+	public function addCause(DamageCause $cause): self {
+		if(!in_array($cause, $this->absorbableCauses, true)){
+			$this->absorbableCauses[] = $cause;
+		}
+		return $this;
+	}
+
 	public static function fromJson(mixed $data): static {
-		return new self($data["absorbable_causes"] ?? []);
+		$causes = [];
+		if(is_array($data["absorbable_causes"] ?? null)){
+			foreach($data["absorbable_causes"] as $cause){
+				if(is_string($cause)){
+					$enumCause = DamageCause::tryFrom($cause);
+					if($enumCause !== null){
+						$causes[] = $enumCause;
+					}
+				}
+			}
+		}
+		return new self($causes);
 	}
 }

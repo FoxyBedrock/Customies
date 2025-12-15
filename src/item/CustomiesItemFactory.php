@@ -27,11 +27,12 @@ use ReflectionClass;
 use function array_values;
 
 final class CustomiesItemFactory {
-	use SingletonTrait;
+	use SingletonTrait {
+		setInstance as private;
+		reset as private;
+	}
 
-	/**
-	 * Default property values for item_properties
-	 */
+	/** Default values for item_properties */
 	private const PROPERTY_DEFAULTS = [
 		'allow_off_hand' => false,
 		'can_destroy_in_creative' => true,
@@ -50,10 +51,9 @@ final class CustomiesItemFactory {
 		'use_duration' => 0,
 	];
 
-	/**
-	 * @var ItemTypeEntry[]
-	 */
+	/** @var ItemTypeEntry[] */
 	private array $itemTableEntries = [];
+	/** @var CreativeGroup[] */
 	private array $groups = [];
 
 	/**
@@ -84,7 +84,7 @@ final class CustomiesItemFactory {
 	}
 
 	/**
-	 * Returns custom item entries
+	 * Returns all registered item table entries.
 	 * @return ItemTypeEntry[]
 	 */
 	public function getItemTableEntries(): array {
@@ -108,46 +108,46 @@ final class CustomiesItemFactory {
 
 		GlobalItemDataHandlers::getDeserializer()->map($identifier, fn() => clone $item);
 		GlobalItemDataHandlers::getSerializer()->map($item, fn() => new SavedItemData($identifier));
-
 		StringToItemParser::getInstance()->register($identifier, fn() => clone $item);
 
 		// This is where the components are added to the item
 		$componentBased = $item instanceof ItemComponents;
-		$nbt = $this->createItemNbt($item, $identifier, $itemId, $creativeInfo);
-
 		if($creativeInfo !== null){
 			$this->loadGroups();
 			if($creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_ALL || $creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_COMMANDS){
 				return;
 			}
-
-			$group = $this->groups[$creativeInfo->getGroup()] ?? ($creativeInfo->getGroup() !== "" && $creativeInfo->getGroup() !== CreativeInventoryInfo::NONE ? new CreativeGroup(
-				new Translatable($creativeInfo->getGroup()),
-				$item
-			) : null);
-
-			if($group !== null){
+			$group = $this->groups[$creativeInfo->getGroup()] ?? null;
+			if(
+				$group === null && $creativeInfo->getGroup() !== "" &&
+				$creativeInfo->getGroup() !== CreativeInventoryInfo::NONE
+			){
+				$group = new CreativeGroup(new Translatable($creativeInfo->getGroup()), $item);
 				$this->groups[$group->getName()->getText()] = $group;
 			}
-
 			$category = match ($creativeInfo->getCategory()) {
 				CreativeInventoryInfo::CATEGORY_CONSTRUCTION => CreativeCategory::CONSTRUCTION,
 				CreativeInventoryInfo::CATEGORY_ITEMS => CreativeCategory::ITEMS,
 				CreativeInventoryInfo::CATEGORY_NATURE => CreativeCategory::NATURE,
 				CreativeInventoryInfo::CATEGORY_EQUIPMENT => CreativeCategory::EQUIPMENT,
-				default => throw new AssumptionFailedError("Unknown category")
+				default => throw new AssumptionFailedError("Unknown Creative Category")
 			};
-
 			CreativeInventory::getInstance()->add($item, $category, $group);
-		}	
-
-		$this->itemTableEntries[$identifier] = $entry = new ItemTypeEntry($identifier, $itemId, $componentBased, $componentBased ? 1 : 0, new CacheableNbt($nbt));
+		}
+		$nbt = $this->createItemNbt($item, $identifier, $itemId, $creativeInfo);
+		$entry = new ItemTypeEntry(
+			$identifier,
+			$itemId,
+			$componentBased,
+			$componentBased ? 1 : 0,
+			new CacheableNbt($nbt)
+		);
+		$this->itemTableEntries[$identifier] = $entry;
 		$this->registerCustomItemMapping($identifier, $itemId, $entry);
 	}
 
 	/**
-	 * Creates the NBT data for the item. This includes the components and their values.
-	 * If the item does not have components, an empty CompoundTag is returned.
+	 * Creates the CompoundTag for an item, including components and default properties.
 	 */
 	private function createItemNbt(Item $item, string $identifier, int $itemId, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
 		if(!($item instanceof ItemComponents)) {
@@ -250,7 +250,8 @@ final class CustomiesItemFactory {
 	public function registerBlockItem(string $identifier, Block $block): void {
 		$itemId = $block->getIdInfo()->getBlockTypeId();
 		StringToItemParser::getInstance()->registerBlock($identifier, fn() => clone $block);
-		$this->itemTableEntries[] = $entry = new ItemTypeEntry($identifier, $itemId, false, 2, new CacheableNbt(CompoundTag::create()));
+		$entry = new ItemTypeEntry($identifier, $itemId, false, 2, new CacheableNbt(CompoundTag::create()));
+		$this->itemTableEntries[] = $entry;
 		$this->registerCustomItemMapping($identifier, $itemId, $entry);
 
 		$blockItemIdMap = BlockItemIdMap::getInstance();

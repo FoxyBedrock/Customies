@@ -23,7 +23,18 @@ use function range;
 class NBT {
 
 	/**
-	 * Attempts to return the correct Tag for the provided type.
+	 * Attempts to return the correct NBT Tag for the provided PHP value.
+	 * Supported conversions:
+	 * - array      → ListTag or CompoundTag
+	 * - bool       → ByteTag
+	 * - float      → FloatTag
+	 * - int        → IntTag
+	 * - string     → StringTag
+	 * - CompoundTag → Returned as-is
+	 *
+	 * @param mixed $type The value to convert into an NBT Tag
+	 * @return Tag|null Returns the corresponding Tag instance, or null if the
+	 *                  type cannot be converted.
 	 */
 	public static function getTagType($type): ?Tag {
 		return match (true) {
@@ -38,7 +49,11 @@ class NBT {
 	}
 
 	/**
-	 * Creates a Tag that is either a ListTag or CompoundTag based on the data types of the keys in the provided array.
+	 * Creates an NBT Tag from an array.
+	 * - If the array uses sequential numeric keys (0..n), a ListTag is created.
+	 * - Otherwise, a CompoundTag is created with each key mapped to a Tag.
+	 * @param array $array The array to convert into an NBT Tag
+	 * @return Tag Returns either a ListTag or CompoundTag depending on the array structure
 	 */
 	private static function getArrayTag(array $array): Tag {
 		if(array_keys($array) === range(0, count($array) - 1)) {

@@ -17,7 +17,10 @@ use pocketmine\world\World;
 use ReflectionClass;
 
 class CustomiesEntityFactory {
-	use SingletonTrait;
+	use SingletonTrait {
+		setInstance as private;
+		reset as private;
+	}
 
 	/**
 	 * Register an entity to the EntityFactory and all the required mappings. An optional behaviour identifier can be

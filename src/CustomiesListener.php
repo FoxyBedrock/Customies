@@ -13,14 +13,15 @@ use pocketmine\network\mcpe\protocol\types\Experiments;
 use function count;
 
 final class CustomiesListener implements Listener {
+
 	/** @var BlockPaletteEntry[] */
 	private array $cachedBlockPalette = [];
 	private Experiments $experiments;
 
 	public function __construct() {
 		$this->experiments = new Experiments([
-			// "data_driven_items" is required for custom blocks to render in-game. With this disabled, they will be
-			// shown as the UPDATE texture block.
+			// "data_driven_items" is required for custom blocks to render in-game.
+			// With this disabled, custom blocks will appear as the UPDATE texture block.
 			"data_driven_items" => true,
 		], true);
 	}
@@ -35,7 +36,7 @@ final class CustomiesListener implements Listener {
 				}
 				$packet->levelSettings->experiments = $this->experiments;
 				$packet->blockPalette = $this->cachedBlockPalette;
-			} elseif($packet instanceof ResourcePackStackPacket) {
+			}elseif($packet instanceof ResourcePackStackPacket) {
 				$packet->experiments = $this->experiments;
 			}
 		}
