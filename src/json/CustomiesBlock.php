@@ -25,16 +25,16 @@ class CustomiesBlock extends Block implements BlockComponents {
 	 * to this block if they are registered.
 	 *
 	 * @param array<string, mixed> $components Associative array of component identifiers to data
-	 * @param float|null $hardness The hardness of the block (default 1.0)
-	 * @param int|null $toolType The required tool type to break the block (default BlockToolType::NONE)
-	 * @param int|null $toolHarvestLevel The required tool harvest level (default 0)
+	 * @param float $hardness The hardness of the block (default 1.0)
+	 * @param int $toolType The required tool type to break the block (default BlockToolType::NONE)
+	 * @param int $toolHarvestLevel The required tool harvest level (default 0)
 	 * @param float|null $blastResistance Optional blast resistance
 	 */
 	public function __construct(
 		array $components,
-		?float $hardness = 1.0,
-		?int $toolType = BlockToolType::NONE,
-		?int $toolHarvestLevel = 0,
+		float $hardness = 1.0,
+		int $toolType = BlockToolType::NONE,
+		int $toolHarvestLevel = 0,
 		?float $blastResistance = null
 	) {
 		// Construct the base Block with identifier and block info

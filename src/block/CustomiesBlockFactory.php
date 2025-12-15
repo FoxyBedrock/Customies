@@ -252,8 +252,8 @@ final class CustomiesBlockFactory {
 			}
 			if($creativeInfo !== null) {
 				$propertiesTag->setTag("menu_category", CompoundTag::create()
-					->setString("category", $creativeInfo->getCategory() ?? "")
-					->setString("group", $creativeInfo->getGroup() ?? ""))
+					->setString("category", $creativeInfo->getCategory())
+					->setString("group", $creativeInfo->getGroup()))
 					->setByte("is_hidden_in_commands", 0);
 			}
 			$propertiesTag

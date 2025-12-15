@@ -12,8 +12,8 @@ final class DurabilitySensorComponent implements ItemComponent {
 
 	/**
 	 * Enables an item to emit effects when it receives damage. Because of this, the item also needs a `minecraft:durability` component.
-	 * @param array<int, array{durability: int, particle_type: string, sound_event: string}> $durabilityThresholds
-	 */
+	 * @param array<int, array{durability: int, particle_type: ?string, sound_event: ?string}> $durabilityThresholds
+ 	*/
 	public function __construct(array $durabilityThresholds = []) {
 		$this->durabilityThresholds = $durabilityThresholds;
 	}
