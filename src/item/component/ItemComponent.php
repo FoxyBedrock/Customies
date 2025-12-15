@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
+/**
+ * @template T
+ */
 interface ItemComponent {
 
 	/**

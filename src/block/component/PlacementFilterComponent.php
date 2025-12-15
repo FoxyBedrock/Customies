@@ -2,17 +2,30 @@
 
 namespace customiesdevs\customies\block\component;
 
+use customiesdevs\customies\block\properties\PlacementCondition;
+use InvalidArgumentException;
+
 class PlacementFilterComponent implements BlockComponent {
 
-	private array $allowedFaces;
-	private array $blockFilter;
+	/** @var PlacementCondition[] */
+	private array $conditions = [];
 
 	/**
-	 * TODO Needs more data on this
+	 * @param PlacementCondition[] $conditions (max 64)
 	 */
-	public function __construct(array $allowedFaces = [], array $blockFilter = []) {
-		$this->allowedFaces = $allowedFaces;
-		$this->blockFilter = $blockFilter;
+	public function __construct(array $conditions = []) {
+		if(count($conditions) > 64){
+			throw new InvalidArgumentException("Placement filter may not exceed 64 conditions");
+		}
+		$this->conditions = $conditions;
+	}
+
+	public function addCondition(PlacementCondition $condition): self {
+		if(count($this->conditions) >= 64){
+			throw new InvalidArgumentException("Placement filter may not exceed 64 conditions");
+		}
+		$this->conditions[] = $condition;
+		return $this;
 	}
 
 	public function getName(): string {
@@ -21,20 +34,18 @@ class PlacementFilterComponent implements BlockComponent {
 
 	public function getValue(): array {
 		return [
-			"conditions" => [
-				[
-					"allowed_faces" => $this->allowedFaces,
-					"block_filter" => $this->blockFilter                    
-				]
-			]
+			"conditions" => array_map(
+				static fn(PlacementCondition $c) => $c->toArray(),
+				$this->conditions
+			)
 		];
 	}
 
-	// TODO Needs more data on this
 	public static function fromJson(mixed $data): static {
-		return new self(
-			$data["conditions"][0]["allowed_faces"] ?? [],
-			$data["conditions"][0]["block_filter"] ?? []
-		);
+		$conditions = [];
+		foreach($data["conditions"] ?? [] as $condition){
+			$conditions[] = PlacementCondition::fromArray($condition);
+		}
+		return new self($conditions);
 	}
 }

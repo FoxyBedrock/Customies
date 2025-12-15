@@ -5,20 +5,21 @@ namespace customiesdevs\customies\item\component;
 
 final class WearableComponent implements ItemComponent {
 
-	public const SLOT_ARMOR = "slot.armor";
-	public const SLOT_ARMOR_CHEST = "slot.armor.chest";
-	public const SLOT_ARMOR_FEET = "slot.armor.feet";
 	public const SLOT_ARMOR_HEAD = "slot.armor.head";
+	public const SLOT_ARMOR_CHEST = "slot.armor.chest";
 	public const SLOT_ARMOR_LEGS = "slot.armor.legs";
-	public const SLOT_CHEST = "slot.chest";
-	public const SLOT_ENDERCHEST = "slot.enderchest";
-	public const SLOT_EQUIPPABLE = "slot.equippable";
-	public const SLOT_HOTBAR = "slot.hotbar";
-	public const SLOT_INVENTORY = "slot.inventory";
-	public const SLOT_NONE = "none";
-	public const SLOT_SADDLE = "slot.saddle";
+	public const SLOT_ARMOR_FEET = "slot.armor.feet";
+	public const SLOT_BODY = "slot.armor.body";
 	public const SLOT_WEAPON_MAIN_HAND = "slot.weapon.mainhand";
 	public const SLOT_WEAPON_OFF_HAND = "slot.weapon.offhand";
+
+	public const SLOT_HOTBAR = "slot.hotbar";
+	public const SLOT_INVENTORY = "slot.inventory";
+	public const SLOT_ENDERCHEST = "slot.enderchest";
+	public const SLOT_SADDLE = "slot.saddle";
+	public const SLOT_ARMOR = "slot.armor";
+	public const SLOT_CHEST = "slot.chest";
+	public const SLOT_EQUIPPABLE = "slot.equippable";
 
 	private string $slot;
 	private int $protection;
@@ -54,7 +55,7 @@ final class WearableComponent implements ItemComponent {
 
 	public static function fromJson(mixed $data): static {
 		return new self(
-			$data["slot"] ?? self::SLOT_NONE, 
+			$data["slot"] ?? self::SLOT_WEAPON_MAIN_HAND, 
 			$data["protection"] ?? 0, 
 			$data["hides_player_location"] ?? false
 		);

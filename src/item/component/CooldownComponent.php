@@ -11,17 +11,23 @@ final class CooldownComponent implements ItemComponent {
 	public const CATEGORY_WINDCHARGE = "wind_charge";
 	public const CATEGORY_CHORUS = "chorusfruit";
 
+	public const TYPE_ATTACK = "attack";
+	public const TYPE_USE = "use";
+
 	private string $category;
 	private float $duration;
+	private string $type;
 
 	/**
 	 * The duration of time (in seconds) items with a matching category will spend cooling down before becoming usable again.
 	 * @param string $category All items with the same "category" are put on cooldown when one is used.
 	 * @param float $duration How long the item is on cooldown before being able to be used again.
+	 * @param string $type The type of cooldown (e.g., "use", "attack"). Default is "use".
 	 */
-	public function __construct(string $category, float $duration) {
+	public function __construct(string $category, float $duration, string $type = self::TYPE_USE) {
 		$this->category = $category;
 		$this->duration = $duration;
+		$this->type = $type;
 	}
 
 	public function getName(): string {
@@ -31,7 +37,8 @@ final class CooldownComponent implements ItemComponent {
 	public function getValue(): array {
 		return [
 			"category" => $this->category,
-			"duration" => $this->duration
+			"duration" => $this->duration,
+			"type" => $this->type,
 		];
 	}
 
@@ -40,6 +47,10 @@ final class CooldownComponent implements ItemComponent {
 	}
 
 	public static function fromJson(mixed $data): static {
-		return new self($data["category"] ?? self::CATEGORY_SHIELD, $data["duration"] ?? 0.0);
+		return new self(
+			$data["category"] ?? self::CATEGORY_SHIELD,
+			$data["duration"] ?? 0.0,
+			$data["type"] ?? "use"
+		);
 	}
 }

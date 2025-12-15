@@ -10,12 +10,14 @@ use function implode;
 
 final class DiggerComponent implements ItemComponent {
 
+	/** @var array<int, array{block: array<string, string>, speed: int}> */
 	private array $destroySpeeds;
 	private bool $useEfficiency;
 
 	/**
 	 * Allows a creator to determine how quickly an item can dig specific blocks.
-	 * @param bool $useEfficiency Determines whether the item should be impacted if the `efficiency` enchant is applied to it.
+	 * @param bool $useEfficiency Determines whether the item should be impacted by the Efficiency enchantment.
+	 * @param array<int, array{block: array<string, string>, speed: int}> $destroySpeeds Optional array of destroy speeds.
 	 */
 	public function __construct(bool $useEfficiency, array $destroySpeeds = []) {
 		$this->useEfficiency = $useEfficiency;
@@ -37,12 +39,12 @@ final class DiggerComponent implements ItemComponent {
 		return null;
 	}
 
-	/**
-	 * Add blocks to the `destroy_speeds` array in the required format.
+	 /**
+	 * Adds blocks to the `destroy_speeds` array with a specified speed.
 	 * @param int $speed Digging speed for the correlating block(s)
-	 * @param Block ...$blocks A list of blocks to dig with correlating speeds of digging
+	 * @param Block ...$blocks A list of blocks to dig with the given speed
 	 */
-	public function withBlocks(int $speed, Block ...$blocks): DiggerComponent {
+	public function withBlocks(int $speed, Block ...$blocks): self {
 		foreach($blocks as $block){
 			$this->destroySpeeds[] = [
 				"block" => [
@@ -55,11 +57,11 @@ final class DiggerComponent implements ItemComponent {
 	}
 
 	/**
-	 * Add blocks to the `destroy_speeds` array in the required format.
-	 * @param int $speed Digging speed for the correlating block(s)
-	 * @param string ...$tags A list of blocks to dig with correlating speeds of digging
+	 * Adds block tags to the `destroy_speeds` array with a specified speed.
+	 * @param int $speed Digging speed for the correlating blocks
+	 * @param string ...$tags A list of block tags
 	 */
-	public function withTags(int $speed, string ...$tags): DiggerComponent {
+	public function withTags(int $speed, string ...$tags): self {
 		$query = implode(",", array_map(fn($tag) => "'" . $tag . "'", $tags));
 		$this->destroySpeeds[] = [
 			"block" => [
@@ -70,8 +72,18 @@ final class DiggerComponent implements ItemComponent {
 		return $this;
 	}
 
+	/**
+	 * Returns the array of destroy speeds.
+	 * @return array<int, array{block: array<string, string>, speed: int}>
+	 */
+	public function getDestroySpeeds(): array {
+		return $this->destroySpeeds;
+	}
+
 	public static function fromJson(mixed $data): static {
-		$component = new self($data["use_efficiency"] ?? false, $data["destroy_speeds"] ?? []);
-		return $component;
+		return new self(
+			$data["use_efficiency"] ?? false,
+			$data["destroy_speeds"] ?? []
+		);
 	}
 }
