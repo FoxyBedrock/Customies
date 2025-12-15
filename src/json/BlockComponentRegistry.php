@@ -49,7 +49,6 @@ final class BlockComponentRegistry {
 		'minecraft:liquid_detection' => LiquidDetectionComponent::class,
 		'minecraft:map_color' => MapColorComponent::class,
 		'minecraft:material_instances' => MaterialInstancesComponent::class,
-		'minecraft:movable' => MovableComponent::class,
 		'minecraft:placement_filter' => PlacementFilterComponent::class,
 		'minecraft:random_offset' => RandomOffsetComponent::class,
 		'minecraft:selection_box' => SelectionBoxComponent::class,

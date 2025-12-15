@@ -16,7 +16,7 @@ final class Material {
 
 	/* packed_bools bit flags (byte) */
 	/** Enables directional face shading */
-	public const FLAG_FACE_DIMMING       = 0x01;
+	public const FLAG_FACE_DIMMING = 0x01;
 	/** Enables randomized UV rotation per face */
 	public const FLAG_RANDOM_UV_ROTATION = 0x02;
 	/** Enables texture variation support */
@@ -43,23 +43,13 @@ final class Material {
 	 * Tint logic applied to the texture (biome-based, none, etc).
 	 * @param float $ambientOcclusion
 	 * Ambient occlusion strength. Typically `1.0`.
-	 * @param int $packedBools
-	 * Bitmask controlling material behavior.
-	 * Supported flags:
-	 *  - {@see self::FLAG_FACE_DIMMING}
-	 *  - {@see self::FLAG_RANDOM_UV_ROTATION}
-	 *  - {@see self::FLAG_TEXTURE_VARIATION}
-	 * @param bool $alphaMaskedTint
-	 * Whether the tint should only apply to alpha-masked pixels.
 	 */
 	public function __construct(
 		private readonly string $target,
 		private readonly string $texture,
 		private readonly RenderMethod $renderMethod = RenderMethod::OPAQUE,
 		private readonly TintMethod $tintMethod = TintMethod::NONE,
-		private readonly float $ambientOcclusion = 1.0,
-		private readonly int $packedBools = self::FLAG_FACE_DIMMING,
-		private readonly bool $alphaMaskedTint = false,
+		private readonly float $ambientOcclusion = 1.0
 	) {}
 
 	/**
@@ -78,55 +68,39 @@ final class Material {
 	 *   render_method?: string,
 	 *   tint_method?: string,
 	 *   ambient_occlusion?: float|int,
-	 *   packed_bools?: int,
-	 *   face_dimming?: bool|int,
-	 *   isotropic?: bool|int,
-	 *   alpha_masked_tint?: bool|int
 	 * } $data
 	 */
 	public static function fromArray(string $target, array $data): self {
-		$packedBools = 0;
-		if(isset($data["packed_bools"])){
-			$packedBools = (int) $data["packed_bools"];
-		}else{
-			if(!empty($data["face_dimming"])){
-				$packedBools |= self::FLAG_FACE_DIMMING;
-			}
-			if(!empty($data["isotropic"])){
-				$packedBools |= self::FLAG_RANDOM_UV_ROTATION;
-			}
-		}
 		return new self(
 			$target,
 			$data["texture"],
 			RenderMethod::tryFrom($data["render_method"] ?? "") ?? RenderMethod::OPAQUE,
 			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE,
-			(float) ($data["ambient_occlusion"] ?? 1.0),
-			$packedBools,
-			(bool) ($data["alpha_masked_tint"] ?? false)
+			(float) ($data["ambient_occlusion"] ?? 1.0)
 		);
 	}
 
 	/**
 	 * Converts the material into Bedrock-compatible NBT/JSON format.
-	 *
+	 * @param int $packedBools Context-specific packed_bools value (1=item_visual, 4=permutations, 5=material_instances)
 	 * @return array{
 	 *   texture: string,
 	 *   render_method: string,
 	 *   tint_method: string,
 	 *   ambient_occlusion: float,
-	 *   packed_bools: int,
-	 *   alpha_masked_tint: bool
 	 * }
 	 */
-	public function toArray(): array {
+	public function toArray(int $packedBools = self::FLAG_TEXTURE_VARIATION): array {
 		return [
 			"texture" => $this->texture,
 			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,
-			"packed_bools" => $this->packedBools,
-			"alpha_masked_tint" => $this->alphaMaskedTint
+			"packed_bools" => $packedBools,
+			// Fixed values
+			"alpha_masked_tint" => false,
+			"face_dimming" => true,
+			"isotropic" => false,
 		];
 	}
 }

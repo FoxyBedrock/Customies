@@ -2,6 +2,8 @@
 
 namespace customiesdevs\customies\block\component;
 
+use customiesdevs\customies\block\properties\Material;
+
 class ItemVisualComponent implements BlockComponent {
 
 	private GeometryComponent $geometry;
@@ -19,7 +21,7 @@ class ItemVisualComponent implements BlockComponent {
 	public function getValue(): array {
 		return [
 			"geometryDescription" => $this->geometry->getValue(),
-			"materialInstancesDescription" => $this->materialInstances->getValue()
+			"materialInstancesDescription" => $this->materialInstances->getValue(Material::FLAG_FACE_DIMMING)
 		];
 	}
 

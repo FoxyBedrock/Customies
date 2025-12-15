@@ -25,10 +25,10 @@ class MaterialInstancesComponent implements BlockComponent {
 		return 'minecraft:material_instances';
 	}
 
-	public function getValue(): array {
+	public function getValue(int $packedBools = Material::FLAG_TEXTURE_VARIATION): array {
 		$materials = [];
 		foreach($this->materials as $material){
-			$materials[$material->getTarget()] = $material->toArray();
+			$materials[$material->getTarget()] = $material->toArray($packedBools);
 		}
 		return [
 			"mappings" => [],

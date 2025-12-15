@@ -38,10 +38,7 @@ use function strcmp;
 use function usort;
 
 final class CustomiesBlockFactory {
-	use SingletonTrait {
-		setInstance as private;
-		reset as private;
-	}
+	use SingletonTrait;
 
 	/**
 	 * @var Closure[]
@@ -185,7 +182,7 @@ final class CustomiesBlockFactory {
 			$serializer ??= static fn() => new BlockStateWriter($identifier);
 			$deserializer ??= static fn(BlockStateReader $in) => $block;
 		}
-		
+
 		GlobalBlockStateHandlers::getSerializer()->map($block, $serializer);
 		GlobalBlockStateHandlers::getDeserializer()->map($identifier, $deserializer);
 
@@ -259,7 +256,6 @@ final class CustomiesBlockFactory {
 			$propertiesTag
 				->setTag("components", $components)
 				->setInt("molangVersion", 13);
-			\var_dump($propertiesTag->__toString());
 			return $propertiesTag;
 		}
 		return CompoundTag::create();
