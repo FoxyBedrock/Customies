@@ -24,10 +24,7 @@ use function str_ends_with;
  * and register items and blocks with their components.
  */
 final class BehaviorManager {
-	use SingletonTrait {
-		setInstance as private;
-		reset as private;
-	}
+	use SingletonTrait;
 
 	/** @var string Path to the behavior folder */
 	private string $behaviorDirectory;

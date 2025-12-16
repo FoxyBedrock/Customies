@@ -18,7 +18,6 @@ use customiesdevs\customies\block\component\LightEmissionComponent;
 use customiesdevs\customies\block\component\LiquidDetectionComponent;
 use customiesdevs\customies\block\component\MapColorComponent;
 use customiesdevs\customies\block\component\MaterialInstancesComponent;
-use customiesdevs\customies\block\component\MovableComponent;
 use customiesdevs\customies\block\component\PlacementFilterComponent;
 use customiesdevs\customies\block\component\RandomOffsetComponent;
 use customiesdevs\customies\block\component\SelectionBoxComponent;

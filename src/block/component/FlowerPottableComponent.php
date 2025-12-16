@@ -7,7 +7,7 @@ class FlowerPottableComponent implements BlockComponent {
 	public function __construct() {}
 
 	public function getName(): string {
-		return 'minecraft:embedded_visual';
+		return 'minecraft:flower_pottable';
 	}
 
 	public function getValue(): array {

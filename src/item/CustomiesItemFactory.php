@@ -27,10 +27,7 @@ use ReflectionClass;
 use function array_values;
 
 final class CustomiesItemFactory {
-	use SingletonTrait {
-		setInstance as private;
-		reset as private;
-	}
+	use SingletonTrait;
 
 	/** Default values for item_properties */
 	private const PROPERTY_DEFAULTS = [
