@@ -2,14 +2,22 @@
 
 namespace customiesdevs\customies\block\component;
 
+use customiesdevs\customies\block\properties\Material;
+
 class EmbeddedVisualComponent implements BlockComponent {
 
-	private GeometryComponent $geometry;
-	private MaterialInstancesComponent $materialInstances;
-
-	public function __construct(GeometryComponent $geometry, MaterialInstancesComponent $materialInstances) {
-		$this->geometry = $geometry;
-		$this->materialInstances = $materialInstances;
+	public function __construct(
+		private readonly GeometryComponent $geometry, 
+		private readonly array $materials
+	) {
+		if(count($materials) === 0){
+			throw new \InvalidArgumentException("At least one material must be defined");
+		}
+		foreach($materials as $material){
+			if(!$material instanceof Material){
+				throw new \InvalidArgumentException("All materials must be instances of ".Material::class);
+			}
+		}
 	}
 
 	public function getName(): string {
@@ -17,16 +25,29 @@ class EmbeddedVisualComponent implements BlockComponent {
 	}
 
 	public function getValue(): array {
+		$materials = [];
+		foreach($this->materials as $material){
+			$materials[$material->getTarget()] = [
+				"alpha_masked_tint" => false,
+				"face_dimming" => true,
+				"isotropic" => false,
+				...$material->toArray()
+			];
+		}
 		return [
 			"geometry" => $this->geometry->getValue(),
-			"material_instances" => $this->materialInstances->getValue()
+			"material_instances" => $materials
 		];
 	}
 
 	public static function fromJson(mixed $data): static {
+		$materials = [];
+		foreach($data as $target => $materialData){
+			$materials[] = Material::fromArray($target, $materialData);
+		}
 		return new self(
 			GeometryComponent::fromJson($data["geometry"] ?? []),
-			MaterialInstancesComponent::fromJson($data["material_instances"] ?? [])
+			$materials
 		);
 	}
 }

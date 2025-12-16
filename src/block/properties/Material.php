@@ -82,7 +82,6 @@ final class Material {
 
 	/**
 	 * Converts the material into Bedrock-compatible NBT/JSON format.
-	 * @param int $packedBools Context-specific packed_bools value (1=item_visual, 4=permutations, 5=material_instances)
 	 * @return array{
 	 *   texture: string,
 	 *   render_method: string,
@@ -90,17 +89,12 @@ final class Material {
 	 *   ambient_occlusion: float,
 	 * }
 	 */
-	public function toArray(int $packedBools = self::FLAG_TEXTURE_VARIATION): array {
+	public function toArray(): array {
 		return [
 			"texture" => $this->texture,
 			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,
-			"packed_bools" => $packedBools,
-			// Fixed values
-			"alpha_masked_tint" => false,
-			"face_dimming" => true,
-			"isotropic" => false,
 		];
 	}
 }
