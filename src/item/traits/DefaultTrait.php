@@ -2,11 +2,15 @@
 
 namespace customiesdevs\customies\item\traits;
 
-trait DefaultTrait {
-    use ItemComponentsTrait;
+use customiesdevs\customies\item\component\DisplayNameComponent;
+use customiesdevs\customies\item\component\IconComponent;
 
-    protected function initComponent(): void {
-        // Default items do not have any components for now.
-    }
+trait DefaultTrait {
+	use ItemComponentsTrait;
+
+	protected function initComponent(string $texture, string $name): void {
+		$this->addComponent(new IconComponent($texture));
+		$this->addComponent(new DisplayNameComponent($name));
+	}
 
 }
