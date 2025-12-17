@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace customiesdevs\customies\item;
 
 use Closure;
+use customiesdevs\customies\Customies;
 use InvalidArgumentException;
 use pocketmine\block\Block;
 use pocketmine\data\bedrock\item\BlockItemIdMap;
@@ -204,7 +205,14 @@ final class CustomiesItemFactory {
 			->setTag('item_tags', NBT::getTagType($tags))
 			->merge($componentsTag);
 
-		\var_dump($components->__toString());
+		
+		$debugFile = Customies::getInstance()->getDataFolder() . "debug_nbt.txt";
+		file_put_contents(
+			$debugFile,
+			"==== ITEM DEBUG ====" . PHP_EOL .
+			(string) $components . PHP_EOL . PHP_EOL,
+			FILE_APPEND
+		);
 		return CompoundTag::create()
 			->setTag('components', $components)
 			->setInt('id', $itemId)

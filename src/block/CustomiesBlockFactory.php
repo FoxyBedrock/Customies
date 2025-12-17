@@ -128,11 +128,7 @@ final class CustomiesBlockFactory {
 		CustomiesItemFactory::getInstance()->registerBlockItem($identifier, $block);
 		$this->customBlocks[$identifier] = $block;
 
-		$propertiesTag = CompoundTag::create();
-		$components = CompoundTag::create();
-
 		$nbt = $this->createBlockNBT($block, $creativeInfo);
-
 		// TODO 
 		if($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
@@ -142,10 +138,15 @@ final class CustomiesBlockFactory {
 				$blockProperties[] = $blockProperty->toNBT();
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
+			$componentsTag = $nbt->getTag("components");
+			if(!$componentsTag instanceof CompoundTag){
+				$componentsTag = CompoundTag::create();
+				$nbt->setTag("components", $componentsTag);
+			}
 			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 			// it a smoother experience for the end-user.
-			$components->setTag("minecraft:on_player_placing", CompoundTag::create());
-			$propertiesTag
+			$componentsTag->setTag("minecraft:on_player_placing", CompoundTag::create());
+			$nbt
 				->setTag("permutations", new ListTag($permutations))
 				->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 
@@ -228,17 +229,9 @@ final class CustomiesBlockFactory {
 		}
 	}
 
-	/** 
-	 * Creates the NBT data for the block. This includes the components and their values.
-	 * If the block does not have components, an empty CompoundTag is returned.
-	 * @param Block $block The block to create the NBT data for.
-	 * @param CreativeInventoryInfo|null $creativeInfo Optional creative inventory information for the block.
-	 * @return CompoundTag The NBT data for the block.
-	 */
 	private function createBlockNBT(Block $block, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
 		$propertiesTag = CompoundTag::create();
 		$components = CompoundTag::create();
-
 		if($block instanceof BlockComponents) {
 			foreach ($block->getComponents() as $component) {
 				$tag = NBT::getTagType($component->getValue());
@@ -247,17 +240,16 @@ final class CustomiesBlockFactory {
 				}
 				$components->setTag($component->getName(), $tag);
 			}
-			if($creativeInfo !== null) {
-				$propertiesTag->setTag("menu_category", CompoundTag::create()
-					->setString("category", $creativeInfo->getCategory())
-					->setString("group", $creativeInfo->getGroup()))
-					->setByte("is_hidden_in_commands", 0);
-			}
-			$propertiesTag
-				->setTag("components", $components)
-				->setInt("molangVersion", 13);
-			return $propertiesTag;
 		}
-		return CompoundTag::create();
+		if($creativeInfo !== null) {
+			$propertiesTag->setTag("menu_category", CompoundTag::create()
+				->setString("category", $creativeInfo->getCategory())
+				->setString("group", $creativeInfo->getGroup()))
+				->setByte("is_hidden_in_commands", 0);
+		}
+		$propertiesTag
+			->setTag("components", $components)
+			->setInt("molangVersion", 13);
+		return $propertiesTag;
 	}
 }

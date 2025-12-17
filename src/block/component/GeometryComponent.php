@@ -22,7 +22,7 @@ class GeometryComponent implements BlockComponent {
 		string $identifier = "minecraft:geometry.full_block", 
 		array $boneVisibility = [], 
 		string $culling = "", 
-		string $cullingLayer = "minecraft:culling_layer.undefined",
+		string $cullingLayer = "",
 		array|bool $uvLock = false
 	) {
 		$this->identifier = $identifier;
@@ -55,7 +55,7 @@ class GeometryComponent implements BlockComponent {
 			$data["identifier"] ?? "minecraft:geometry.full_block",
 			$data["bone_visibility"] ?? [],
 			$data["culling"] ?? "",
-			$data["culling_layer"] ?? "minecraft:culling_layer.undefined",
+			$data["culling_layer"] ?? "",
 			$data["uv_lock"] ?? false
 		);
 	}
