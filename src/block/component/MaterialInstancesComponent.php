@@ -3,6 +3,7 @@
 namespace customiesdevs\customies\block\component;
 
 use customiesdevs\customies\block\properties\Material;
+use pocketmine\nbt\tag\CompoundTag;
 
 class MaterialInstancesComponent implements BlockComponent {
 
@@ -25,11 +26,11 @@ class MaterialInstancesComponent implements BlockComponent {
 		return 'minecraft:material_instances';
 	}
 
-	public function getValue(): array {
+	public function getValue(int $packedBools = 5): array {
 		$materials = [];
 		foreach($this->materials as $material){
 			$materials[$material->getTarget()] = [
-				"packed_bools" => Material::FLAG_UNKNOWN,
+				CompoundTag::create()->setByte("packed_bools", $packedBools),
 				...$material->toArray()
 			];
 		}

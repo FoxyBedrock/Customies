@@ -146,12 +146,15 @@ final class CustomiesBlockFactory {
 				->setString("group", $creativeInfo->getGroup())
 				->setByte("is_hidden_in_commands", 0));
 		}
+
 		// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 		// it a smoother experience for the end-user.
+		// Is this even used anymore??????
 		$components->setTag("minecraft:on_player_placing", CompoundTag::create());
 		$propertiesTag->setTag("components", $components);
 		$propertiesTag->setInt("molangVersion", 13);
 
+		// TODO refactor this mess
 		if($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
 			foreach($block->getBlockProperties() as $blockProperty){

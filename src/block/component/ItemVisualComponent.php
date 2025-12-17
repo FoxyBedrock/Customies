@@ -3,6 +3,7 @@
 namespace customiesdevs\customies\block\component;
 
 use customiesdevs\customies\block\properties\Material;
+use pocketmine\nbt\tag\CompoundTag;
 
 class ItemVisualComponent implements BlockComponent {
 
@@ -28,7 +29,7 @@ class ItemVisualComponent implements BlockComponent {
 		$materials = [];
 		foreach($this->materials as $material){
 			$materials[$material->getTarget()] = [
-				"packed_bools" => Material::FLAG_FACE_DIMMING,
+				CompoundTag::create()->setByte("packed_bools", 1),
 				...$material->toArray()
 			];
 		}

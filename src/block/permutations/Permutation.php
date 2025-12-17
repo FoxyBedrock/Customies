@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\permutations;
 
+use customiesdevs\customies\block\component\BlockComponent;
+use customiesdevs\customies\block\component\MaterialInstancesComponent;
 use customiesdevs\customies\util\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 
@@ -18,6 +20,11 @@ final class Permutation {
 	 * Returns the permutation with the provided component added to the current list of components.
 	 */
 	public function withComponent(string $component, mixed $value) : self {
+		if ($value instanceof MaterialInstancesComponent) {
+			$value = $value->getValue(4); // Use packed_bools = 4 for permutations
+		} elseif ($value instanceof BlockComponent) {
+			$value = $value->getValue();
+		}
 		$this->components->setTag($component, NBT::getTagType($value));
 		return $this;
 	}

@@ -14,16 +14,6 @@ final class Material {
 	public const TARGET_SOUTH = "south";
 	public const TARGET_WEST = "west";
 
-	/* packed_bools bit flags (byte) */
-	/** Enables directional face shading */
-	public const FLAG_FACE_DIMMING = 0x01;
-	/** Enables randomized UV rotation per face */
-	public const FLAG_RANDOM_UV_ROTATION = 0x02;
-	/** Enables texture variation support */
-	public const FLAG_TEXTURE_VARIATION = 0x04;
-	/* Unknown to us */
-	public const FLAG_UNKNOWN = 0x05;
-
 	/**
 	 * @param string $target
 	 * Targeted face for the material.
