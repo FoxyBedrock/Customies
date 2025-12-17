@@ -139,15 +139,10 @@ final class CustomiesBlockFactory {
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
 			$componentsTag = $nbt->getTag("components");
-			if(!$componentsTag instanceof CompoundTag){
-				$componentsTag = CompoundTag::create();
-				$nbt->setTag("components", $componentsTag);
-			}
 			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 			// it a smoother experience for the end-user.
 			$componentsTag->setTag("minecraft:on_player_placing", CompoundTag::create());
-			$nbt
-				->setTag("permutations", new ListTag($permutations))
+			$nbt->setTag("permutations", new ListTag($permutations))
 				->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 
 			foreach(Permutations::getCartesianProduct($blockPropertyValues) as $meta => $permutations){
@@ -247,9 +242,8 @@ final class CustomiesBlockFactory {
 				->setString("group", $creativeInfo->getGroup()))
 				->setByte("is_hidden_in_commands", 0);
 		}
-		$propertiesTag
-			->setTag("components", $components)
-			->setInt("molangVersion", 13);
+		$propertiesTag->setTag("components", $components)->setInt("molangVersion", 13);
+
 		return $propertiesTag;
 	}
 }
