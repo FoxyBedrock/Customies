@@ -19,13 +19,11 @@ final class Permutation {
 	/**
 	 * Returns the permutation with the provided component added to the current list of components.
 	 */
-	public function withComponent(string $component, mixed $value) : self {
-		if ($value instanceof MaterialInstancesComponent) {
-			$value = $value->getValue(4); // Use packed_bools = 4 for permutations
-		} elseif ($value instanceof BlockComponent) {
-			$value = $value->getValue();
-		}
-		$this->components->setTag($component, NBT::getTagType($value));
+	public function withComponent(BlockComponent $component) : self {
+		$value = ($component instanceof MaterialInstancesComponent) 
+			? $component->getValue(4)  // Use packed_bools = 4 for permutations
+			: $component->getValue();
+		$this->components->setTag($component->getName(), NBT::getTagType($value));
 		return $this;
 	}
 

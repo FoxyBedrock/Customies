@@ -26,6 +26,7 @@ trait RotatableTrait {
 		];
 	}
 
+	// This will be removed soon
 	/**
 	 * @return Permutation[]
 	 */
