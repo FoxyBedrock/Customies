@@ -128,7 +128,27 @@ final class CustomiesBlockFactory {
 		CustomiesItemFactory::getInstance()->registerBlockItem($identifier, $block);
 		$this->customBlocks[$identifier] = $block;
 
-		$nbt = $this->createBlockNBT($block, $creativeInfo);
+		$propertiesTag = CompoundTag::create();
+		$components = CompoundTag::create();
+
+		if($block instanceof BlockComponents) {
+			foreach ($block->getComponents() as $component) {
+				$tag = NBT::getTagType($component->getValue());
+				if($tag === null) {
+					throw new RuntimeException("Failed to get tag type for component " . $component->getName());
+				}
+				$components->setTag($component->getName(), $tag);
+			}
+		}
+		if($creativeInfo !== null) {
+			$propertiesTag->setTag("menu_category", CompoundTag::create()
+				->setString("category", $creativeInfo->getCategory())
+				->setString("group", $creativeInfo->getGroup()))
+				->setByte("is_hidden_in_commands", 0);
+		}
+		$propertiesTag->setTag("components", $components)
+			->setInt("molangVersion", 13);
+
 		// TODO 
 		if($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
@@ -138,12 +158,12 @@ final class CustomiesBlockFactory {
 				$blockProperties[] = $blockProperty->toNBT();
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
-			$componentsTag = $nbt->getTag("components");
+
 			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 			// it a smoother experience for the end-user.
-			$componentsTag->setTag("minecraft:on_player_placing", CompoundTag::create());
-			$nbt->setTag("permutations", new ListTag($permutations))
-				->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
+			$components->setTag("minecraft:on_player_placing", CompoundTag::create());
+			$propertiesTag->setTag("permutations", new ListTag($permutations));
+			$propertiesTag->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 
 			foreach(Permutations::getCartesianProduct($blockPropertyValues) as $meta => $permutations){
 				// We need to insert states for every possible permutation to allow for all blocks to be used and to
@@ -208,7 +228,7 @@ final class CustomiesBlockFactory {
 			CreativeInventory::getInstance()->add($block->asItem(), $category, $group);
 		}
 
-		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($nbt));
+		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($propertiesTag));
 		$this->blockFuncs[$identifier] = [$blockFunc, $serializer, $deserializer];
 
 		// 1.20.60 added a new "block_id" field which depends on the order of the block palette entries. Every time we
@@ -222,28 +242,5 @@ final class CustomiesBlockFactory {
 			$root->setTag("vanilla_block_data", CompoundTag::create()->setInt("block_id", 10000 + $i));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));
 		}
-	}
-
-	private function createBlockNBT(Block $block, ?CreativeInventoryInfo $creativeInfo): CompoundTag {
-		$propertiesTag = CompoundTag::create();
-		$components = CompoundTag::create();
-		if($block instanceof BlockComponents) {
-			foreach ($block->getComponents() as $component) {
-				$tag = NBT::getTagType($component->getValue());
-				if($tag === null) {
-					throw new RuntimeException("Failed to get tag type for component " . $component->getName());
-				}
-				$components->setTag($component->getName(), $tag);
-			}
-		}
-		if($creativeInfo !== null) {
-			$propertiesTag->setTag("menu_category", CompoundTag::create()
-				->setString("category", $creativeInfo->getCategory())
-				->setString("group", $creativeInfo->getGroup()))
-				->setByte("is_hidden_in_commands", 0);
-		}
-		$propertiesTag->setTag("components", $components)->setInt("molangVersion", 13);
-
-		return $propertiesTag;
 	}
 }
