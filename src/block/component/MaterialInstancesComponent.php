@@ -29,7 +29,7 @@ class MaterialInstancesComponent implements BlockComponent {
 		$materials = [];
 		foreach($this->materials as $material){
 			$materials[$material->getTarget()] = [
-				"packed_bools" => Material::FLAG_TEXTURE_VARIATION,
+				"packed_bools" => Material::FLAG_UNKNOWN,
 				...$material->toArray()
 			];
 		}

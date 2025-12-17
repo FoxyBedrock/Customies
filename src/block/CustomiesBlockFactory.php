@@ -146,10 +146,12 @@ final class CustomiesBlockFactory {
 				->setString("group", $creativeInfo->getGroup())
 				->setByte("is_hidden_in_commands", 0));
 		}
-		$propertiesTag->setTag("components", $components)
-			->setInt("molangVersion", 13);
+		// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
+		// it a smoother experience for the end-user.
+		$components->setTag("minecraft:on_player_placing", CompoundTag::create());
+		$propertiesTag->setTag("components", $components);
+		$propertiesTag->setInt("molangVersion", 13);
 
-		// TODO 
 		if($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
 			foreach($block->getBlockProperties() as $blockProperty){
@@ -159,9 +161,6 @@ final class CustomiesBlockFactory {
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
 
-			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
-			// it a smoother experience for the end-user.
-			$components->setTag("minecraft:on_player_placing", CompoundTag::create());
 			$propertiesTag->setTag("permutations", new ListTag($permutations));
 			$propertiesTag->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 

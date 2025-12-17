@@ -20,7 +20,9 @@ final class Material {
 	/** Enables randomized UV rotation per face */
 	public const FLAG_RANDOM_UV_ROTATION = 0x02;
 	/** Enables texture variation support */
-	public const FLAG_TEXTURE_VARIATION  = 0x04;
+	public const FLAG_TEXTURE_VARIATION = 0x04;
+	/* Unknown to us */
+	public const FLAG_UNKNOWN = 0x05;
 
 	/**
 	 * @param string $target
