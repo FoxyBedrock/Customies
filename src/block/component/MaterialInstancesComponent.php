@@ -3,7 +3,7 @@
 namespace customiesdevs\customies\block\component;
 
 use customiesdevs\customies\block\properties\Material;
-use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ByteTag;
 
 class MaterialInstancesComponent implements BlockComponent {
 
@@ -30,7 +30,7 @@ class MaterialInstancesComponent implements BlockComponent {
 		$materials = [];
 		foreach($this->materials as $material){
 			$materials[$material->getTarget()] = [
-				CompoundTag::create()->setByte("packed_bools", $packedBools),
+				"packed_bools" => new ByteTag($packedBools),
 				...$material->toArray()
 			];
 		}

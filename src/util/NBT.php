@@ -30,7 +30,7 @@ class NBT {
 	 * - float      → FloatTag
 	 * - int        → IntTag
 	 * - string     → StringTag
-	 * - CompoundTag → Returned as-is
+	 * - Tag        → Returned as-is
 	 *
 	 * @param mixed $type The value to convert into an NBT Tag
 	 * @return Tag|null Returns the corresponding Tag instance, or null if the
@@ -38,12 +38,12 @@ class NBT {
 	 */
 	public static function getTagType($type): ?Tag {
 		return match (true) {
+			$type instanceof Tag => $type,
 			is_array($type) => self::getArrayTag($type),
 			is_bool($type) => new ByteTag($type ? 1 : 0),
 			is_float($type) => new FloatTag($type),
 			is_int($type) => new IntTag($type),
 			is_string($type) => new StringTag($type),
-			$type instanceof CompoundTag => $type,
 			default => null,
 		};
 	}
@@ -54,14 +54,25 @@ class NBT {
 	 * - Otherwise, a CompoundTag is created with each key mapped to a Tag.
 	 * @param array $array The array to convert into an NBT Tag
 	 * @return Tag Returns either a ListTag or CompoundTag depending on the array structure
+	 * @throws \InvalidArgumentException If any value cannot be converted to a Tag
 	 */
 	private static function getArrayTag(array $array): Tag {
 		if(array_keys($array) === range(0, count($array) - 1)) {
-			return new ListTag(array_map(fn($value) => self::getTagType($value), $array));
+			return new ListTag(array_map(function($value) {
+				$tag = self::getTagType($value);
+				if($tag === null) {
+					throw new \InvalidArgumentException("Cannot convert value of type " . get_debug_type($value) . " to NBT Tag");
+				}
+				return $tag;
+			}, $array));
 		}
 		$tag = CompoundTag::create();
 		foreach($array as $key => $value){
-			$tag->setTag($key, self::getTagType($value));
+			$valueTag = self::getTagType($value);
+			if($valueTag === null) {
+				throw new \InvalidArgumentException("Cannot convert value of type " . get_debug_type($value) . " for key '$key' to NBT Tag");
+			}
+			$tag->setTag((string) $key, $valueTag);
 		}
 		return $tag;
 	}
