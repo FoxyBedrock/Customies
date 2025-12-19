@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\permutations;
 
+use customiesdevs\customies\block\component\TransformationComponent;
 use pocketmine\block\Block;
 use pocketmine\block\utils\HorizontalFacingTrait;
 use pocketmine\data\bedrock\block\convert\BlockStateReader;
@@ -10,7 +11,6 @@ use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 use pocketmine\item\Item;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
-use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\world\BlockTransaction;
 
@@ -33,81 +33,13 @@ trait RotatableTrait {
 	public function getPermutations(): array {
 		return [
 			(new Permutation("q.block_state('customies:rotation') == 2"))
-				->withComponent("minecraft:transformation", CompoundTag::create()
-					->setInt("RX", 0)
-					->setFloat("RXP", 0.0)
-					->setInt("RY", 0)
-					->setFloat("RYP", 0.0)
-					->setInt("RZ", 0)
-					->setFloat("RZP", 0.0)
-					->setFloat("SX", 1.0)
-					->setFloat("SXP", 0.0)
-					->setFloat("SY", 1.0)
-					->setFloat("SYP", 0.0)
-					->setFloat("SZ", 1.0)
-					->setFloat("SZP", 0.0)
-					->setFloat("TX", 0.0)
-					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)
-					->setByte("hasJsonVersionBeforeValidation", 0)
-				),
+				->withComponent(new TransformationComponent()),
 			(new Permutation("q.block_state('customies:rotation') == 3"))
-				->withComponent("minecraft:transformation", CompoundTag::create()
-					->setInt("RX", 0)
-					->setFloat("RXP", 0.0)
-					->setInt("RY", 2)
-					->setFloat("RYP", 0.0)
-					->setInt("RZ", 0)
-					->setFloat("RZP", 0.0)
-					->setFloat("SX", 1.0)
-					->setFloat("SXP", 0.0)
-					->setFloat("SY", 1.0)
-					->setFloat("SYP", 0.0)
-					->setFloat("SZ", 1.0)
-					->setFloat("SZP", 0.0)
-					->setFloat("TX", 0.0)
-					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)
-					->setByte("hasJsonVersionBeforeValidation", 0)
-				),
+				->withComponent(new TransformationComponent(new Vector3(0, 180, 0))),
 			(new Permutation("q.block_state('customies:rotation') == 4"))
-				->withComponent("minecraft:transformation", CompoundTag::create()
-					->setInt("RX", 0)
-					->setFloat("RXP", 0.0)
-					->setInt("RY", 1)
-					->setFloat("RYP", 0.0)
-					->setInt("RZ", 0)
-					->setFloat("RZP", 0.0)
-					->setFloat("SX", 1.0)
-					->setFloat("SXP", 0.0)
-					->setFloat("SY", 1.0)
-					->setFloat("SYP", 0.0)
-					->setFloat("SZ", 1.0)
-					->setFloat("SZP", 0.0)
-					->setFloat("TX", 0.0)
-					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)
-					->setByte("hasJsonVersionBeforeValidation", 0)
-				),
+				->withComponent(new TransformationComponent(new Vector3(0, 90, 0))),
 			(new Permutation("q.block_state('customies:rotation') == 5"))
-				->withComponent("minecraft:transformation", CompoundTag::create()
-					->setInt("RX", 0)
-					->setFloat("RXP", 0.0)
-					->setInt("RY", 3)
-					->setFloat("RYP", 0.0)
-					->setInt("RZ", 0)
-					->setFloat("RZP", 0.0)
-					->setFloat("SX", 1.0)
-					->setFloat("SXP", 0.0)
-					->setFloat("SY", 1.0)
-					->setFloat("SYP", 0.0)
-					->setFloat("SZ", 1.0)
-					->setFloat("SZP", 0.0)
-					->setFloat("TX", 0.0)
-					->setFloat("TY", 0.0)
-					->setFloat("TZ", 0.0)
-					->setByte("hasJsonVersionBeforeValidation", 0)
-				),
+				->withComponent(new TransformationComponent(new Vector3(0, -90, 0))),
 		];
 	}
 
