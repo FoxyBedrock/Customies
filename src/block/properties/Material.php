@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\properties;
 
+use pocketmine\nbt\tag\ByteTag;
+
 final class Material {
 
 	public const TARGET_ALL = "*";
@@ -13,6 +15,12 @@ final class Material {
 	public const TARGET_EAST = "east";
 	public const TARGET_SOUTH = "south";
 	public const TARGET_WEST = "west";
+
+	public const FACE_DIMMING = 1;
+	public const RANDOMIZE_UV_ROTATION = 2;
+	public const SUPPORTS_TEXTURE_VARIATION = 4;
+
+	private int $packed_bools;
 
 	/**
 	 * @param string $target
@@ -35,14 +43,24 @@ final class Material {
 	 * Tint logic applied to the texture (biome-based, none, etc).
 	 * @param float $ambientOcclusion
 	 * Ambient occlusion strength. Typically `1.0`.
+	 * @param bool $face_dimming
+	 * Whether face dimming/shading is enabled for the block.
+	 * @param bool $isotropic
+	 * Whether randomized UV rotation is enabled for the block.
 	 */
 	public function __construct(
 		private readonly string $target,
 		private readonly string $texture,
 		private readonly RenderMethod $renderMethod = RenderMethod::OPAQUE,
 		private readonly TintMethod $tintMethod = TintMethod::NONE,
-		private readonly float $ambientOcclusion = 1.0
-	) {}
+		private readonly float $ambientOcclusion = 1.0,
+		private readonly bool $face_dimming = true,
+		private readonly bool $isotropic = false,
+	) {
+		$this->packed_bools = self::SUPPORTS_TEXTURE_VARIATION
+			| ($face_dimming ? self::FACE_DIMMING : 0)
+			| ($isotropic ? self::RANDOMIZE_UV_ROTATION : 0);
+	}
 
 	/**
 	 * Returns the targeted face for the material.
@@ -68,7 +86,9 @@ final class Material {
 			$data["texture"],
 			RenderMethod::tryFrom($data["render_method"] ?? "") ?? RenderMethod::OPAQUE,
 			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE,
-			(float) ($data["ambient_occlusion"] ?? 1.0)
+			(float) ($data["ambient_occlusion"] ?? 1.0),
+			$data["face_dimming"] ?? true,
+			$data["isotropic"] ?? false
 		);
 	}
 
@@ -87,6 +107,7 @@ final class Material {
 			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,
+			"packed_bools" => new ByteTag($this->packed_bools)
 		];
 	}
 }

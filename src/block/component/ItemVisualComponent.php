@@ -29,8 +29,8 @@ class ItemVisualComponent implements BlockComponent {
 		$materials = [];
 		foreach($this->materials as $material){
 			$materials[$material->getTarget()] = [
-				"packed_bools" => new ByteTag(1),
-				...$material->toArray()
+				...$material->toArray(),
+				"packed_bools" => new ByteTag(Material::FACE_DIMMING)
 			];
 		}
 		return [
