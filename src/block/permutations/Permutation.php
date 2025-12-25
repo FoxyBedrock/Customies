@@ -19,7 +19,7 @@ final class Permutation {
 	/**
 	 * Returns the permutation with the provided component added to the current list of components.
 	 */
-	public function withComponent(BlockComponent $component) : self {
+	public function withComponent(BlockComponent $component): self {
 		$value = ($component instanceof MaterialInstancesComponent) 
 			? $component->getValue(4)  // Use packed_bools = 4 for permutations
 			: $component->getValue();

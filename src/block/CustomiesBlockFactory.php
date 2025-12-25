@@ -7,6 +7,10 @@ use Closure;
 use customiesdevs\customies\block\permutations\Permutable;
 use customiesdevs\customies\block\permutations\Permutation;
 use customiesdevs\customies\block\permutations\Permutations;
+use customiesdevs\customies\test\permutation\BlockPermutation as NewBlockPermutation;
+use customiesdevs\customies\test\permutation\BlockPermutations;
+use customiesdevs\customies\test\state\BlockStates;
+use customiesdevs\customies\test\trait\BlockTraits;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
@@ -128,7 +132,7 @@ final class CustomiesBlockFactory {
 		CustomiesItemFactory::getInstance()->registerBlockItem($identifier, $block);
 		$this->customBlocks[$identifier] = $block;
 
-		$propertiesTag = CompoundTag::create();
+		$nbt = CompoundTag::create();
 		$components = CompoundTag::create();
 
 		if($block instanceof BlockComponents) {
@@ -141,7 +145,7 @@ final class CustomiesBlockFactory {
 			}
 		}
 		if($creativeInfo !== null) {
-			$propertiesTag->setTag("menu_category", CompoundTag::create()
+			$nbt->setTag("menu_category", CompoundTag::create()
 				->setString("category", $creativeInfo->getCategory())
 				->setString("group", $creativeInfo->getGroup())
 				->setByte("is_hidden_in_commands", 0));
@@ -151,11 +155,70 @@ final class CustomiesBlockFactory {
 		// it a smoother experience for the end-user.
 		// Is this even used anymore??????
 		$components->setTag("minecraft:on_player_placing", CompoundTag::create());
-		$propertiesTag->setTag("components", $components);
-		$propertiesTag->setInt("molangVersion", 13);
 
-		// TODO refactor this mess
-		if($block instanceof Permutable) {
+		// New API: Block Traits
+		if($block instanceof BlockTraits) {
+			$traits = [];
+			foreach($block->getTraits() as $trait) {
+				$traits[] = $trait->getValue();
+			}
+			$nbt->setTag("traits", NBT::getTagType($traits));
+		}
+
+		$nbt->setTag("components", $components);
+		$nbt->setInt("molangVersion", 13);
+
+		// New API: BlockPermutations (independent of BlockStates - works with BlockTraits too)
+		if($block instanceof BlockPermutations) {
+			$permutations = array_map(
+				static fn(NewBlockPermutation $p) => NBT::getTagType($p->toArray()),
+				$block->getPermutations()
+			);
+			$nbt->setTag("permutations", new ListTag($permutations));
+		}
+
+		// New API: BlockStates (custom state properties)
+		if($block instanceof BlockStates) {
+			$stateNames = $stateValues = $stateNBT = [];
+			foreach($block->getStates() as $state) {
+				$stateNames[] = $state->getName();
+				$value = $state->getValue();
+				// Extract enum values for Cartesian product
+				$stateValues[] = $value["enum"] ?? [];
+				$stateNBT[] = NBT::getTagType($value);
+			}
+			$nbt->setTag("properties", new ListTag(array_reverse($stateNBT))); // fix client-side order
+
+			// Generate block palette entries for all state combinations
+			foreach(Permutations::getCartesianProduct($stateValues) as $meta => $combination) {
+				$states = CompoundTag::create();
+				foreach($combination as $i => $value) {
+					$states->setTag($stateNames[$i], NBT::getTagType($value));
+				}
+				$blockState = CompoundTag::create()
+					->setString(BlockStateData::TAG_NAME, $identifier)
+					->setTag(BlockStateData::TAG_STATES, $states);
+				BlockPalette::getInstance()->insertState($blockState, $meta);
+			}
+
+			$serializer ??= static function (BlockStates $block) use ($identifier) : BlockStateWriter {
+				$writer = BlockStateWriter::create($identifier);
+				foreach($block->getStates() as $state) {
+					$state->serialize($writer);
+				}
+				return $writer;
+			};
+			$deserializer ??= static function (BlockStateReader $in) use ($identifier) : BlockStates {
+				$b = CustomiesBlockFactory::getInstance()->get($identifier);
+				assert($b instanceof BlockStates);
+				foreach($b->getStates() as $state) {
+					$state->deserialize($in);
+				}
+				return $b;
+			};
+		}
+		// Legacy API: Permutable (deprecated)
+		elseif($block instanceof Permutable) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
 			foreach($block->getBlockProperties() as $blockProperty){
 				$blockPropertyNames[] = $blockProperty->getName();
@@ -164,8 +227,8 @@ final class CustomiesBlockFactory {
 			}
 			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
 
-			$propertiesTag->setTag("permutations", new ListTag($permutations));
-			$propertiesTag->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
+			$nbt->setTag("permutations", new ListTag($permutations));
+			$nbt->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 
 			foreach(Permutations::getCartesianProduct($blockPropertyValues) as $meta => $permutations){
 				// We need to insert states for every possible permutation to allow for all blocks to be used and to
@@ -230,7 +293,7 @@ final class CustomiesBlockFactory {
 			CreativeInventory::getInstance()->add($block->asItem(), $category, $group);
 		}
 
-		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($propertiesTag));
+		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($nbt));
 		$this->blockFuncs[$identifier] = [$blockFunc, $serializer, $deserializer];
 
 		// 1.20.60 added a new "block_id" field which depends on the order of the block palette entries. Every time we

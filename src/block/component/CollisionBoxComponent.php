@@ -54,7 +54,7 @@ class CollisionBoxComponent implements BlockComponent {
 			$convertedBoxes[] = $box->toNbtArray();
 		}
 		return [
-			"enabled" => $this->enabled ? 1 : 0,
+			"enabled" => $this->enabled,
 			"boxes" => $convertedBoxes
 		];
 	}

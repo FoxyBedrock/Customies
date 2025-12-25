@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\util;
 
+use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -31,6 +32,7 @@ class NBT {
 	 * - int        → IntTag
 	 * - string     → StringTag
 	 * - Tag        → Returned as-is
+	 * - ByteArray  → ListTag of ByteTag
 	 *
 	 * @param mixed $type The value to convert into an NBT Tag
 	 * @return Tag|null Returns the corresponding Tag instance, or null if the
@@ -39,6 +41,7 @@ class NBT {
 	public static function getTagType($type): ?Tag {
 		return match (true) {
 			$type instanceof Tag => $type,
+			$type instanceof ByteArray => self::getByteArrayTag($type),
 			is_array($type) => self::getArrayTag($type),
 			is_bool($type) => new ByteTag($type ? 1 : 0),
 			is_float($type) => new FloatTag($type),
@@ -46,6 +49,15 @@ class NBT {
 			is_string($type) => new StringTag($type),
 			default => null,
 		};
+	}
+
+	/**
+	 * Creates a ByteArrayTag from a ByteArray.
+	 * @param ByteArray $byteArray The byte array to convert
+	 * @return ByteArrayTag Returns a ByteArrayTag
+	 */
+	private static function getByteArrayTag(ByteArray $byteArray): ByteArrayTag {
+		return new ByteArrayTag(pack("C*", ...$byteArray->getValues()));
 	}
 
 	/**
