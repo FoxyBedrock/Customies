@@ -3,15 +3,11 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\blockpermutations;
 
-/**
- * Interface for blocks that have permutations.
- * 
- * Similar to BlockComponents but for permutations.
- */
 interface BlockPermutations {
 
 	/**
 	 * Adds a permutation to the block.
+	 * @param BlockPermutation $permutation
 	 */
 	public function addPermutation(BlockPermutation $permutation): void;
 

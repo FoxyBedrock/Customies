@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\states;
 
-use customiesdevs\customies\util\ByteArray;
 use pocketmine\data\bedrock\block\convert\BlockStateReader;
 use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 
@@ -19,7 +18,7 @@ class BooleanState implements BlockState {
 
 	public function getValue(): array {
 		return [
-			"enum" => new ByteArray([false, true]),
+			"enum" => [false, true], // Native bools -> NBT::getTagType() converts to ByteTag
 			"name" => $this->name
 		];
 	}

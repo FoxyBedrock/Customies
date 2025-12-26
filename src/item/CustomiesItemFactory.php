@@ -96,7 +96,11 @@ final class CustomiesItemFactory {
 	 * @param CreativeInventoryInfo|null $creativeInfo The creative inventory info for the item, if any
 	 * @throws InvalidArgumentException if the closure does not return an Item instance
 	 */
-	public function registerItem(Closure $itemFunc, string $identifier, ?CreativeInventoryInfo $creativeInfo = null): void {
+	public function registerItem(
+		Closure $itemFunc, 
+		string $identifier, 
+		?CreativeInventoryInfo $creativeInfo = new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_ITEMS)
+	): void {
 		$item = $itemFunc();
 		if(!$item instanceof Item) {
 			throw new InvalidArgumentException("Class returned from closure is not a Item");

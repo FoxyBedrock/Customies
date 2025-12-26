@@ -3,11 +3,6 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\blockpermutations;
 
-/**
- * Trait that implements BlockPermutations interface.
- * 
- * Similar to BlockComponentsTrait but for permutations.
- */
 trait BlockPermutationsTrait {
 
 	/**
@@ -18,6 +13,7 @@ trait BlockPermutationsTrait {
 
 	/**
 	 * Adds a permutation to the block.
+	 * @param BlockPermutation $permutation
 	 */
 	public function addPermutation(BlockPermutation $permutation): void {
 		$this->permutations[] = $permutation;

@@ -100,12 +100,12 @@ class Box {
 	public function toNbtArray(): array {
 		$max = $this->getMax();
 		return [
-			"minX" => $this->origin->x + 8,
-			"minY" => $this->origin->y,
-			"minZ" => $this->origin->z + 8,
-			"maxX" => $max->x + 8,
-			"maxY" => $max->y,
-			"maxZ" => $max->z + 8,
+			"minX" => (float) ($this->origin->x + 8),
+			"minY" => (float) $this->origin->y,
+			"minZ" => (float) ($this->origin->z + 8),
+			"maxX" => (float) ($max->x + 8),
+			"maxY" => (float) $max->y,
+			"maxZ" => (float) ($max->z + 8),
 		];
 	}
 

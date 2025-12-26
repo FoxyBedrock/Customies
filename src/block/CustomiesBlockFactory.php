@@ -15,7 +15,6 @@ use customiesdevs\customies\block\traits\BlockTraits;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
-use customiesdevs\customies\util\ByteArray;
 use customiesdevs\customies\util\NBT;
 use InvalidArgumentException;
 use pocketmine\block\Block;
@@ -121,7 +120,7 @@ final class CustomiesBlockFactory {
 	public function registerBlock(
 		Closure $blockFunc,
 		string $identifier,
-		?CreativeInventoryInfo $creativeInfo = null,
+		?CreativeInventoryInfo $creativeInfo = new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_ITEMS),
 		?Closure $serializer = null,
 		?Closure $deserializer = null
 	): void {
@@ -156,10 +155,10 @@ final class CustomiesBlockFactory {
 		// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
 		// it a smoother experience for the end-user.
 		// Is this even used anymore??????
-		$components->setTag("minecraft:on_player_placing", CompoundTag::create());
+		// $components->setTag("minecraft:on_player_placing", CompoundTag::create());
 
 		// New API: Block Traits
-		if($block instanceof BlockTraits) {
+		if($block instanceof BlockTraits && count($block->getTraits()) > 0) {
 			$traits = [];
 			foreach($block->getTraits() as $trait) {
 				$traits[] = $trait->getValue();
@@ -170,8 +169,8 @@ final class CustomiesBlockFactory {
 		$nbt->setTag("components", $components);
 		$nbt->setInt("molangVersion", 13);
 
-		// New API: BlockPermutations (independent of BlockStates - works with BlockTraits too)
-		if($block instanceof BlockPermutations) {
+		// New API: BlockPermutations
+		if($block instanceof BlockPermutations && count($block->getPermutations()) > 0) {
 			$permutations = array_map(
 				static fn(BlockPermutation $p) => NBT::getTagType($p->toArray()),
 				$block->getPermutations()
@@ -179,15 +178,13 @@ final class CustomiesBlockFactory {
 			$nbt->setTag("permutations", new ListTag($permutations));
 		}
 
-		// New API: BlockStates (custom state properties)
-		if($block instanceof BlockStates) {
+		// New API: BlockStates
+		if($block instanceof BlockStates && count($block->getStates()) > 0) {
 			$stateNames = $stateValues = $stateNBT = [];
 			foreach($block->getStates() as $state) {
 				$stateNames[] = $state->getName();
 				$value = $state->getValue();
-				// Extract enum values for Cartesian product (handle ByteArray for boolean states)
-				$enum = $value["enum"] ?? [];
-				$stateValues[] = $enum instanceof ByteArray ? $enum->getValues() : $enum;
+				$stateValues[] = $value["enum"] ?? [];
 				$stateNBT[] = NBT::getTagType($value);
 			}
 			$nbt->setTag("properties", new ListTag(array_reverse($stateNBT))); // fix client-side order
@@ -305,7 +302,6 @@ final class CustomiesBlockFactory {
 			return strcmp(hash("fnv164", $a->getName()), hash("fnv164", $b->getName()));
 		});
 		foreach($this->blockPaletteEntries as $i => $entry) {
-			/** @var CompoundTag $root */
 			$root = $entry->getStates()->getRoot();
 			$root->setTag("vanilla_block_data", CompoundTag::create()->setInt("block_id", 10000 + $i));
 			$this->blockPaletteEntries[$i] = new BlockPaletteEntry($entry->getName(), new CacheableNbt($root));

@@ -93,21 +93,22 @@ final class Material {
 	}
 
 	/**
-	 * Converts the material into Bedrock-compatible NBT/JSON format.
+	 * Converts the material into Bedrock-compatible NBT format.
 	 * @return array{
-	 *   texture: string,
-	 *   render_method: string,
-	 *   tint_method: string,
 	 *   ambient_occlusion: float,
+	 *   packed_bools: ByteTag,
+	 *   render_method: string,
+	 *   texture: string,
+	 *   tint_method: string,
 	 * }
 	 */
 	public function toArray(): array {
 		return [
-			"texture" => $this->texture,
-			"render_method" => $this->renderMethod->value,
-			"tint_method" => $this->tintMethod->value,
 			"ambient_occlusion" => $this->ambientOcclusion,
-			"packed_bools" => new ByteTag($this->packed_bools)
+			"packed_bools" => new ByteTag($this->packed_bools),
+			"render_method" => $this->renderMethod->value,
+			"texture" => $this->texture,
+			"tint_method" => $this->tintMethod->value,
 		];
 	}
 }

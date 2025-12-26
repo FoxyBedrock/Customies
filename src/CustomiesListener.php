@@ -22,6 +22,7 @@ final class CustomiesListener implements Listener {
 			// "data_driven_items" is required for custom blocks to render in-game.
 			// With this disabled, custom blocks will appear as the UPDATE texture block.
 			"data_driven_items" => true,
+			"upcoming_creator_features" => true
 		], true);
 	}
 
