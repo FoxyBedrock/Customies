@@ -1,20 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\test\state;
+namespace customiesdevs\customies\block\states;
 
 use pocketmine\data\bedrock\block\convert\BlockStateReader;
 use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 
-class IntState implements BlockState {
+class IntRangeState implements BlockState {
 
 	private int $currentValue;
 
 	public function __construct(
 		private readonly string $name,
-		private readonly array $values
+		private readonly int $min,
+		private readonly int $max
 	) {
-		$this->currentValue = $values[0] ?? 0;
+		$this->currentValue = $min;
 	}
 
 	public function getName(): string {
@@ -23,7 +24,7 @@ class IntState implements BlockState {
 
 	public function getValue(): array {
 		return [
-			"enum" => $this->values,
+			"enum" => range($this->min, $this->max),
 			"name" => $this->name
 		];
 	}
@@ -33,7 +34,7 @@ class IntState implements BlockState {
 	}
 
 	public function setCurrentValue(mixed $value): void {
-		$this->currentValue = (int) $value;
+		$this->currentValue = max($this->min, min($this->max, (int) $value));
 	}
 
 	public function serialize(BlockStateWriter $writer): void {

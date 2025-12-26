@@ -1,6 +1,6 @@
 <?php
 
-namespace customiesdevs\customies\test\trait;
+namespace customiesdevs\customies\block\traits;
 
 class PlacementDirectionTrait implements BlockTrait {
 

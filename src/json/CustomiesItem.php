@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace customiesdevs\customies\json;
 
 use customiesdevs\customies\item\ItemComponents;
-use customiesdevs\customies\item\traits\ItemComponentsTrait;
+use customiesdevs\customies\item\ItemComponentsTrait;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemTypeIds;

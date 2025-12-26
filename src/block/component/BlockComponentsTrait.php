@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
-namespace customiesdevs\customies\block\traits;
+namespace customiesdevs\customies\block\component;
 
-use customiesdevs\customies\block\component\BlockComponent;
+use customiesdevs\customies\block\properties\Material;
 
 trait BlockComponentsTrait {
 	
@@ -10,7 +11,7 @@ trait BlockComponentsTrait {
 	 * Registered block components indexed by component name.
 	 * @var array<string, BlockComponent>
 	 */
-	private array $components;
+	private array $components = [];
 
 	/**
 	 * Adds or replaces a block component.
@@ -48,5 +49,18 @@ trait BlockComponentsTrait {
 	 */
 	public function getComponents(): array {
 		return $this->components;
+	}
+
+	/**
+	 * Initializes the default components for a block with the given texture and name.
+	 * Adds geometry, material instances, and display name components.
+	 * 
+	 * @param string $texture The texture identifier
+	 * @param string $name The display name of the block
+	 */
+	protected function initDefaultComponents(string $texture, string $name): void {
+		$this->addComponent(new GeometryComponent());
+		$this->addComponent(new MaterialInstancesComponent([new Material("*", $texture)]));
+		$this->addComponent(new DisplayNameComponent($name));
 	}
 }

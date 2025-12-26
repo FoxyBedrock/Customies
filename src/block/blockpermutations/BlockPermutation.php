@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\test\permutation;
+namespace customiesdevs\customies\block\blockpermutations;
 
 use customiesdevs\customies\block\component\BlockComponent;
 

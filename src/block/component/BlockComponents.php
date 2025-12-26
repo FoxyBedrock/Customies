@@ -1,8 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace customiesdevs\customies\block;
-
-use customiesdevs\customies\block\component\BlockComponent;
+namespace customiesdevs\customies\block\component;
 
 interface BlockComponents {
 

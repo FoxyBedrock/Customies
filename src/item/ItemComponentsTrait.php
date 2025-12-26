@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\item\traits;
+namespace customiesdevs\customies\item;
 
+use customiesdevs\customies\item\component\DisplayNameComponent;
+use customiesdevs\customies\item\component\IconComponent;
 use customiesdevs\customies\item\component\ItemComponent;
 
 trait ItemComponentsTrait {
@@ -50,5 +52,10 @@ trait ItemComponentsTrait {
 	 */
 	public function getComponents(): array {
 		return $this->components;
+	}
+
+	protected function initDefaultComponent(string $texture, string $name): void {
+		$this->addComponent(new IconComponent($texture));
+		$this->addComponent(new DisplayNameComponent($name));
 	}
 }

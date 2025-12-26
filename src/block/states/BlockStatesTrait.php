@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\test\state;
+namespace customiesdevs\customies\block\states;
 
 trait BlockStatesTrait {
 

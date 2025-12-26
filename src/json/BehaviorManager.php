@@ -162,14 +162,19 @@ final class BehaviorManager {
 	 * @param array<string, mixed> $config JSON-decoded block configuration
 	 */
 	private function registerBlock(array $config): void {
-		if(!isset($config["components"], $config["description"]["identifier"])) {
-			throw new \InvalidArgumentException("Missing required fields 'components' or 'description.identifier'");
+		if(!isset($config["description"]["identifier"])) {
+			throw new \InvalidArgumentException("Missing required field 'description.identifier'");
 		}
+		
 		$identifier = $config["description"]["identifier"];
-		$components = $config["components"];
+		$components = $config["components"] ?? [];
+		$traits = $config["description"]["traits"] ?? [];
+		$states = $config["description"]["states"] ?? [];
+		$permutations = $config["permutations"] ?? [];
 		$creativeInfo = $this->getCreativeInfo($config);
+		
 		CustomiesBlockFactory::getInstance()->registerBlock(
-			static fn(): Block => new CustomiesBlock($components),
+			static fn(): Block => new CustomiesBlock($components, $traits, $states, $permutations),
 			$identifier,
 			$creativeInfo
 		);

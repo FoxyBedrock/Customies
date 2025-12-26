@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\test\trait;
+namespace customiesdevs\customies\block\traits;
 
 /**
  * Trait that implements BlockTraits interface.

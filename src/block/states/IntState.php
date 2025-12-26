@@ -1,17 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\test\state;
+namespace customiesdevs\customies\block\states;
 
-use customiesdevs\customies\util\ByteArray;
 use pocketmine\data\bedrock\block\convert\BlockStateReader;
 use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 
-class BooleanState implements BlockState {
+class IntState implements BlockState {
 
-	private bool $currentValue = false;
+	private int $currentValue;
 
-	public function __construct(private readonly string $name) {}
+	public function __construct(
+		private readonly string $name,
+		private readonly array $values
+	) {
+		$this->currentValue = $values[0] ?? 0;
+	}
 
 	public function getName(): string {
 		return $this->name;
@@ -19,24 +23,24 @@ class BooleanState implements BlockState {
 
 	public function getValue(): array {
 		return [
-			"enum" => new ByteArray([false, true]),
+			"enum" => $this->values,
 			"name" => $this->name
 		];
 	}
 
-	public function getCurrentValue(): bool {
+	public function getCurrentValue(): int {
 		return $this->currentValue;
 	}
 
 	public function setCurrentValue(mixed $value): void {
-		$this->currentValue = (bool) $value;
+		$this->currentValue = (int) $value;
 	}
 
 	public function serialize(BlockStateWriter $writer): void {
-		$writer->writeBool($this->name, $this->currentValue);
+		$writer->writeInt($this->name, $this->currentValue);
 	}
 
 	public function deserialize(BlockStateReader $reader): void {
-		$this->currentValue = $reader->readBool($this->name);
+		$this->currentValue = $reader->readInt($this->name);
 	}
 }

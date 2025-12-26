@@ -7,13 +7,15 @@ use Closure;
 use customiesdevs\customies\block\permutations\Permutable;
 use customiesdevs\customies\block\permutations\Permutation;
 use customiesdevs\customies\block\permutations\Permutations;
-use customiesdevs\customies\test\permutation\BlockPermutation as NewBlockPermutation;
-use customiesdevs\customies\test\permutation\BlockPermutations;
-use customiesdevs\customies\test\state\BlockStates;
-use customiesdevs\customies\test\trait\BlockTraits;
+use customiesdevs\customies\block\blockpermutations\BlockPermutation;
+use customiesdevs\customies\block\blockpermutations\BlockPermutations;
+use customiesdevs\customies\block\component\BlockComponents;
+use customiesdevs\customies\block\states\BlockStates;
+use customiesdevs\customies\block\traits\BlockTraits;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
+use customiesdevs\customies\util\ByteArray;
 use customiesdevs\customies\util\NBT;
 use InvalidArgumentException;
 use pocketmine\block\Block;
@@ -171,7 +173,7 @@ final class CustomiesBlockFactory {
 		// New API: BlockPermutations (independent of BlockStates - works with BlockTraits too)
 		if($block instanceof BlockPermutations) {
 			$permutations = array_map(
-				static fn(NewBlockPermutation $p) => NBT::getTagType($p->toArray()),
+				static fn(BlockPermutation $p) => NBT::getTagType($p->toArray()),
 				$block->getPermutations()
 			);
 			$nbt->setTag("permutations", new ListTag($permutations));
@@ -183,8 +185,9 @@ final class CustomiesBlockFactory {
 			foreach($block->getStates() as $state) {
 				$stateNames[] = $state->getName();
 				$value = $state->getValue();
-				// Extract enum values for Cartesian product
-				$stateValues[] = $value["enum"] ?? [];
+				// Extract enum values for Cartesian product (handle ByteArray for boolean states)
+				$enum = $value["enum"] ?? [];
+				$stateValues[] = $enum instanceof ByteArray ? $enum->getValues() : $enum;
 				$stateNBT[] = NBT::getTagType($value);
 			}
 			$nbt->setTag("properties", new ListTag(array_reverse($stateNBT))); // fix client-side order
