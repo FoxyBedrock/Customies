@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\json;
 
-use customiesdevs\customies\block\component\BlockComponent;
-use customiesdevs\customies\block\blockpermutations\BlockPermutation;
+use customiesdevs\customies\block\permutations\BlockPermutation;
 
 /**
  * Registry for block permutation mappings.

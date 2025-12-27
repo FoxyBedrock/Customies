@@ -22,6 +22,7 @@ use customiesdevs\customies\block\component\PlacementFilterComponent;
 use customiesdevs\customies\block\component\RandomOffsetComponent;
 use customiesdevs\customies\block\component\SelectionBoxComponent;
 use customiesdevs\customies\block\component\SupportComponent;
+use customiesdevs\customies\block\component\TransformationComponent;
 
 /**
  * Central registry for block component mappings.
@@ -52,6 +53,7 @@ final class BlockComponentRegistry {
 		'minecraft:random_offset' => RandomOffsetComponent::class,
 		'minecraft:selection_box' => SelectionBoxComponent::class,
 		'minecraft:support' => SupportComponent::class,
+		'minecraft:transformation' => TransformationComponent::class,
 	];
 
 	/**

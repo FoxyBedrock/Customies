@@ -54,7 +54,7 @@ trait ItemComponentsTrait {
 		return $this->components;
 	}
 
-	protected function initDefaultComponent(string $texture, string $name): void {
+	protected function initComponent(string $texture, string $name): void {
 		$this->addComponent(new IconComponent($texture));
 		$this->addComponent(new DisplayNameComponent($name));
 	}

@@ -58,7 +58,7 @@ trait BlockComponentsTrait {
 	 * @param string $texture The texture identifier
 	 * @param string $name The display name of the block
 	 */
-	protected function initDefaultComponents(string $texture, string $name): void {
+	protected function initComponents(string $texture, string $name): void {
 		$this->addComponent(new GeometryComponent());
 		$this->addComponent(new MaterialInstancesComponent([new Material("*", $texture)]));
 		$this->addComponent(new DisplayNameComponent($name));

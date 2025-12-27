@@ -1,22 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block\blockpermutations;
+namespace customiesdevs\customies\block\permutations;
+
+use customiesdevs\customies\block\states\BlockStatesTrait;
 
 trait BlockPermutationsTrait {
+	use BlockStatesTrait;
 
 	/**
 	 * Registered block permutations.
 	 * @var BlockPermutation[]
 	 */
-	private array $permutations = [];
+	private array $blockPermutations = [];
 
 	/**
 	 * Adds a permutation to the block.
 	 * @param BlockPermutation $permutation
 	 */
 	public function addPermutation(BlockPermutation $permutation): void {
-		$this->permutations[] = $permutation;
+		$this->blockPermutations[] = $permutation;
 	}
 
 	/**
@@ -34,6 +37,6 @@ trait BlockPermutationsTrait {
 	 * @return BlockPermutation[]
 	 */
 	public function getPermutations(): array {
-		return $this->permutations;
+		return $this->blockPermutations;
 	}
 }

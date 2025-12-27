@@ -3,32 +3,37 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\json;
 
-use customiesdevs\customies\block\component\BlockComponents;
-use customiesdevs\customies\block\component\BlockComponentsTrait;
 use customiesdevs\customies\block\blockpermutations\BlockPermutations;
 use customiesdevs\customies\block\blockpermutations\BlockPermutationsTrait;
-use customiesdevs\customies\block\states\BlockStates;
-use customiesdevs\customies\block\states\BlockStatesTrait;
-use customiesdevs\customies\block\traits\BlockTraits;
-use customiesdevs\customies\block\traits\BlockTraitsTrait;
+use customiesdevs\customies\block\component\BlockComponents;
+use customiesdevs\customies\block\component\BlockComponentsTrait;
 use pocketmine\block\Block;
 use pocketmine\block\BlockBreakInfo;
 use pocketmine\block\BlockIdentifier;
 use pocketmine\block\BlockToolType;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\BlockTypeInfo;
+use pocketmine\block\utils\HorizontalFacingTrait;
+use pocketmine\block\utils\PillarRotationTrait;
+use pocketmine\data\bedrock\block\convert\BlockStateReader;
+use pocketmine\data\bedrock\block\convert\BlockStateWriter;
+use pocketmine\item\Item;
+use pocketmine\math\Axis;
+use pocketmine\math\Vector3;
+use pocketmine\player\Player;
+use pocketmine\world\BlockTransaction;
 
-class CustomiesBlock extends Block implements BlockComponents, BlockTraits, BlockStates, BlockPermutations {
+class CustomiesBlock extends Block implements BlockComponents, BlockPermutations {
 	use BlockComponentsTrait;
-	use BlockTraitsTrait;
-	use BlockStatesTrait;
 	use BlockPermutationsTrait;
+
+	use HorizontalFacingTrait;
+	use PillarRotationTrait;
 
 	/**
 	 * Constructs a new CustomiesBlock with the given configuration.
 	 *
 	 * @param array<string, mixed> $components Associative array of component identifiers to data
-	 * @param array<string, mixed> $traits Associative array of trait identifiers to data
 	 * @param array<string, mixed> $states Associative array of state identifiers to values
 	 * @param array<int, array{condition: string, components: array}> $permutations Array of permutation definitions
 	 * @param float $hardness The hardness of the block (default 1.0)
@@ -38,9 +43,6 @@ class CustomiesBlock extends Block implements BlockComponents, BlockTraits, Bloc
 	 */
 	public function __construct(
 		array $components,
-		array $traits = [],
-		array $states = [],
-		array $permutations = [],
 		float $hardness = 1.0,
 		int $toolType = BlockToolType::NONE,
 		int $toolHarvestLevel = 0,
@@ -65,24 +67,38 @@ class CustomiesBlock extends Block implements BlockComponents, BlockTraits, Bloc
 				$this->addComponent($component);
 			}
 		}
+	}
 
-		// Add all registered traits
-		foreach($traits as $name => $data) {
-			$trait = BlockTraitRegistry::fromJson($name, $data);
-			if($trait !== null) {
-				$this->addTrait($trait);
-			}
-		}
+	public function getCurrentStates(): array {
+		return [$this->axis];
+	}
 
-		// Add all registered states
-		foreach($states as $name => $data) {
-			$state = BlockStateRegistry::fromJson($name, $data);
-			if($state !== null) {
-				$this->addState($state);
-			}
-		}
+	public function place(BlockTransaction $tx, Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, ?Player $player = null): bool {
+		$this->axis = match($face) {
+			0, 1 => Axis::Y,  // down, up
+			2, 3 => Axis::Z,  // north, south
+			4, 5 => Axis::X,  // west, east
+			default => Axis::Y
+		};
+		return parent::place($tx, $item, $blockReplace, $blockClicked, $face, $clickVector, $player);
+	}
 
-		// Add all permutations
-		$this->addPermutations(BlockPermutationRegistry::fromJson($permutations));
+	public function serializeState(BlockStateWriter $out): void {
+		$rotation = match($this->axis) {
+			Axis::X => "east",
+			Axis::Y => "up",
+			Axis::Z => "north",
+			default => "down"
+		};
+		$out->writeString("minecraft:block_face", $rotation);
+	}
+
+	public function deserializeState(BlockStateReader $in): void {
+		$this->axis = match($in->readString("minecraft:block_face")) {
+			"east", "west" => Axis::X,
+			"up", "down" => Axis::Y,
+			"north", "south" => Axis::Z,
+			default => Axis::Y
+		};
 	}
 }

@@ -3,41 +3,46 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\states;
 
-use pocketmine\data\bedrock\block\convert\BlockStateReader;
-use pocketmine\data\bedrock\block\convert\BlockStateWriter;
+/**
+ * Represents a block state property with a name and array of possible values.
+ * Automatically detects the value type (bool, int, string) for serialization.
+ */
+class BlockState {
 
-interface BlockState {
+	protected mixed $currentValue;
 
 	/**
-	 * Returns the state property name (e.g., "minecraft:cardinal_direction").
+	 * @param string $name The state property name (e.g., "customies:rotation")
+	 * @param array $values Array of possible values (bool[], int[], or string[])
 	 */
-	public function getName(): string;
+	public function __construct(
+		protected readonly string $name,
+		protected readonly array $values
+	) {
+		$this->currentValue = $values[0] ?? null;
+	}
+
+	/**
+	 * Returns the state property name.
+	 */
+	public function getName(): string {
+		return $this->name;
+	}
+
+	/**
+	 * Returns the possible values array.
+	 */
+	public function getValues(): array {
+		return $this->values;
+	}
 
 	/**
 	 * Returns the NBT value definition for client (enum + name).
-	 * The "enum" values must be native PHP types (bool, int, string) that
-	 * NBT::getTagType() can convert to the correct NBT tag type.
 	 */
-	public function getValue(): array;
-
-	/**
-	 * Gets the current state value.
-	 */
-	public function getCurrentValue(): mixed;
-
-	/**
-	 * Sets the current state value.
-	 */
-	public function setCurrentValue(mixed $value): void;
-
-	/**
-	 * Writes the current state value to the BlockStateWriter.
-	 */
-	public function serialize(BlockStateWriter $writer): void;
-
-	/**
-	 * Reads the state value from the BlockStateReader and sets it.
-	 */
-	public function deserialize(BlockStateReader $reader): void;
-
+	public function getValue(): array {
+		return [
+			"enum" => $this->values,
+			"name" => $this->name
+		];
+	}
 }

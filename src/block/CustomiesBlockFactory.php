@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace customiesdevs\customies\block;
 
 use Closure;
-use customiesdevs\customies\block\permutations\Permutable;
-use customiesdevs\customies\block\permutations\Permutation;
+use customiesdevs\customies\block\permutations\BlockPermutation;
+use customiesdevs\customies\block\permutations\BlockPermutations;
 use customiesdevs\customies\block\permutations\Permutations;
-use customiesdevs\customies\block\blockpermutations\BlockPermutation;
-use customiesdevs\customies\block\blockpermutations\BlockPermutations;
 use customiesdevs\customies\block\component\BlockComponents;
 use customiesdevs\customies\block\states\BlockStates;
-use customiesdevs\customies\block\traits\BlockTraits;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
@@ -152,83 +149,20 @@ final class CustomiesBlockFactory {
 				->setByte("is_hidden_in_commands", 0));
 		}
 
-		// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
-		// it a smoother experience for the end-user.
-		// Is this even used anymore??????
-		// $components->setTag("minecraft:on_player_placing", CompoundTag::create());
-
-		// New API: Block Traits
-		if($block instanceof BlockTraits && count($block->getTraits()) > 0) {
-			$traits = [];
-			foreach($block->getTraits() as $trait) {
-				$traits[] = $trait->getValue();
-			}
-			$nbt->setTag("traits", NBT::getTagType($traits));
-		}
-
-		$nbt->setTag("components", $components);
-		$nbt->setInt("molangVersion", 13);
-
-		// New API: BlockPermutations
-		if($block instanceof BlockPermutations && count($block->getPermutations()) > 0) {
-			$permutations = array_map(
-				static fn(BlockPermutation $p) => NBT::getTagType($p->toArray()),
-				$block->getPermutations()
-			);
-			$nbt->setTag("permutations", new ListTag($permutations));
-		}
-
-		// New API: BlockStates
-		if($block instanceof BlockStates && count($block->getStates()) > 0) {
-			$stateNames = $stateValues = $stateNBT = [];
-			foreach($block->getStates() as $state) {
-				$stateNames[] = $state->getName();
-				$value = $state->getValue();
-				$stateValues[] = $value["enum"] ?? [];
-				$stateNBT[] = NBT::getTagType($value);
-			}
-			$nbt->setTag("properties", new ListTag(array_reverse($stateNBT))); // fix client-side order
-
-			// Generate block palette entries for all state combinations
-			foreach(Permutations::getCartesianProduct($stateValues) as $meta => $combination) {
-				$states = CompoundTag::create();
-				foreach($combination as $i => $value) {
-					$states->setTag($stateNames[$i], NBT::getTagType($value));
-				}
-				$blockState = CompoundTag::create()
-					->setString(BlockStateData::TAG_NAME, $identifier)
-					->setTag(BlockStateData::TAG_STATES, $states);
-				BlockPalette::getInstance()->insertState($blockState, $meta);
-			}
-
-			$serializer ??= static function (BlockStates $block) use ($identifier) : BlockStateWriter {
-				$writer = BlockStateWriter::create($identifier);
-				foreach($block->getStates() as $state) {
-					$state->serialize($writer);
-				}
-				return $writer;
-			};
-			$deserializer ??= static function (BlockStateReader $in) use ($identifier) : BlockStates {
-				$b = CustomiesBlockFactory::getInstance()->get($identifier);
-				assert($b instanceof BlockStates);
-				foreach($b->getStates() as $state) {
-					$state->deserialize($in);
-				}
-				return $b;
-			};
-		}
-		// Legacy API: Permutable (deprecated)
-		elseif($block instanceof Permutable) {
+		if($block instanceof BlockPermutations) {
 			$blockPropertyNames = $blockPropertyValues = $blockProperties = [];
-			foreach($block->getBlockProperties() as $blockProperty){
+			foreach($block->getStates() as $blockProperty){
 				$blockPropertyNames[] = $blockProperty->getName();
 				$blockPropertyValues[] = $blockProperty->getValues();
-				$blockProperties[] = $blockProperty->toNBT();
+				$blockProperties[] = NBT::getTagType($blockProperty->getValue());
 			}
-			$permutations = array_map(static fn(Permutation $permutation) => $permutation->toNBT(), $block->getPermutations());
+			$permutations = array_map(static fn(BlockPermutation $permutation) => NBT::getTagType($permutation->toArray()), $block->getPermutations());
 
-			$nbt->setTag("permutations", new ListTag($permutations));
-			$nbt->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
+			// The 'minecraft:on_player_placing' component is required for the client to predict block placement, making
+			// it a smoother experience for the end-user.
+			$components->setTag("minecraft:on_player_placing", CompoundTag::create());
+			$nbt->setTag("permutations", new ListTag($permutations))
+				->setTag("properties", new ListTag(array_reverse($blockProperties))); // fix client-side order
 
 			foreach(Permutations::getCartesianProduct($blockPropertyValues) as $meta => $permutations){
 				// We need to insert states for every possible permutation to allow for all blocks to be used and to
@@ -243,14 +177,14 @@ final class CustomiesBlockFactory {
 				BlockPalette::getInstance()->insertState($blockState, $meta);
 			}
 
-			$serializer ??= static function (Permutable $block) use ($identifier) : BlockStateWriter {
+			$serializer ??= static function (BlockPermutations $block) use ($identifier, $blockPropertyNames) : BlockStateWriter {
 				$b = BlockStateWriter::create($identifier);
 				$block->serializeState($b);
 				return $b;
 			};
-			$deserializer ??= static function (BlockStateReader $in) use ($identifier) : Permutable {
+			$deserializer ??= static function (BlockStateReader $in) use ($block, $identifier, $blockPropertyNames) : BlockPermutations {
 				$b = CustomiesBlockFactory::getInstance()->get($identifier);
-				assert($b instanceof Permutable);
+				assert($b instanceof BlockPermutations);
 				$b->deserializeState($in);
 				return $b;
 			};
@@ -263,9 +197,11 @@ final class CustomiesBlockFactory {
 			$serializer ??= static fn() => new BlockStateWriter($identifier);
 			$deserializer ??= static fn(BlockStateReader $in) => $block;
 		}
-
 		GlobalBlockStateHandlers::getSerializer()->map($block, $serializer);
 		GlobalBlockStateHandlers::getDeserializer()->map($identifier, $deserializer);
+
+		$nbt->setTag("components", $components);
+		$nbt->setInt("molangVersion", 13);
 
 		if($creativeInfo !== null){
 			$this->loadGroups();

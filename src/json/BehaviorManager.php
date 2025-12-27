@@ -168,13 +168,10 @@ final class BehaviorManager {
 		
 		$identifier = $config["description"]["identifier"];
 		$components = $config["components"] ?? [];
-		$traits = $config["description"]["traits"] ?? [];
-		$states = $config["description"]["states"] ?? [];
-		$permutations = $config["permutations"] ?? [];
 		$creativeInfo = $this->getCreativeInfo($config);
 		
 		CustomiesBlockFactory::getInstance()->registerBlock(
-			static fn(): Block => new CustomiesBlock($components, $traits, $states, $permutations),
+			static fn(): Block => new CustomiesBlock($components),
 			$identifier,
 			$creativeInfo
 		);

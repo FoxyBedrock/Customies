@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block\blockpermutations;
+namespace customiesdevs\customies\block\permutations;
 
-interface BlockPermutations {
+use customiesdevs\customies\block\states\BlockStates;
+
+interface BlockPermutations extends BlockStates {
 
 	/**
 	 * Adds a permutation to the block.

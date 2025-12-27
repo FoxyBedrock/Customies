@@ -52,29 +52,38 @@ class TransformationComponent implements BlockComponent {
 			"RX" => $rx,
 			"RY" => $ry,
 			"RZ" => $rz,
-			"RXP" => $this->rotationPivot->x,
-			"RYP" => $this->rotationPivot->y,
-			"RZP" => $this->rotationPivot->z,
-			"SX" => $this->scale->x,
-			"SY" => $this->scale->y,
-			"SZ" => $this->scale->z,
-			"SXP" => $this->scalePivot->x,
-			"SYP" => $this->scalePivot->y,
-			"SZP" => $this->scalePivot->z,
-			"TX" => $this->translation->x,
-			"TY" => $this->translation->y,
-			"TZ" => $this->translation->z,
+			"RXP" => (float) $this->rotationPivot->x,
+			"RYP" => (float) $this->rotationPivot->y,
+			"RZP" => (float) $this->rotationPivot->z,
+			"SX" => (float) $this->scale->x,
+			"SY" => (float) $this->scale->y,
+			"SZ" => (float) $this->scale->z,
+			"SXP" => (float) $this->scalePivot->x,
+			"SYP" => (float) $this->scalePivot->y,
+			"SZP" => (float) $this->scalePivot->z,
+			"TX" => (float) $this->translation->x,
+			"TY" => (float) $this->translation->y,
+			"TZ" => (float) $this->translation->z,
 			"hasJsonVersionBeforeValidation" => false
 		];
 	}
 
 	public static function fromJson(mixed $data): static {
-		return new self(
-			$data['rotation'] ?? new Vector3(0, 0, 0),
-			$data['rotation_pivot'] ?? new Vector3(0, 0, 0),
-			$data['scale'] ?? new Vector3(1, 1, 1),
-			$data['scale_pivot'] ?? new Vector3(0, 0, 0),
-			$data['translation'] ?? new Vector3(0, 0, 0)
-		);
+		$rotation = isset($data['rotation']) 
+			? new Vector3($data['rotation'][0] ?? 0, $data['rotation'][1] ?? 0, $data['rotation'][2] ?? 0)
+			: new Vector3(0, 0, 0);
+		$rotationPivot = isset($data['rotation_pivot'])
+			? new Vector3($data['rotation_pivot'][0] ?? 0, $data['rotation_pivot'][1] ?? 0, $data['rotation_pivot'][2] ?? 0)
+			: new Vector3(0, 0, 0);
+		$scale = isset($data['scale'])
+			? new Vector3($data['scale'][0] ?? 1, $data['scale'][1] ?? 1, $data['scale'][2] ?? 1)
+			: new Vector3(1, 1, 1);
+		$scalePivot = isset($data['scale_pivot'])
+			? new Vector3($data['scale_pivot'][0] ?? 0, $data['scale_pivot'][1] ?? 0, $data['scale_pivot'][2] ?? 0)
+			: new Vector3(0, 0, 0);
+		$translation = isset($data['translation'])
+			? new Vector3($data['translation'][0] ?? 0, $data['translation'][1] ?? 0, $data['translation'][2] ?? 0)
+			: new Vector3(0, 0, 0);
+		return new self($rotation, $rotationPivot, $scale, $scalePivot, $translation);
 	}
 }
