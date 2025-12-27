@@ -24,8 +24,4 @@ class LightEmissionComponent implements BlockComponent {
 		return CompoundTag::create()
 			->setByte("emission", $this->emission);
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data ?? 0);
-	}
 }

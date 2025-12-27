@@ -24,8 +24,4 @@ class LightDampeningComponent implements BlockComponent {
 		return CompoundTag::create()
 			->setByte("lightLevel", $this->dampening);
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data ?? 15);
-	}
 }

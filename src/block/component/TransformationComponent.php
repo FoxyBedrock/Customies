@@ -67,23 +67,4 @@ class TransformationComponent implements BlockComponent {
 			"hasJsonVersionBeforeValidation" => false
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		$rotation = isset($data['rotation']) 
-			? new Vector3($data['rotation'][0] ?? 0, $data['rotation'][1] ?? 0, $data['rotation'][2] ?? 0)
-			: new Vector3(0, 0, 0);
-		$rotationPivot = isset($data['rotation_pivot'])
-			? new Vector3($data['rotation_pivot'][0] ?? 0, $data['rotation_pivot'][1] ?? 0, $data['rotation_pivot'][2] ?? 0)
-			: new Vector3(0, 0, 0);
-		$scale = isset($data['scale'])
-			? new Vector3($data['scale'][0] ?? 1, $data['scale'][1] ?? 1, $data['scale'][2] ?? 1)
-			: new Vector3(1, 1, 1);
-		$scalePivot = isset($data['scale_pivot'])
-			? new Vector3($data['scale_pivot'][0] ?? 0, $data['scale_pivot'][1] ?? 0, $data['scale_pivot'][2] ?? 0)
-			: new Vector3(0, 0, 0);
-		$translation = isset($data['translation'])
-			? new Vector3($data['translation'][0] ?? 0, $data['translation'][1] ?? 0, $data['translation'][2] ?? 0)
-			: new Vector3(0, 0, 0);
-		return new self($rotation, $rotationPivot, $scale, $scalePivot, $translation);
-	}
 }

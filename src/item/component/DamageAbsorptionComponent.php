@@ -51,19 +51,4 @@ final class DamageAbsorptionComponent implements ItemComponent {
 		}
 		return $this;
 	}
-
-	public static function fromJson(mixed $data): static {
-		$causes = [];
-		if(is_array($data["absorbable_causes"] ?? null)){
-			foreach($data["absorbable_causes"] as $cause){
-				if(is_string($cause)){
-					$enumCause = DamageCause::tryFrom($cause);
-					if($enumCause !== null){
-						$causes[] = $enumCause;
-					}
-				}
-			}
-		}
-		return new self($causes);
-	}
 }

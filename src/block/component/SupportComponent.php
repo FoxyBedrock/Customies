@@ -25,8 +25,4 @@ class SupportComponent implements BlockComponent {
 			"shape" => $this->shape
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(is_array($data) ? ($data["shape"] ?? self::STAIRS) : self::STAIRS);
-	}
 }

@@ -23,8 +23,4 @@ class MapColorComponent implements BlockComponent {
 			"color" => $this->color
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data);
-	}
 }

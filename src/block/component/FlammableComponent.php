@@ -27,11 +27,4 @@ class FlammableComponent implements BlockComponent {
 			"destroy_chance_modifier" => $this->destroyChanceModifier
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data["catch_chance_modifier"] ?? 5,
-			$data["destroy_chance_modifier"] ?? 20
-		);
-	}
 }

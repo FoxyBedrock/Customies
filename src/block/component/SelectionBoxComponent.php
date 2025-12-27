@@ -41,23 +41,4 @@ class SelectionBoxComponent implements BlockComponent {
 			]
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		if (is_bool($data)) {
-			return new self($data);
-		}
-		return new self(
-			true,
-			new Vector3(
-				$data["origin"][0] ?? -8,
-				$data["origin"][1] ?? 0,
-				$data["origin"][2] ?? -8
-			),
-			new Vector3(
-				$data["size"][0] ?? 16,
-				$data["size"][1] ?? 16,
-				$data["size"][2] ?? 16
-			)
-		);
-	}
 }

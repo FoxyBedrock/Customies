@@ -61,11 +61,4 @@ final class DyeableComponent implements ItemComponent {
 		[$r, $g, $b] = $rgb;
 		return sprintf("#%02x%02x%02x", $r, $g, $b);
 	}
-
-	public static function fromJson(mixed $data): static {
-		if(isset($data["default_color"]) && is_array($data["default_color"])){
-			return new self(self::rgbToHex($data["default_color"]));
-		}
-		return new self("#ffffff");
-	}
 }

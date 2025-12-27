@@ -91,14 +91,4 @@ final class StorageItemComponent implements ItemComponent {
 		}
 		return false;
 	}
-
-	public static function fromJson(mixed $data): static {
-		$self = new self(
-			$data["allow_nested_storage_items"] ?? true,
-			$data["max_slots"] ?? 64
-		);
-		$self->allowedItems = $data["allowed_items"] ?? [];
-		$self->bannedItems = $data["banned_items"] ?? [];
-		return $self;
-	}
 }

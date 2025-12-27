@@ -18,9 +18,4 @@ class RandomOffsetComponent implements BlockComponent {
 		return [
 		];
 	}
-
-	// TODO Needs more data on this
-	public static function fromJson(mixed $data): static {
-		return new self();
-	}
 }

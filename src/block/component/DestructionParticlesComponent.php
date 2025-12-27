@@ -33,12 +33,4 @@ class DestructionParticlesComponent implements BlockComponent {
 			"tint_method" => $this->tintMethod->value
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data["particle_count"] ?? 100,
-			$data["texture"] ?? "",
-			TintMethod::tryFrom($data["tint_method"] ?? "") ?? TintMethod::NONE
-		);
-	}
 }

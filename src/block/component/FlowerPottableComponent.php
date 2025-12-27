@@ -13,8 +13,4 @@ class FlowerPottableComponent implements BlockComponent {
 	public function getValue(): array {
 		return [];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self();
-	}
 }

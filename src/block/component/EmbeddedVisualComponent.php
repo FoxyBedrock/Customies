@@ -39,15 +39,4 @@ class EmbeddedVisualComponent implements BlockComponent {
 			"material_instances" => $materials
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		$materials = [];
-		foreach($data as $target => $materialData){
-			$materials[] = Material::fromArray($target, $materialData);
-		}
-		return new self(
-			GeometryComponent::fromJson($data["geometry"] ?? []),
-			$materials
-		);
-	}
 }

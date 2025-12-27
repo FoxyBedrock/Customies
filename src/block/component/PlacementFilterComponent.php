@@ -40,12 +40,4 @@ class PlacementFilterComponent implements BlockComponent {
 			)
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		$conditions = [];
-		foreach($data["conditions"] ?? [] as $condition){
-			$conditions[] = PlacementCondition::fromArray($condition);
-		}
-		return new self($conditions);
-	}
 }

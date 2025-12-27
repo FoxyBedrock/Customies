@@ -79,11 +79,4 @@ final class DiggerComponent implements ItemComponent {
 	public function getDestroySpeeds(): array {
 		return $this->destroySpeeds;
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data["use_efficiency"] ?? false,
-			$data["destroy_speeds"] ?? []
-		);
-	}
 }

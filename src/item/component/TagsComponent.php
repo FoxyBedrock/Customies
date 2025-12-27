@@ -28,8 +28,4 @@ final class TagsComponent implements ItemComponent {
 	public function getPropertyMapping(): ?array {
 		return null;
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(is_array($data["tags"] ?? null) ? $data["tags"] : []);
-	}
 }

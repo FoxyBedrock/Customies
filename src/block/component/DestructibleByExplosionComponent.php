@@ -23,8 +23,4 @@ class DestructibleByExplosionComponent implements BlockComponent {
 			"value" => $this->explosionResistance
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data["explosion_resistance"] ?? 0.0);
-	}
 }

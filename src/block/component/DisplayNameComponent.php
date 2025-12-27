@@ -26,8 +26,4 @@ class DisplayNameComponent implements BlockComponent {
 			"value" => $this->displayName
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data);
-	}
 }

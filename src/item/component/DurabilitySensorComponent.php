@@ -58,16 +58,4 @@ final class DurabilitySensorComponent implements ItemComponent {
 		];
 		return $this;
 	}
-
-	public static function fromJson(mixed $data): static {
-		$thresholds = [];
-		foreach($data["durability_thresholds"] ?? [] as $threshold) {
-			$thresholds[] = [
-				"durability" => $threshold["durability"] ?? 0,
-				"particle_type" => isset($threshold["particle_type"]) ? ParticleType::tryFrom($threshold["particle_type"]) : null,
-				"sound_event" => isset($threshold["sound_event"]) ? SoundEvent::tryFrom($threshold["sound_event"]) : null
-			];
-		}
-		return new self($thresholds);
-	}
 }

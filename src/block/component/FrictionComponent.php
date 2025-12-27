@@ -24,8 +24,4 @@ class FrictionComponent implements BlockComponent {
 			"value" => $this->friction
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data);
-	}
 }

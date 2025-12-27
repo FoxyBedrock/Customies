@@ -77,25 +77,4 @@ final class KineticWeaponComponent implements ItemComponent {
 	public function getPropertyMapping(): ?array {
 		return null;
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data['creative_reach'] ?? ['min' => 2.0, 'max' => 7.5],
-			(float) ($data['damage_modifier'] ?? 0.0),
-			(float) ($data['damage_multiplier'] ?? 0.7),
-			(int) ($data['delay'] ?? 15),
-			$data['dismount_conditions'] ?? [
-				'min_speed' => 14.0,
-				'min_relative_speed' => 0.0,
-				'max_duration' => 100
-			],
-			(float) ($data['hitbox_margin'] ?? 0.25),
-			$data['knockback_conditions'] ?? [
-				'min_speed' => 14.0,
-				'min_relative_speed' => 0.0,
-				'max_duration' => 120
-			],
-			$data['reach'] ?? ['min' => 2.0, 'max' => 4.5]
-		);
-	}
 }

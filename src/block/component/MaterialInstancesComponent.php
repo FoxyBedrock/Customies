@@ -35,12 +35,4 @@ class MaterialInstancesComponent implements BlockComponent {
 			"materials" => $materials
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		$materials = [];
-		foreach($data as $target => $materialData){
-			$materials[] = Material::fromArray($target, $materialData);
-		}
-		return new self($materials);
-	}
 }

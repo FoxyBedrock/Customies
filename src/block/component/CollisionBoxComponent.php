@@ -62,39 +62,4 @@ class CollisionBoxComponent implements BlockComponent {
 			"enabled" => $this->enabled
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		// false or true
-		if(is_bool($data)) {
-			return new self($data);
-		}
-		
-		$component = new self(true);
-		$boxes = [];
-		
-		// Array of boxes
-		if(is_array($data) && isset($data[0])) {
-			foreach($data as $box) {
-				$origin = $box['origin'] ?? [-8, 0, -8];
-				$size = $box['size'] ?? [16, 24, 16];
-				$boxes[] = new Box(
-					new Vector3($origin[0], $origin[1], $origin[2]),
-					new Vector3($size[0], $size[1], $size[2])
-				);
-			}
-			return $component->addBoxes($boxes);
-		}
-		
-		// Single box object
-		if(is_array($data) && isset($data['origin'])) {
-			$origin = $data['origin'];
-			$size = $data['size'] ?? [16, 24, 16];
-			return $component->addBox(new Box(
-				new Vector3($origin[0], $origin[1], $origin[2]),
-				new Vector3($size[0], $size[1], $size[2])
-			));
-		}
-		
-		return $component;
-	}
 }

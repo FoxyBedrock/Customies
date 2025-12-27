@@ -49,14 +49,4 @@ class GeometryComponent implements BlockComponent {
 			"useBlockTypeLightAbsorption" => false
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data["identifier"] ?? "minecraft:geometry.full_block",
-			$data["bone_visibility"] ?? [],
-			$data["culling"] ?? "",
-			$data["culling_layer"] ?? "minecraft:culling_layer.undefined",
-			$data["uv_lock"] ?? false
-		);
-	}
 }

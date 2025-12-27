@@ -32,14 +32,4 @@ final class RepairableComponent implements ItemComponent {
 	public function getPropertyMapping(): ?array {
 		return null;
 	}
-
-	public static function fromJson(mixed $data): static {
-		$repairItems = [];
-		if(is_array($data["repair_items"] ?? null)) {
-			foreach($data["repair_items"] as $repairItem) {
-				$repairItems[] = RepairItems::fromArray($repairItem);
-			}
-		}
-		return new self($repairItems);
-	}
 }

@@ -23,8 +23,4 @@ class DestructibleByMiningComponent implements BlockComponent {
 			"value" => $this->secondsToDestroy
 		];
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self($data["seconds_to_destroy"] ?? 0.0);
-	}
 }

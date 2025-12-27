@@ -40,12 +40,4 @@ final class PiercingWeaponComponent implements ItemComponent {
 	public function getPropertyMapping(): ?array {
 		return null;
 	}
-
-	public static function fromJson(mixed $data): static {
-		return new self(
-			$data['creative_reach'] ?? ['min' => 2.0, 'max' => 7.5],
-			(float) ($data['hitbox_margin'] ?? 0.25),
-			$data['reach'] ?? ['min' => 2.0, 'max' => 4.5]
-		);
-	}
 }
