@@ -5,20 +5,16 @@ namespace customiesdevs\customies\block\component;
 use customiesdevs\customies\block\properties\Material;
 use pocketmine\nbt\tag\ByteTag;
 
-class ItemVisualComponent implements BlockComponent {
+final class ItemVisualComponent implements BlockComponent {
 
+	/**
+	 * @param Material[] $materials
+	 */
 	public function __construct(
 		private readonly GeometryComponent $geometry, 
-		private readonly array $materials
+		private readonly array $materials = []
 	) {
-		if(count($materials) === 0){
-			throw new \InvalidArgumentException("At least one material must be defined");
-		}
-		foreach($materials as $material){
-			if(!$material instanceof Material){
-				throw new \InvalidArgumentException("All materials must be instances of ".Material::class);
-			}
-		}
+		Material::validMaterials($materials);
 	}
 
 	public function getName(): string {

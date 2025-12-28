@@ -5,6 +5,7 @@ namespace customiesdevs\customies\item\component;
 
 final class EnchantableComponent implements ItemComponent {
 
+	// Item Type
 	public const SLOT_NONE = "none";
 	public const SLOT_ALL = "all";
 	public const SLOT_HELMET = "armor_head";

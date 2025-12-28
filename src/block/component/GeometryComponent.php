@@ -2,10 +2,10 @@
 
 namespace customiesdevs\customies\block\component;
 
-class GeometryComponent implements BlockComponent {
+final class GeometryComponent implements BlockComponent {
 
 	private string $identifier;
-	private array $boneVisibility;
+	private array $boneVisibility = [];
 	private string $culling;
 	private string $cullingLayer;
 	private array|bool $uvLock;

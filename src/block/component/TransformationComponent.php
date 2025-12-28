@@ -4,7 +4,7 @@ namespace customiesdevs\customies\block\component;
 
 use pocketmine\math\Vector3;
 
-class TransformationComponent implements BlockComponent {
+final class TransformationComponent implements BlockComponent {
 
 	/**
 	 * The block's translation, rotation and scale with respect to the center of its world position.
@@ -15,11 +15,11 @@ class TransformationComponent implements BlockComponent {
 	 * @param Vector3 $translation The block's translation
 	 */
 	public function __construct(
-		private readonly Vector3 $rotation = new Vector3(0, 0, 0),
-		private readonly Vector3 $rotationPivot = new Vector3(0, 0, 0),
-		private readonly Vector3 $scale = new Vector3(1, 1, 1),
-		private readonly Vector3 $scalePivot = new Vector3(0, 0, 0),
-		private readonly Vector3 $translation = new Vector3(0, 0, 0)
+		private readonly Vector3 $rotation = new Vector3(0.0, 0.0, 0.0),
+		private readonly Vector3 $rotationPivot = new Vector3(0.0, 0.0, 0.0),
+		private readonly Vector3 $scale = new Vector3(1.0, 1.0, 1.0),
+		private readonly Vector3 $scalePivot = new Vector3(0.0, 0.0, 0.0),
+		private readonly Vector3 $translation = new Vector3(0.0, 0.0, 0.0)
 	) {}
 
 	public function getName(): string {
@@ -27,31 +27,10 @@ class TransformationComponent implements BlockComponent {
 	}
 
 	public function getValue(): array {
-		$rx = match ((int) $this->rotation->x) {
-			0 => 0,
-			90 => 1,
-			180 => 2,
-			270, -90 => 3,
-			default => 0
-		};
-		$ry = match ((int) $this->rotation->y) {
-			0 => 0,
-			90 => 1,
-			180 => 2,
-			270, -90 => 3,
-			default => 0
-		};
-		$rz = match ((int) $this->rotation->z) {
-			0 => 0,
-			90 => 1,
-			180 => 2,
-			270, -90 => 3,
-			default => 0
-		};
 		return [
-			"RX" => $rx,
-			"RY" => $ry,
-			"RZ" => $rz,
+			"RX" => (int) self::rotationToIndex($this->rotation->x),
+			"RY" => (int) self::rotationToIndex($this->rotation->y),
+			"RZ" => (int) self::rotationToIndex($this->rotation->z),
 			"RXP" => (float) $this->rotationPivot->x,
 			"RYP" => (float) $this->rotationPivot->y,
 			"RZP" => (float) $this->rotationPivot->z,
@@ -66,5 +45,19 @@ class TransformationComponent implements BlockComponent {
 			"TZ" => (float) $this->translation->z,
 			"hasJsonVersionBeforeValidation" => false
 		];
+	}
+
+	private static function rotationToIndex(float $d): int {
+		$d = ((int) $d) % 360;
+		if($d < 0){
+			$d += 360;
+		}
+		return match($d){
+			0 => 0, // North
+			90 => 1, // West
+			180 => 2, // South
+			270, -90 => 3, // East
+			default => 0 // North By Default
+		};
 	}
 }

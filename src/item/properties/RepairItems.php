@@ -2,14 +2,14 @@
 
 namespace customiesdevs\customies\item\properties;
 
-class RepairItems {
+final class RepairItems {
 
 	/**
 	 * @param string[] $items List of item names that may be used for repairing.
 	 * @param int $repairAmount Amount by which the item is repaired.
 	 */
 	public function __construct(
-		private readonly array $items,
+		private readonly array $items = [],
 		private readonly int $repairAmount,
 	) {}
 

@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class DisplayNameComponent implements BlockComponent {
+final class DisplayNameComponent implements BlockComponent {
 
 	private string $displayName;
 

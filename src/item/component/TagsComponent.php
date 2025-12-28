@@ -5,7 +5,7 @@ namespace customiesdevs\customies\item\component;
 
 final class TagsComponent implements ItemComponent {
 
-	private array $tags;
+	private array $tags = [];
 
 	/**
 	 * Determines which tags are included on a given item.

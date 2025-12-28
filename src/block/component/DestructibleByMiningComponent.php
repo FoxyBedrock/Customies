@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class DestructibleByMiningComponent implements BlockComponent {
+final class DestructibleByMiningComponent implements BlockComponent {
 
 	private float $secondsToDestroy;
 

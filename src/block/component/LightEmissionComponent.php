@@ -4,7 +4,7 @@ namespace customiesdevs\customies\block\component;
 
 use pocketmine\nbt\tag\CompoundTag;
 
-class LightEmissionComponent implements BlockComponent {
+final class LightEmissionComponent implements BlockComponent {
 
 	private int $emission;
 

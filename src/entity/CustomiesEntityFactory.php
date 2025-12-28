@@ -16,7 +16,7 @@ use pocketmine\utils\SingletonTrait;
 use pocketmine\world\World;
 use ReflectionClass;
 
-class CustomiesEntityFactory {
+final class CustomiesEntityFactory {
 	use SingletonTrait;
 
 	/**

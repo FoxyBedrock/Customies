@@ -12,7 +12,7 @@ final class RepairableComponent implements ItemComponent {
 	 * @param RepairItems[] $repairItems List of repair item entries. Each entry needs to define a list of strings for items that can be used for the repair and an optional repair_amount for how much durability is gained.
 	 */
 	public function __construct(
-		private readonly array $repairItems,
+		private readonly array $repairItems = [],
 	) {}
 
 	public function getName(): string {

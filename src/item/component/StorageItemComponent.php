@@ -8,8 +8,8 @@ use pocketmine\item\Item;
 final class StorageItemComponent implements ItemComponent {
 
 	private bool $allowNestedStorageItems;
-	private array $allowedItems;
-	private array $bannedItems;
+	private array $allowedItems = [];
+	private array $bannedItems = [];
 	private int $maxSlots;
 
 	/**

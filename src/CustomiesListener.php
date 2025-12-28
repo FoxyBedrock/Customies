@@ -28,8 +28,8 @@ final class CustomiesListener implements Listener {
 
 	public function onDataPacketSend(DataPacketSendEvent $event): void {
 		foreach($event->getPackets() as $packet){
-			if($packet instanceof StartGamePacket) {
-				if(count($this->cachedBlockPalette) === 0) {
+			if($packet instanceof StartGamePacket){
+				if(count($this->cachedBlockPalette) === 0){
 					// Wait for the data to be needed before it is actually cached. Allows for all blocks and items to be
 					// registered before they are cached for the rest of the runtime.
 					$this->cachedBlockPalette = CustomiesBlockFactory::getInstance()->getBlockPaletteEntries();

@@ -5,9 +5,9 @@ namespace customiesdevs\customies\item\component;
 
 final class PiercingWeaponComponent implements ItemComponent {
 
-	private array $creativeReach;
+	private array $creativeReach = [];
 	private float $hitboxMargin;
-	private array $reach;
+	private array $reach = [];
 
 	public function __construct(
 		array $creativeReach = ['min' => 2.0, 'max' => 7.5],

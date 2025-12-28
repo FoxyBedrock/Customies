@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class LiquidDetectionComponent implements BlockComponent {
+final class LiquidDetectionComponent implements BlockComponent {
 
 	/** The block stops liquid flow (default behavior). */
 	public const BLOCKING = "blocking";
@@ -24,7 +24,7 @@ class LiquidDetectionComponent implements BlockComponent {
 	 * Directions from which liquid flow is blocked.
 	 * Valid values: "up", "down", "north", "south", "east", "west"
 	 */
-	private array $stopsLiquidFlowingFromDirection;
+	private array $stopsLiquidFlowingFromDirection = [];
 
 	/**
 	 * Creates a new liquid detection rule.

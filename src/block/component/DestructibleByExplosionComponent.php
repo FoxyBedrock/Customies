@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class DestructibleByExplosionComponent implements BlockComponent {
+final class DestructibleByExplosionComponent implements BlockComponent {
 
 	private float $explosionResistance;
 

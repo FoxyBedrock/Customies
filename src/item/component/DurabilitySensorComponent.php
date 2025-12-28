@@ -8,7 +8,7 @@ use customiesdevs\customies\item\properties\SoundEvent;
 
 final class DurabilitySensorComponent implements ItemComponent {
 
-	private array $durabilityThresholds;
+	private array $durabilityThresholds = [];
 
 	/**
 	 * Enables an item to emit effects when it receives damage. Because of this, the item also needs a `minecraft:durability` component.

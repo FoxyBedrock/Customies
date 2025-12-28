@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class MapColorComponent implements BlockComponent {
+final class MapColorComponent implements BlockComponent {
 
 	private string|array $color;
 

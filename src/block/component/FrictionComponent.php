@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class FrictionComponent implements BlockComponent {
+final class FrictionComponent implements BlockComponent {
 
 	private float $friction;
 

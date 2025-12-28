@@ -9,7 +9,7 @@ final class DyeableComponent implements ItemComponent {
 	 * RGB color values as an array of three integers [R, G, B].
 	 * @var int[]
 	 */
-	private array $rgb;
+	private array $rgb = [];
 
 	/**
 	 * Allows the item to be dyed by cauldron water. Once dyed, the item will display the `dyed` texture defined in the `minecraft:icon` component rather than `default`.

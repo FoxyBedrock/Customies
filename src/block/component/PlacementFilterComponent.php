@@ -5,7 +5,7 @@ namespace customiesdevs\customies\block\component;
 use customiesdevs\customies\block\properties\PlacementCondition;
 use InvalidArgumentException;
 
-class PlacementFilterComponent implements BlockComponent {
+final class PlacementFilterComponent implements BlockComponent {
 
 	/** @var PlacementCondition[] */
 	private array $conditions = [];
@@ -20,14 +20,6 @@ class PlacementFilterComponent implements BlockComponent {
 		$this->conditions = $conditions;
 	}
 
-	public function addCondition(PlacementCondition $condition): self {
-		if(count($this->conditions) >= 64){
-			throw new InvalidArgumentException("Placement filter may not exceed 64 conditions");
-		}
-		$this->conditions[] = $condition;
-		return $this;
-	}
-
 	public function getName(): string {
 		return 'minecraft:placement_filter';
 	}
@@ -39,5 +31,13 @@ class PlacementFilterComponent implements BlockComponent {
 				$this->conditions
 			)
 		];
+	}
+
+	public function addCondition(PlacementCondition $condition): self {
+		if(count($this->conditions) >= 64){
+			throw new InvalidArgumentException("Placement filter may not exceed 64 conditions");
+		}
+		$this->conditions[] = $condition;
+		return $this;
 	}
 }

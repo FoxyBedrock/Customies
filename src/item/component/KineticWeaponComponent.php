@@ -5,15 +5,15 @@ namespace customiesdevs\customies\item\component;
 
 final class KineticWeaponComponent implements ItemComponent {
 
-	private array $creativeReach;
+	private array $creativeReach = [];
 	private float $damageModifier;
 	private float $damageMultiplier;
 	private int $delay;
 
-	private array $dismountConditions;
+	private array $dismountConditions = [];
 	private float $hitboxMargin;
-	private array $knockbackConditions;
-	private array $reach;
+	private array $knockbackConditions = [];
+	private array $reach = [];
 
 	public function __construct(
 		array $creativeReach = ['min' => 2.0, 'max' => 7.5],

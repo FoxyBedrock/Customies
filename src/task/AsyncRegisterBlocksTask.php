@@ -42,8 +42,6 @@ final class AsyncRegisterBlocksTask extends AsyncTask {
 
 	public function onRun(): void {
 		foreach($this->blockFuncs as $identifier => $blockFunc){
-			// We do not care about the creative inventory data in other threads since it is unused outside of
-			// the main thread.
 			CustomiesBlockFactory::getInstance()->registerBlock(
 				$blockFunc,
 				(string) $identifier,

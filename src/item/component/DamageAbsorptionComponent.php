@@ -11,7 +11,7 @@ final class DamageAbsorptionComponent implements ItemComponent {
 	 * List of damage causes that can be absorbed by the item.
 	 * @var DamageCause[] Must contain at least 1 item for meaningful effect.
 	 */
-	private array $absorbableCauses;
+	private array $absorbableCauses = [];
 
 	/**
 	 * It allows an item to absorb damage that would otherwise be dealt to its wearer.

@@ -20,7 +20,7 @@ use pocketmine\math\Vector3;
  *
  * All values are automatically clamped to valid ranges.
  */
-class Box {
+final class Box {
 
 	/** @var Vector3 Origin (minimum corner) of the box in block-relative coordinates. */
 	private Vector3 $origin;

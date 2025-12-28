@@ -19,13 +19,12 @@ final class Customies extends PluginBase {
 
 	protected function onEnable(): void {
 		$this->getServer()->getPluginManager()->registerEvents(new CustomiesListener(), $this);
-
-		CustomiesBlockFactory::getInstance()->registerBlock(
-			static fn() => new ExampleBlock(),
-			"customies:example_block",
-			new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_ITEMS)
-		);
-
+		// why?
+		// CustomiesBlockFactory::getInstance()->registerBlock(
+		// 	static fn() => new ExampleBlock(),
+		// 	"customies:example_block",
+		// 	new CreativeInventoryInfo(CreativeInventoryInfo::CATEGORY_ITEMS)
+		// );
 		$this->getScheduler()->scheduleDelayedTask(new ClosureTask(static function (): void {
 			// This task is scheduled with a 0-tick delay so it runs as soon as the server has started. Plugins should
 			// register their custom blocks and entities in onEnable() before this is executed

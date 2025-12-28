@@ -6,7 +6,7 @@ namespace customiesdevs\customies\block\component;
 use customiesdevs\customies\block\properties\Box;
 use pocketmine\math\Vector3;
 
-class CollisionBoxComponent implements BlockComponent {
+final class CollisionBoxComponent implements BlockComponent {
 
 	private bool $enabled;
 	/** @var Box[] */
@@ -18,6 +18,33 @@ class CollisionBoxComponent implements BlockComponent {
 	 */
 	public function __construct(bool $enabled = true) {
 		$this->enabled = $enabled;
+	}
+
+	public function getName(): string {
+		return 'minecraft:collision_box';
+	}
+
+	public function getValue(): array {
+		$boxes = [];
+		foreach($this->boxes as $box) {
+			$boxes[] = $box->toNbtArray();
+		}
+		//if no boxes are defined we add a default full block box
+		if(empty($boxes)){
+			$boxes[] = $this->enabled ? self::defaultCollisionBox()->toNbtArray() : self::noCollisionBox()->toNbtArray();
+		}
+		return [
+			"boxes" => $boxes,
+			"enabled" => $this->enabled
+		];
+	}
+
+	public static function defaultCollisionBox(): Box {
+		return new Box(new Vector3(-8, 0, -8), new Vector3(16, 8, 16));
+	}
+
+	public static function noCollisionBox(): Box {
+		return new Box(new Vector3(-8, 0, -8), new Vector3(0.0001, 0.0001, 0.0001));
 	}
 
 	/**
@@ -42,24 +69,5 @@ class CollisionBoxComponent implements BlockComponent {
 			$this->boxes[] = $box;
 		}
 		return $this;
-	}
-
-	public function getName(): string {
-		return 'minecraft:collision_box';
-	}
-
-	public function getValue(): array {
-		$convertedBoxes = [];
-		foreach($this->boxes as $box) {
-			$convertedBoxes[] = $box->toNbtArray();
-		}
-		//if no boxes are defined we add a default full block box
-		if(empty($convertedBoxes)) {
-			$convertedBoxes[] = (new Box(new Vector3(-8, 0, -8), new Vector3(16, 16, 16)))->toNbtArray();
-		}
-		return [
-			"boxes" => $convertedBoxes,
-			"enabled" => $this->enabled
-		];
 	}
 }

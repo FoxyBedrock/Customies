@@ -4,7 +4,7 @@ namespace customiesdevs\customies\block\component;
 
 use pocketmine\math\Vector3;
 
-class SelectionBoxComponent implements BlockComponent {
+final class SelectionBoxComponent implements BlockComponent {
 
 	private bool $useSelectionBox;
 	private Vector3 $origin;

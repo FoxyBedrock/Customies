@@ -1,8 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block\component;
+namespace customiesdevs\customies\block;
 
+use customiesdevs\customies\block\component\BlockComponent;
+use customiesdevs\customies\block\component\DisplayNameComponent;
+use customiesdevs\customies\block\component\GeometryComponent;
+use customiesdevs\customies\block\component\MaterialInstancesComponent;
 use customiesdevs\customies\block\properties\Material;
 
 trait BlockComponentsTrait {

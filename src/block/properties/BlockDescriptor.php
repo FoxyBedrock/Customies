@@ -14,7 +14,7 @@ namespace customiesdevs\customies\block\properties;
 final class BlockDescriptor {
 
 	private ?string $name;
-	private array $states;
+	private array $states = [];
 	private ?string $tags;
 	private ?int $tagsVersion;
 

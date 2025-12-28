@@ -11,7 +11,7 @@ use function implode;
 final class DiggerComponent implements ItemComponent {
 
 	/** @var array<int, array{block: array<string, string>, speed: int}> */
-	private array $destroySpeeds;
+	private array $destroySpeeds = [];
 	private bool $useEfficiency;
 
 	/**

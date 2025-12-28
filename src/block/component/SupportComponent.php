@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class SupportComponent implements BlockComponent {
+final class SupportComponent implements BlockComponent {
 
 	public const FENCE = "fence";
 	public const STAIRS = "stair";

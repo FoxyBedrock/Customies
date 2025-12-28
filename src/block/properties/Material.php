@@ -16,10 +16,22 @@ final class Material {
 	public const TARGET_SOUTH = "south";
 	public const TARGET_WEST = "west";
 
+	/** Enables face shading/dimming based on lighting direction */
 	public const FACE_DIMMING = 1;
+	/** Enables randomized UV rotation */
 	public const RANDOMIZE_UV_ROTATION = 2;
+	/** Indicates support for texture variation */
 	public const SUPPORTS_TEXTURE_VARIATION = 4;
 
+	/**
+	 * Packed material flags stored as a bitmask.
+	 * Example:
+	 *  `self::FACE_DIMMING` | `self::RANDOMIZE_UV_ROTATION` = `0x03`
+	 * @var int
+	 * @see self::FACE_DIMMING
+	 * @see self::RANDOMIZE_UV_ROTATION
+	 * @see self::SUPPORTS_TEXTURE_VARIATION
+	 */
 	private int $packed_bools;
 
 	/**
@@ -71,16 +83,30 @@ final class Material {
 	}
 
 	/**
+	 * Returns the material flag bitmask.
+	 * @return int Bitmask composed of FLAG_* constants.
+	 */
+	public function getBitSet(): int {
+		return $this->packed_bools;
+	}
+
+	/**
 	 * Creates a Material instance from a decoded material definition.
-	 * @param string $target
+	 * @param string $target Targeted face for the material.
 	 * @param array{
 	 *   texture: string,
 	 *   render_method?: string,
 	 *   tint_method?: string,
 	 *   ambient_occlusion?: float|int,
+	 *   face_dimming?: bool,
+	 *   isotropic?: bool
 	 * } $data
+	 * @return self
 	 */
 	public static function fromArray(string $target, array $data): self {
+		if(!isset($data['texture'])){
+			throw new \InvalidArgumentException('Material texture is required');
+		}
 		return new self(
 			$target,
 			$data["texture"],
@@ -104,11 +130,25 @@ final class Material {
 	 */
 	public function toArray(): array {
 		return [
-			"ambient_occlusion" => $this->ambientOcclusion,
-			"packed_bools" => new ByteTag($this->packed_bools),
-			"render_method" => $this->renderMethod->value,
 			"texture" => $this->texture,
+			"render_method" => $this->renderMethod->value,
 			"tint_method" => $this->tintMethod->value,
+			"ambient_occlusion" => $this->ambientOcclusion,
+			"packed_bools" => new ByteTag($this->packed_bools)
 		];
+	}
+
+	/**
+	 * @param Material[] $materials
+	 */
+	public static function validMaterials(array $materials): void{
+		if($materials === []){
+			throw new \InvalidArgumentException('At least one material must be defined');
+		}
+		foreach($materials as $material){
+			if(!$material instanceof Material){
+				throw new \InvalidArgumentException('All materials must be instances of ' . Material::class);
+			}
+		}
 	}
 }

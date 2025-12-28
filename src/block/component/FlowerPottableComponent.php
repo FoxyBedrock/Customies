@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class FlowerPottableComponent implements BlockComponent {
+final class FlowerPottableComponent implements BlockComponent {
 
 	public function __construct() {}
 

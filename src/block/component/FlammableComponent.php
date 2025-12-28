@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-class FlammableComponent implements BlockComponent {
+final class FlammableComponent implements BlockComponent {
 
 	private int $catchChanceModifier;
 	private int $destroyChanceModifier;
