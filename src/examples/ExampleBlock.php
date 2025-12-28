@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block\example;
+namespace customiesdevs\customies\examples;
 
 use customiesdevs\customies\block\BlockComponents;
 use customiesdevs\customies\block\BlockComponentsTrait;
