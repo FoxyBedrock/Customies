@@ -11,7 +11,7 @@ use customiesdevs\customies\block\component\TransformationComponent;
 use customiesdevs\customies\block\permutations\BlockPermutation;
 use customiesdevs\customies\block\permutations\BlockPermutations;
 use customiesdevs\customies\block\permutations\BlockPermutationsTrait;
-use customiesdevs\customies\block\properties\Material;
+use customiesdevs\customies\block\utils\Material;
 use customiesdevs\customies\block\states\BlockState;
 use pocketmine\block\Block;
 use pocketmine\block\BlockBreakInfo;

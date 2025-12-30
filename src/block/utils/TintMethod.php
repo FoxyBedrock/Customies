@@ -1,6 +1,6 @@
 <?php
 
-namespace customiesdevs\customies\block\properties;
+namespace customiesdevs\customies\block\utils;
 
 enum TintMethod: string {
 	case NONE = "none";

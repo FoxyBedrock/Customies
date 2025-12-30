@@ -1,6 +1,6 @@
 <?php
 
-namespace customiesdevs\customies\item\properties;
+namespace customiesdevs\customies\item\utils;
 
 final class RepairItems {
 

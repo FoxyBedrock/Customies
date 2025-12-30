@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\block\component;
 
-use customiesdevs\customies\block\properties\Box;
+use customiesdevs\customies\block\utils\Box;
 use pocketmine\math\Vector3;
 
 final class CollisionBoxComponent implements BlockComponent {

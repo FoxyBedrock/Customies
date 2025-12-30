@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
-use customiesdevs\customies\item\properties\ParticleType;
-use customiesdevs\customies\item\properties\SoundEvent;
+use customiesdevs\customies\item\utils\ParticleType;
+use customiesdevs\customies\item\utils\SoundEvent;
 
 final class DurabilitySensorComponent implements ItemComponent {
 

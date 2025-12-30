@@ -2,7 +2,7 @@
 
 namespace customiesdevs\customies\block\component;
 
-use customiesdevs\customies\block\properties\TintMethod;
+use customiesdevs\customies\block\utils\TintMethod;
 
 final class DestructionParticlesComponent implements BlockComponent {
 

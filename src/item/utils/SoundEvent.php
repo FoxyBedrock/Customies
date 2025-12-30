@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\item\properties;
+namespace customiesdevs\customies\item\utils;
 
 /**
  * Represents all possible sound events in the game.

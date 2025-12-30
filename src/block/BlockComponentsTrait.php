@@ -7,7 +7,7 @@ use customiesdevs\customies\block\component\BlockComponent;
 use customiesdevs\customies\block\component\DisplayNameComponent;
 use customiesdevs\customies\block\component\GeometryComponent;
 use customiesdevs\customies\block\component\MaterialInstancesComponent;
-use customiesdevs\customies\block\properties\Material;
+use customiesdevs\customies\block\utils\Material;
 
 trait BlockComponentsTrait {
 	

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\block\properties;
+namespace customiesdevs\customies\block\utils;
 
-use customiesdevs\customies\block\properties\AllowedFace;
+use customiesdevs\customies\block\utils\AllowedFace;
 use InvalidArgumentException;
 
 final class PlacementCondition {
