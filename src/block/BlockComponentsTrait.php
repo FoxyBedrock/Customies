@@ -56,6 +56,7 @@ trait BlockComponentsTrait {
 	}
 
 	/**
+	 * @todo
 	 * Initializes the default components for a block with the given texture and name.
 	 * Adds geometry, material instances, and display name components.
 	 * 
@@ -63,6 +64,10 @@ trait BlockComponentsTrait {
 	 * @param string $name The display name of the block
 	 */
 	protected function initComponents(string $texture, string $name): void {
+		// Only initialize if no components are set yet
+		if($this->getComponents() !== []){
+			return;
+		}
 		$this->addComponent(new GeometryComponent());
 		$this->addComponent(new MaterialInstancesComponent([new Material("*", $texture)]));
 		$this->addComponent(new DisplayNameComponent($name));

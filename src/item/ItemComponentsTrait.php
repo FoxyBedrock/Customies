@@ -55,12 +55,17 @@ trait ItemComponentsTrait {
 	}
 
 	/**
+	 * @todo
 	 * Initializes common item components.
 	 * 
 	 * @param string $texture The texture identifier for the icon
 	 * @param string $name The display name of the item
 	 */
 	protected function initComponent(string $texture, string $name): void {
+		// Only initialize if no components are set yet
+		if($this->getComponents() !== []){
+			return;
+		}
 		$this->addComponent(new IconComponent($texture));
 		$this->addComponent(new DisplayNameComponent($name));
 	}
