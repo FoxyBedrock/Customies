@@ -11,6 +11,7 @@ interface BlockStates {
 	/**
 	 * Adds a state to the block.
 	 * @param BlockState $trait
+	 * @return void
 	 */
 	public function addState(BlockState $trait): void;
 
@@ -43,11 +44,15 @@ interface BlockStates {
 
 	/**
 	 * Serializes the block state to the given BlockStateWriter.
+	 * @param BlockStateWriter $blockStateOut
+	 * @return void
 	 */
 	public function serializeState(BlockStateWriter $blockStateOut): void;
 
 	/**
 	 * Deserializes the block state from the given BlockStateReader.
+	 * @param BlockStateReader $blockStateIn
+	 * @return void
 	 */
 	public function deserializeState(BlockStateReader $blockStateIn): void;
 }

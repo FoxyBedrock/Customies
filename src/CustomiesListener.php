@@ -13,6 +13,7 @@ use pocketmine\network\mcpe\protocol\types\Experiments;
 use function count;
 
 final class CustomiesListener implements Listener {
+
 	/** @var BlockPaletteEntry[] */
 	private array $cachedBlockPalette = [];
 	private Experiments $experiments;

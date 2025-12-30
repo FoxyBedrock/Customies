@@ -9,6 +9,7 @@ namespace customiesdevs\customies\block\states;
  */
 class BlockState {
 
+	/** @var mixed The current value of the state property */
 	protected mixed $currentValue;
 
 	/**
@@ -24,6 +25,7 @@ class BlockState {
 
 	/**
 	 * Returns the state property name.
+	 * @return string
 	 */
 	public function getName(): string {
 		return $this->name;
@@ -31,6 +33,7 @@ class BlockState {
 
 	/**
 	 * Returns the possible values array.
+	 * @return array
 	 */
 	public function getValues(): array {
 		return $this->values;
@@ -38,6 +41,7 @@ class BlockState {
 
 	/**
 	 * Returns the NBT value definition for client (enum + name).
+	 * @return array
 	 */
 	public function getValue(): array {
 		return [

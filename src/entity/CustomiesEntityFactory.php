@@ -32,6 +32,12 @@ final class CustomiesEntityFactory {
 		$this->updateStaticPacketCache($identifier, $behaviourId);
 	}
 
+	/**
+	 * Updates the AvailableActorIdentifiersPacket to include the new entity.
+	 * @param string $identifier example: "customies:my_entity"
+	 * @param string $behaviourId
+	 * @return void
+	 */
 	private function updateStaticPacketCache(string $identifier, string $behaviourId): void {
 		$instance = StaticPacketCache::getInstance();
 		$property = (new ReflectionClass($instance))->getProperty("availableActorIdentifiers");

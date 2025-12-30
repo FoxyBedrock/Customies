@@ -7,7 +7,6 @@ use Closure;
 use customiesdevs\customies\block\BlockComponents;
 use customiesdevs\customies\block\permutations\BlockPermutation;
 use customiesdevs\customies\block\permutations\BlockPermutations;
-use customiesdevs\customies\block\permutations\Permutations;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
@@ -31,7 +30,6 @@ use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalBlockStateHandlers;
 use RuntimeException;
-
 use function array_map;
 use function array_reverse;
 use function hash;
@@ -69,30 +67,14 @@ final class CustomiesBlockFactory {
 	/**
 	 * Get a custom block from its identifier. An exception will be thrown if the block is not registered.
 	 * @param string $identifier Unique block identifier (e.g. "namespace:block_name")
-	 * @throws InvalidArgumentException If the block is not registered
 	 * @return Block A clone of the registered block.
+	 * @throws InvalidArgumentException If the block is not registered
 	 */
 	public function get(string $identifier): Block {
 		if(!isset($this->customBlocks[$identifier])){
 			throw new InvalidArgumentException("Custom block $identifier is not registered");
 		}
 		return clone $this->customBlocks[$identifier];
-	}
-
-	/**
-	 * Loads all the creative groups from the CreativeInventory entries. This is used to ensure that all groups are
-	 * available when registering new blocks with creative inventory info.
-	 */
-	private function loadCreativeGroups(): void {
-		if($this->groups !== []){
-			return;
-		}
-		foreach(CreativeInventory::getInstance()->getAllEntries() as $entry){
-			$group = $entry->getGroup();
-			if($group !== null){
-				$this->groups[$group->getName()->getText()] = $group;
-			}
-		}
 	}
 
 	/**
@@ -168,7 +150,6 @@ final class CustomiesBlockFactory {
 		$nbtTag->setTag("components", $componentsTag);
 		$nbtTag->setInt("molangVersion", 13);
 		// Registers the block to creative inventory
-		$this->loadCreativeGroups();
 		$this->registerCreativeInfo($block, $creativeInfo);
 		$this->blockPaletteEntries[] = new BlockPaletteEntry($identifier, new CacheableNbt($nbtTag));
 		$this->blockFuncs[$identifier] = [$blockFunc, $serializer, $deserializer];
@@ -184,6 +165,14 @@ final class CustomiesBlockFactory {
 		}
 	}
 
+	/**
+	 * Registers permutations and states for a BlockPermutations instance.
+	 * @param BlockPermutations $block The block instance
+	 * @param string $identifier The unique block identifier
+	 * @param CompoundTag $nbt The NBT tag to populate with permutation data
+	 * @param Closure|null &$serializer Reference to the serializer closure to set
+	 * @param Closure|null &$deserializer Reference to the deserializer closure to set
+	 */
 	private function registerPermutations(
 		BlockPermutations $block,
 		string $identifier,
@@ -202,7 +191,7 @@ final class CustomiesBlockFactory {
 			$block->getPermutations()
 		)));
 		$nbt->setTag("properties", new ListTag(array_reverse($blockProperties)));
-		foreach(Permutations::getCartesianProduct($blockValues) as $meta => $stateValues){
+		foreach(BlockPermutation::getCartesianProduct($blockValues) as $meta => $stateValues){
 			$stateTag = CompoundTag::create();
 			// We need to insert states for every possible permutation to allow for all blocks to be used and to
 			// keep in sync with the client's block palette.
@@ -228,23 +217,20 @@ final class CustomiesBlockFactory {
 			return $b;
 		};
 	}
-	
+
+	/**
+	 * Registers the block in the creative inventory based on the provided CreativeInventoryInfo.
+	 * @param Block $block The block to register
+	 * @param CreativeInventoryInfo $creativeInfo The creative inventory information
+	 */
 	private function registerCreativeInfo(
 		Block $block,
 		CreativeInventoryInfo $creativeInfo
 	): void {
-		if(
-			$creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_ALL ||
-			$creativeInfo->getCategory() === CreativeInventoryInfo::CATEGORY_COMMANDS
-		){
-			return;
-		}
 		$group = null;
-		if(
-			$creativeInfo->getGroup() !== "" && 
-			$creativeInfo->getGroup() !== CreativeInventoryInfo::NONE
-		){
-			$group = $this->groups[$creativeInfo->getGroup()] ??= new CreativeGroup(new Translatable($creativeInfo->getGroup()), $block->asItem());
+		if($creativeInfo->getGroup() !== CreativeInventoryInfo::NONE){
+			$group = CreativeInventoryInfo::get($creativeInfo->getGroup()) ?? new CreativeGroup(new Translatable($creativeInfo->getGroup()), $block->asItem());
+			CreativeInventoryInfo::set($group);
 		}
 		$category = match($creativeInfo->getCategory()){
 			CreativeInventoryInfo::CATEGORY_CONSTRUCTION => CreativeCategory::CONSTRUCTION,

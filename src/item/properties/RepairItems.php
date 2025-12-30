@@ -77,6 +77,7 @@ final class RepairItems {
 
 	/**
 	 * Returns the repair amount provided by these items.
+	 * @return int
 	 */
 	public function getRepairAmount(): int {
 		return $this->repairAmount;

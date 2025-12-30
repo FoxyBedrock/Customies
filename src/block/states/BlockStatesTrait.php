@@ -6,13 +6,14 @@ namespace customiesdevs\customies\block\states;
 trait BlockStatesTrait {
 
 	/**
-	 * @var BlockState[]
+	 * @var BlockState[] Array of registered block states
 	 */
 	private array $states = [];
 
 	/**
 	 * Adds a state to the block.
 	 * @param BlockState $state
+	 * @return void
 	 */
 	public function addState(BlockState $state): void {
 		$this->states[$state->getName()] = $state;

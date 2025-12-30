@@ -13,9 +13,13 @@ namespace customiesdevs\customies\block\properties;
  */
 final class BlockDescriptor {
 
+	/** @var string|null */
 	private ?string $name;
+	/** @var array<int, array{state: string, type: int, value: mixed}> */
 	private array $states = [];
+	/** @var string|null */
 	private ?string $tags;
+	/** @var int|null */
 	private ?int $tagsVersion;
 
 	/**
@@ -56,6 +60,9 @@ final class BlockDescriptor {
 		return $data;
 	}
 
+	/**
+	 * Creates a BlockDescriptor from an array.
+	 */
 	public static function fromArray(array $data): self {
 		return new self(
 			$data["name"] ?? null,

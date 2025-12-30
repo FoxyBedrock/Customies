@@ -102,6 +102,7 @@ final class Material {
 	 *   isotropic?: bool
 	 * } $data
 	 * @return self
+	 * @throws \InvalidArgumentException if required fields are missing or invalid.
 	 */
 	public static function fromArray(string $target, array $data): self {
 		if(!isset($data['texture'])){
@@ -139,7 +140,9 @@ final class Material {
 	}
 
 	/**
+	 * Validates an array of materials.
 	 * @param Material[] $materials
+	 * @throws \InvalidArgumentException if the array is empty or contains invalid entries.
 	 */
 	public static function validMaterials(array $materials): void{
 		if($materials === []){

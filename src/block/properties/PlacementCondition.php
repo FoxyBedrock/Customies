@@ -28,6 +28,9 @@ final class PlacementCondition {
 		$this->blockFilters = $blockFilters;
 	}
 
+	/**
+	 * Converts the placement condition to Bedrock format.
+	 */
 	public function toArray(): array {
 		return [
 			"allowed_faces" => array_map(
@@ -41,6 +44,9 @@ final class PlacementCondition {
 		];
 	}
 
+	/**
+	 * Creates a PlacementCondition from an array.
+	 */
 	public static function fromArray(array $data): self {
 		return new self(
 			array_map(
