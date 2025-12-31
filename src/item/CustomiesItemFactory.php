@@ -43,6 +43,7 @@ final class CustomiesItemFactory {
 		'use_duration' => 0, // Int
 	];
 
+	/** Order in which properties should appear in item_properties */
 	private const PROPERTY_ORDER = [
 		'allow_off_hand',
 		'can_destroy_in_creative',
@@ -67,8 +68,6 @@ final class CustomiesItemFactory {
 
 	/** @var ItemTypeEntry[] */
 	private array $itemTableEntries = [];
-	/** @var CreativeGroup[] */
-	private array $groups = [];
 
 	/**
 	 * Get a custom item from its identifier. An exception will be thrown if the item is not registered.

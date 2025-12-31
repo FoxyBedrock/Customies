@@ -17,14 +17,6 @@ final class CollisionBoxComponent implements BlockComponent {
 	 */
 	public function __construct(bool $enabled = true) {
 		$this->enabled = $enabled;
-		//if no boxes are defined we add a default full block box
-		if($this->enabled){
-			$this->boxes[] = Box::defaultCollisionBox();
-		}else{
-			// We send a small box here or it will crash client
-			// or just dont use the component at all
-			$this->boxes[] = Box::noCollisionBox();
-		}
 	}
 
 	public function getName(): string {
@@ -35,6 +27,14 @@ final class CollisionBoxComponent implements BlockComponent {
 		$boxes = [];
 		foreach($this->boxes as $box){
 			$boxes[] = $box->toNbtArray();
+		}
+		// if no boxes are defined we add a default full block box
+		if($this->enabled && empty($boxes)){
+			$boxes[] = Box::defaultBox()->toNbtArray();
+		}
+		// no collision
+		if(!$this->enabled){
+			$boxes[] = [];
 		}
 		return [
 			"boxes" => $boxes,

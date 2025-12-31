@@ -45,8 +45,6 @@ final class CustomiesBlockFactory {
 	private array $blockPaletteEntries = [];
 	/** @var array<string, Block> Map of block identifiers to block instances */
 	private array $customBlocks = [];
-	/** @var array<string, CreativeGroup> Map of group names to creative groups */
-	private array $groups = [];
 
 	/**
 	 * Adds a worker initialize hook to the async pool to sync the BlockFactory for every thread worker that is created.

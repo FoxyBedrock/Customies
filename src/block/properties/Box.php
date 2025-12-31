@@ -125,15 +125,7 @@ final class Box {
 	 * Returns a default full block collision box.
 	 * @return Box
 	 */
-	public static function defaultCollisionBox(): Box {
+	public static function defaultBox(): Box {
 		return new self(new Vector3(-8.0, 0.0, -8.0), new Vector3(16.0, 16.0, 16.0));
-	}
-
-	/**
-	 * Returns a box that effectively has no collision.
-	 * @return Box
-	 */
-	public static function noCollisionBox(): Box {
-		return new self(new Vector3(-8.0, 0.0, -8.0), new Vector3(0.0001, 0.00001, 0.0001));
 	}
 }
