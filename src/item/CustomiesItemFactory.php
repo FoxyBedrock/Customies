@@ -195,10 +195,6 @@ final class CustomiesItemFactory {
 			->setTag('item_tags', NBT::getTagType($tags))
 			->merge($componentsTag);
 
-		\file_put_contents(
-			"{$itemId}.json",
-			$components, JSON_PRETTY_PRINT
-		);
 		return CompoundTag::create()
 			->setTag('components', $components)
 			->setInt('id', $itemId)
