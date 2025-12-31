@@ -9,17 +9,13 @@ use InvalidArgumentException;
 use pocketmine\block\Block;
 use pocketmine\data\bedrock\item\BlockItemIdMap;
 use pocketmine\data\bedrock\item\SavedItemData;
-use pocketmine\inventory\CreativeCategory;
 use pocketmine\inventory\CreativeGroup;
-use pocketmine\inventory\CreativeInventory;
 use pocketmine\item\Item;
 use pocketmine\item\StringToItemParser;
-use pocketmine\lang\Translatable;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
-use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use ReflectionClass;
@@ -126,7 +122,7 @@ final class CustomiesItemFactory {
 		// Adding item components
 		$componentBased = $item instanceof ItemComponents;
 		// Registers the item to creative inventory
-		$this->registerCreativeInfo($item, $creativeInfo);
+		CreativeInventoryInfo::registerCreativeInfo($item, $creativeInfo);
 		// Create the NBT data for the item
 		$nbt = $this->createItemNbt($item, $identifier, $itemId, $creativeInfo);
 		$entry = new ItemTypeEntry(
@@ -248,29 +244,5 @@ final class CustomiesItemFactory {
 		/** @var string[] $value */
 		$value = $itemToBlockId->getValue($blockItemIdMap);
 		$itemToBlockId->setValue($blockItemIdMap, $value + [$identifier => $identifier]);
-	}
-
-	/**
-	 * Registers the Item in the creative inventory based on the provided CreativeInventoryInfo.
-	 * @param Item $item The item to register
-	 * @param CreativeInventoryInfo $creativeInfo The creative inventory information
-	 */
-	private function registerCreativeInfo(
-		Item $item,
-		CreativeInventoryInfo $creativeInfo
-	): void {
-		$group = null;
-		if($creativeInfo->getGroup() !== CreativeInventoryInfo::NONE){
-			$group = CreativeInventoryInfo::get($creativeInfo->getGroup()) ?? new CreativeGroup(new Translatable($creativeInfo->getGroup()), $item);
-			CreativeInventoryInfo::set($group);
-		}
-		$category = match($creativeInfo->getCategory()){
-			CreativeInventoryInfo::CATEGORY_CONSTRUCTION => CreativeCategory::CONSTRUCTION,
-			CreativeInventoryInfo::CATEGORY_ITEMS => CreativeCategory::ITEMS,
-			CreativeInventoryInfo::CATEGORY_NATURE => CreativeCategory::NATURE,
-			CreativeInventoryInfo::CATEGORY_EQUIPMENT => CreativeCategory::EQUIPMENT,
-			default => throw new AssumptionFailedError("Unknown Creative Category"),
-		};
-		CreativeInventory::getInstance()->add($item, $category, $group);
 	}
 }
