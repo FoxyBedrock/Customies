@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace customiesdevs\customies\block;
 
 use Closure;
-use customiesdevs\customies\block\BlockComponents;
+use customiesdevs\customies\block\component\BlockComponents;
 use customiesdevs\customies\block\permutations\BlockPermutation;
 use customiesdevs\customies\block\permutations\BlockPermutations;
+use customiesdevs\customies\block\permutations\Permutations;
 use customiesdevs\customies\item\CreativeInventoryInfo;
 use customiesdevs\customies\item\CustomiesItemFactory;
 use customiesdevs\customies\task\AsyncRegisterBlocksTask;
@@ -191,7 +192,7 @@ final class CustomiesBlockFactory {
 			$block->getPermutations()
 		)));
 		$nbt->setTag("properties", new ListTag(array_reverse($blockProperties)));
-		foreach(BlockPermutation::getCartesianProduct($blockValues) as $meta => $stateValues){
+		foreach(Permutations::getCartesianProduct($blockValues) as $meta => $stateValues){
 			$stateTag = CompoundTag::create();
 			// We need to insert states for every possible permutation to allow for all blocks to be used and to
 			// keep in sync with the client's block palette.

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
+use pocketmine\nbt\tag\ByteTag;
+
 final class MaxStackSizeComponent implements ItemComponent {
 
 	private int $maxStackSize;
@@ -21,11 +23,11 @@ final class MaxStackSizeComponent implements ItemComponent {
 
 	public function getValue(): array {
 		return [
-			"value" => $this->maxStackSize
+			"value" => new ByteTag($this->maxStackSize)
 		];
 	}
 
 	public function getPropertyMapping(): ?array {
-		return ['max_stack_size' => $this->maxStackSize];
+		return ['max_stack_size' => (int) $this->maxStackSize];
 	}
 }

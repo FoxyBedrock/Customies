@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace customiesdevs\customies\item\utils;
+namespace customiesdevs\customies\item\properties;
 
 /**
  * Represents all available particle types in the game.

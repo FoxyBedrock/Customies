@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace customiesdevs\customies\item\component;
 
-use customiesdevs\customies\item\utils\DamageCause;
+use customiesdevs\customies\item\properties\DamageCause;
 
 final class DamageAbsorptionComponent implements ItemComponent {
 

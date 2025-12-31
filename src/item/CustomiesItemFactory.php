@@ -30,21 +30,43 @@ final class CustomiesItemFactory {
 
 	/** Default values for item_properties */
 	private const PROPERTY_DEFAULTS = [
-		'allow_off_hand' => false,
-		'can_destroy_in_creative' => true,
-		'damage' => 0,
-		'enchantable_slot' => 'none',
-		'enchantable_value' => 0,
-		'foil' => false,
-		'frame_count' => 1,
-		'hand_equipped' => false,
-		'liquid_clipped' => false,
-		'max_stack_size' => 64,
-		'mining_speed' => 1.0,
-		'should_despawn' => true,
-		'stacked_by_data' => false,
-		'use_animation' => 0,
-		'use_duration' => 0,
+		'allow_off_hand' => false, // Byte
+		'can_destroy_in_creative' => true, // Byte
+		'damage' => 0, // Int
+		'enchantable_slot' => 'none', // String
+		'enchantable_value' => 0, // Int
+		'foil' => false, // Byte
+		'frame_count' => 1, // Int
+		'hand_equipped' => false, // Byte
+		'liquid_clipped' => false, // Byte
+		'max_stack_size' => 64, // Int
+		'mining_speed' => 1.0, // Float
+		'should_despawn' => true, // Byte
+		'stacked_by_data' => false, // Byte
+		'use_animation' => 0, // Int
+		'use_duration' => 0, // Int
+	];
+
+	private const PROPERTY_ORDER = [
+		'allow_off_hand',
+		'can_destroy_in_creative',
+		'creative_category',
+		'creative_group',
+		'damage',
+		'enchantable_slot',
+		'enchantable_value',
+		'foil',
+		'frame_count',
+		'hand_equipped',
+		'hidden_in_commands',
+		'liquid_clipped',
+		'max_stack_size',
+		'minecraft:icon',
+		'mining_speed',
+		'should_despawn',
+		'stacked_by_data',
+		'use_animation',
+		'use_duration',
 	];
 
 	/** @var ItemTypeEntry[] */
@@ -129,12 +151,12 @@ final class CustomiesItemFactory {
 		$propertiesTag = CompoundTag::create();
 		foreach(self::PROPERTY_DEFAULTS as $name => $default) {
 			$propertiesTag
-				->setTag($name, NBT::getTagType($default))
-				->setByte("hidden_in_commands", 2);
+				->setTag($name, NBT::getTagType($default));
 		}
 		// Set creative info
-		$propertiesTag->setTag('creative_category', NBT::getTagType($creativeInfo->getNumericCategory()));
-		$propertiesTag->setTag('creative_group', NBT::getTagType($creativeInfo->getGroup()));
+		$propertiesTag->setTag('creative_category', NBT::getTagType((int) $creativeInfo->getNumericCategory()));
+		$propertiesTag->setTag('creative_group', NBT::getTagType((string) $creativeInfo->getGroup()));
+		$propertiesTag->setByte("hidden_in_commands", 2);
 		$tags = [];
 		$componentsTag = CompoundTag::create();
 		// Process each component
@@ -157,17 +179,26 @@ final class CustomiesItemFactory {
 			$mapping = $component->getPropertyMapping();
 			if($mapping !== null) {
 				foreach($mapping as $prop => $propValue) {
+					if($prop === "use_duration"){
+						$propertiesTag->setTag("use_duration", NBT::getTagType((int) round($propValue * 20)));
+						continue;
+					}
 					$propertiesTag->setTag($prop, NBT::getTagType($propValue));
 				}
 			}
 			// All components go to components tag
 			$componentsTag->setTag($name, $tag);
 		}
+		$propertiesTag = NBT::sortCompoundTag($propertiesTag, self::PROPERTY_ORDER);
 		$components = CompoundTag::create()
 			->setTag('item_properties', $propertiesTag)
 			->setTag('item_tags', NBT::getTagType($tags))
 			->merge($componentsTag);
 
+		\file_put_contents(
+			"{$itemId}.json",
+			$components, JSON_PRETTY_PRINT
+		);
 		return CompoundTag::create()
 			->setTag('components', $components)
 			->setInt('id', $itemId)
