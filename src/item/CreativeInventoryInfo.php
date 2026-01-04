@@ -219,6 +219,12 @@ final class CreativeInventoryInfo {
 		Item|Block $type,
 		CreativeInventoryInfo $creativeInfo
 	): void {
+		if(
+			$creativeInfo->getCategory() === self::CATEGORY_ALL || 
+			$creativeInfo->getCategory() === self::CATEGORY_COMMANDS
+		){
+			return;
+		}
 		$group = null;
 		if($creativeInfo->getGroup() !== CreativeInventoryInfo::NONE){
 			$group = CreativeInventoryInfo::get($creativeInfo->getGroup())
