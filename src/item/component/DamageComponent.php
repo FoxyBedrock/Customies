@@ -19,6 +19,10 @@ final class DamageComponent implements ItemComponent {
 		if($damage < 0) {
 			throw new \InvalidArgumentException("Damage value must be a positive number, $damage given");
 		}
+		if($damage > 255) {
+			// 1.26.0 will support damage up to 32767 soon
+			$damage = 255; // temporary wordaround for 1.21.130
+		}
 		$this->damage = $damage;
 	}
 
