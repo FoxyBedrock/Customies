@@ -53,8 +53,8 @@ final class PiercingWeaponComponent implements ItemComponent {
 
 	private static function rangeToArray(array $range): array {
 		return [
-			"min" => $range['min'],
-			"max" => $range['max']
+			"min" => (float) $range['min'],
+			"max" => (float) $range['max']
 		];
 	}
 }
