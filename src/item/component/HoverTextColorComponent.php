@@ -17,14 +17,16 @@ final class HoverTextColorComponent implements ItemComponent {
 	}
 
 	public function getName(): string {
-		return "hover_text_color";
+		return 'minecraft:hover_text_color';
 	}
 
-	public function getValue(): string {
-		return $this->hoverTextColor;
+	public function getValue(): array {
+		return [
+			"value" => $this->hoverTextColor
+		];
 	}
 
-	public function isProperty(): bool {
-		return true;
+	public function getPropertyMapping(): ?array {
+		return ['hover_text_color' => $this->hoverTextColor];
 	}
 }
