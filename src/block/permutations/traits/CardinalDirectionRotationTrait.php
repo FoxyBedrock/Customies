@@ -8,7 +8,7 @@ use customiesdevs\customies\block\permutations\BlockPermutation;
 use customiesdevs\customies\block\permutations\BlockPermutationsTrait;
 use customiesdevs\customies\block\states\BlockState;
 use pocketmine\block\Block;
-use pocketmine\block\utils\FacesOppositePlacingPlayerTrait;
+use pocketmine\block\utils\HorizontalFacingTrait;
 use pocketmine\data\bedrock\block\convert\BlockStateReader;
 use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 use pocketmine\item\Item;
@@ -24,7 +24,7 @@ use pocketmine\world\BlockTransaction;
  */
 trait CardinalDirectionRotationTrait {
 	use BlockPermutationsTrait;
-	use FacesOppositePlacingPlayerTrait;
+	use HorizontalFacingTrait;
 
 	protected function initStates(): void {
 		$this->addState(new BlockState("minecraft:cardinal_direction",
@@ -58,13 +58,9 @@ trait CardinalDirectionRotationTrait {
 	}
 
 	public function place(BlockTransaction $tx, Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, ?Player $player = null): bool {
-		$this->facing = match($face) {
-			Facing::NORTH => Facing::SOUTH,
-			Facing::SOUTH => Facing::NORTH,
-			Facing::WEST => Facing::EAST,
-			Facing::EAST => Facing::WEST,
-			default => Facing::opposite($player?->getHorizontalFacing() ?? Facing::NORTH)
-		};
+		$this->facing = Facing::opposite(
+			($player instanceof Player ? $player->getHorizontalFacing() : $face)
+		);
 		return parent::place($tx, $item, $blockReplace, $blockClicked, $face, $clickVector, $player);
 	}
 
